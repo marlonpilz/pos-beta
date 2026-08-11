@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0f1115" />
-<title>PÓS — V7.1 | Seis Janelas</title>
+<title>PÓS — V8 | Leitura em Camadas</title>
 <style>
 :root{
  --bg:#0d0f13;--panel:#13161b;--card:#181c22;--card2:#20252c;--text:#f5f4f1;--muted:#9ea4ad;
@@ -29,7 +29,7 @@ textarea,input,select{width:100%;border:1px solid var(--line);border-radius:15px
 </head>
 <body>
 <div class="app">
- <div class="top"><div class="brand">PÓS</div><div class="version">V7.1 · seis janelas</div></div>
+ <div class="top"><div class="brand">PÓS</div><div class="version">V8 · leitura em camadas</div></div>
 
  <section id="onboarding" class="hidden fade">
    <div class="eyebrow">Antes de começar</div>
@@ -96,7 +96,7 @@ textarea,input,select{width:100%;border:1px solid var(--line);border-radius:15px
 
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='pos_beta_v71_seis_janelas';
+const KEY='pos_beta_v8_camadas';
 const fresh={onboarded:false,profile:{relType:'',breakTime:'',contact:'',tone:'Direto, mas sem me atropelar'},logs:[],steps:[],openIndex:0};
 let state=(()=>{try{return {...fresh,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return structuredClone(fresh)}})();
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
@@ -154,14 +154,109 @@ function renderHome(){
 function startFlow(kind){show('flow');const f={mandar:flowMandar,saudade:flowSaudade,recebi:flowRecebi,lembranca:flowLembranca,mal:flowMal,melhor:flowMelhor}[kind];f?.()}
 $('#backHome').onclick=()=>show('home');
 
-// --- 6 JANELAS HUMANAS — V7 ---
+// --- 6 JANELAS HUMANAS — V8: LEITURA EM CAMADAS ---
 
 // Helpers específicos dos fluxos
 function renderResult(target, intro, a, b, c, saveFn, button='Guardar este momento'){
   $(target).innerHTML = `${intro||''}${insight(a,b,c,button)}`;
   $('#saveMoment').onclick = saveFn;
 }
+
 function isAny(v, arr){ return arr.some(x=>v.includes(x)); }
+
+function stripTags(s){ return String(s||'').replace(/<[^>]*>/g,''); }
+
+function historySignals(kind, data={}){
+  const logs=state.logs||[];
+  const same=logs.filter(x=>x.kind===kind);
+  let signals=[];
+
+  // semantic-ish recurrence based on exact structured answers we already store
+  const keys=['trigger','need','after','kind','detail','tr','sep','body','story','want','inside','now','feel','layer','before','what','help','fear'];
+  keys.forEach(k=>{
+    if(!data[k]) return;
+    const n=logs.filter(x=>x.data && x.data[k]===data[k]).length;
+    if(n>=2) signals.push({key:k,value:data[k],count:n});
+  });
+
+  return {sameCount:same.length, signals};
+}
+
+function deepReading(target, sections, question, saveFn, button='Guardar este momento'){
+  const iconMap={
+    scene:'◌', emotion:'◎', grief:'↝', mirror:'◇',
+    before:'⟲', shadow:'◐', journey:'⌁', question:'?'
+  };
+  const cards=sections.map(s=>`
+    <div class="card ${s.tone||''}">
+      <div class="eyebrow">${iconMap[s.icon]||'·'} ${esc(s.label)}</div>
+      <div class="human">${s.html}</div>
+      ${s.note?`<p class="tiny muted" style="margin-top:10px">${s.note}</p>`:''}
+    </div>`).join('');
+
+  $(target).innerHTML=`${cards}
+    <div class="card">
+      <div class="eyebrow">${iconMap.question} Pra levar daqui</div>
+      <h2>${question}</h2>
+      <p class="tiny muted">Não precisa responder agora. Guarda a pergunta se ela fizer sentido.</p>
+      <button class="btn" id="saveMoment">${button}</button>
+    </div>`;
+  $('#saveMoment').onclick=saveFn;
+}
+
+function griefMove(text){
+  const t=(text||'').toLowerCase();
+  if(isAny(t,['esperança','voltar','sinal','resposta','fechamento','importo','escolhido']))
+    return ['Protesto e negociação','Uma parte tua parece tentar diminuir a distância, recuperar um sinal ou encontrar uma ação que torne a perda menos definitiva. Isso não é uma “fase fixa”; esses movimentos podem ir e voltar.'];
+  if(isAny(t,['raiva','injust','culpa','erro','mentira','rejeit']))
+    return ['Raiva, busca de sentido e responsabilização','Quando algo termina sem caber direito por dentro, a mente tenta descobrir quem errou, por quê e o que poderia ter sido diferente. Às vezes isso organiza; às vezes vira uma roda que não fecha.'];
+  if(isAny(t,['sozinh','vazio','saudade','falta','triste','chor']))
+    return ['Contato com a ausência','Aqui a perda parece menos uma ideia e mais uma presença física: falta da pessoa, da rotina, do toque, do “nós” ou do futuro que foi imaginado.'];
+  if(isAny(t,['melhor','paz','planos','reconheci','ri','trabalh','sozinho(a) e fiquei bem']))
+    return ['Reorganização','Não é “fim do luto”. É um movimento em que outras partes da vida voltam a existir ao lado da história que terminou.'];
+  return ['Oscilação do luto','O luto por uma relação não costuma andar em linha reta. Em dias diferentes podem aparecer saudade, raiva, esperança, alívio, culpa e até momentos de paz.'];
+}
+
+function mirrorText(core){
+  const t=(core||'').toLowerCase();
+  if(isAny(t,['importo','escolhido','substitu','rejeit']))
+    return 'Talvez esta relação esteja iluminando uma pergunta sobre lugar e valor: o quanto se sentir escolhido por alguém vira prova de que você tem valor? Isso é uma hipótese de leitura, não uma conclusão sobre tua história.';
+  if(isAny(t,['acalmar','proteg','colo','segurança','sozinh']))
+    return 'Talvez o vínculo tenha funcionado também como lugar de regulação e segurança. Quando ele some, não desaparece só “uma pessoa”; pode desaparecer um jeito conhecido de voltar para o eixo.';
+  if(isAny(t,['cumplicidade','contar','testemunha','conversa']))
+    return 'Algumas relações viram testemunhas da nossa existência: a pessoa que sabia da história, recebia a notícia e reconhecia nossos pequenos movimentos. Perder essa testemunha pode doer de um jeito diferente de perder o romance.';
+  if(isAny(t,['culpa','erro','responsab']))
+    return 'Talvez a relação esteja tocando a tendência de transformar vínculo em responsabilidade: “se deu errado, alguma coisa em mim deveria ter impedido”. Vale observar se você costuma carregar sozinho o que foi construído por duas pessoas.';
+  if(isAny(t,['controle','saber','informação','olhar','redes']))
+    return 'Quando a relação deixa de ser previsível, buscar informação pode dar alguns minutos de sensação de controle. O problema é que saber mais sobre a vida do outro nem sempre devolve segurança por dentro.';
+  return 'Relações costumam revelar tanto nossa capacidade de amar quanto os lugares em que ficamos mais vulneráveis. O ponto não é reduzir tudo à relação nem ao passado, mas perceber o que este vínculo tornou mais visível em você.';
+}
+
+function beforeText(core, hist){
+  if(hist.signals.length){
+    const top=hist.signals.sort((a,b)=>b.count-a.count)[0];
+    return `A tua própria Jornada já mostra repetição em “${esc(String(top.value).toLowerCase())}”. Isso apareceu em ${top.count} registros. Não prova uma origem, mas dá mais base para perguntar se esse sentimento já era conhecido antes desta relação.`;
+  }
+  const t=(core||'').toLowerCase();
+  if(isAny(t,['rejeit','substitu','escolhido','importo','sozinh','segurança','culpa']))
+    return 'Ainda não há memória suficiente para dizer que isso vem de antes. A pergunta mais honesta por enquanto é: essa sensação é nova ou você já a conheceu em outras relações, amizades, família ou momentos da vida?';
+  return 'Não precisamos procurar infância ou “origem” para toda dor. Primeiro vale observar se essa sensação aparece de novo. Se aparecer em outros contextos, aí sim o passado pode começar a conversar com o presente.';
+}
+
+function lightShadowText(light, shadow){
+  return `<b>Luz:</b> ${light}<br><br><b>Sombra possível:</b> ${shadow}<br><br><span class="muted">Aqui “sombra” não significa defeito. É a parte de uma qualidade que pode gerar custo quando entra no automático.</span>`;
+}
+
+function journeyText(hist){
+  if(hist.sameCount===0) return 'Este é um primeiro registro desse tipo. O PÓS ainda não tem base para chamar nada de padrão.';
+  if(hist.sameCount===1) return 'Já existe outro registro nesta mesma janela. Ainda é cedo para formular um padrão, mas já dá para comparar cenas.';
+  if(hist.signals.length){
+    const top=hist.signals.sort((a,b)=>b.count-a.count)[0];
+    return `Agora já existe recorrência concreta: “${esc(String(top.value).toLowerCase())}” apareceu ${top.count} vezes. A partir daqui faz sentido observar o que costuma vir antes e depois disso.`;
+  }
+  return `Esta é a ${hist.sameCount+1}ª vez que você registra uma cena deste tipo. Ainda não apareceu a mesma resposta várias vezes, então o PÓS não vai forçar uma explicação única.`;
+}
+
 
 // 1) QUERO MANDAR MENSAGEM
 const mandarTriggers=[
@@ -226,21 +321,45 @@ function mReality(trigger,detail,need){
 }
 
 function mResult(trigger,detail,need,after){
- let a=`A vontade de procurar apareceu depois de <b>${esc(trigger.toLowerCase())}</b>. Dentro disso, o que mais te pegou foi <b>${esc(detail.toLowerCase())}</b>. Se viesse a resposta perfeita, hoje ela serviria principalmente para <b>${esc(need.toLowerCase())}</b>.`;
- let b='Talvez existam duas vontades misturadas: falar com essa pessoa e sair do estado em que você entrou agora.';
- if(trigger.includes('Sonhei')) b='O sonho trouxe a relação para o presente sem que nada novo tivesse acontecido entre vocês. Talvez a urgência seja uma continuação emocional do sonho, não uma informação nova sobre a relação.';
- else if(trigger.includes('foto')) b='Uma imagem mostra segundos e o cérebro completa o resto. Talvez a dor esteja vindo tanto do que você viu quanto da história que precisou inventar para preencher o que não sabe.';
- else if(trigger.includes('sozinho')) b='Talvez você esteja com saudade da pessoa e, ao mesmo tempo, tentando resolver solidão, silêncio ou falta de contato humano com o endereço mais conhecido.';
- else if(trigger.includes('algo bom')) b='Tem relações que viram testemunhas da nossa vida. Às vezes a vontade de contar uma coisa boa é luto de cumplicidade — não necessariamente vontade de reconstruir o casal.';
- else if(trigger.includes('algo ruim')) b='Na dor, a gente tende a procurar rotas antigas de segurança. O fato de teu corpo lembrar dessa pessoa como abrigo não responde sozinho se ela ainda pode ocupar esse lugar hoje.';
- else if(trigger.includes('sinal')) b='Há um acontecimento externo, mas ainda existe diferença entre sinal, intenção e disponibilidade real. A esperança costuma preencher muito rápido o que ficou ambíguo.';
- else if(trigger.includes('alguém')) b='Pode ter entrado algo além da saudade: comparação, medo de substituição e a sensação de perder definitivamente um lugar que um dia foi teu.';
- else if(trigger.includes('Música')) b='Memória sensorial não pede licença. Um cheiro, uma rua ou uma música podem fazer o corpo chegar no passado antes da cabeça perceber onde está.';
- if(isAny(after,['esperando','confuso','reabre','por pouco'])) b+=` E tem um dado teu que importa: depois do contato, você reconhece que costuma acontecer “${esc(after.toLowerCase())}”.`;
- let c=isAny(need,['esperança','voltar'])?'Se essa pessoa dissesse “vamos tentar de novo”, o que teria mudado na realidade — não só na saudade — para essa história ser diferente?':'Se a mensagem não pudesse ser enviada hoje, de que outra forma você tentaria cuidar exatamente do que está pedindo aqui?';
- renderResult('#mNext',`<div class="card"><div class="eyebrow">Antes de enviar</div><p class="quote">A vontade é real. Isso não obriga a transformar a vontade em ação no mesmo minuto.</p></div>`,a,b,c,()=>{
-   addLog('mandar','Quis mandar mensagem',{trigger,detail,need,after},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
- });
+  const hist=historySignals('mandar',{trigger,detail,need,after});
+  const grief=griefMove(`${need} ${after} ${detail}`);
+  const scene=`A vontade de procurar apareceu depois de <b>${esc(trigger.toLowerCase())}</b>. O ponto que mais te atravessou foi <b>${esc(detail.toLowerCase())}</b>. Quando você imaginou a resposta ideal, ela serviria principalmente para <b>${esc(need.toLowerCase())}</b>.`;
+
+  let emotion='Talvez existam duas vontades misturadas: falar com essa pessoa e sair do estado emocional que apareceu agora.';
+  if(trigger.includes('Sonhei')) emotion='O sonho trouxe o vínculo para o presente sem que nada novo tivesse acontecido entre vocês. O corpo pode acordar como se a aproximação, a rejeição ou a perda tivessem acabado de acontecer.';
+  else if(trigger.includes('foto')) emotion='Uma foto entrega poucos segundos e a mente completa o resto. O que te atingiu pode estar tanto no que você viu quanto no que imaginou sobre a vida dessa pessoa a partir dali.';
+  else if(trigger.includes('sozinho')) emotion='A saudade pode estar misturada com solidão e necessidade de co-regulação. O endereço emocional mais conhecido costuma ser lembrado primeiro quando o silêncio pesa.';
+  else if(trigger.includes('algo bom')) emotion='O impulso parece tocar a perda de cumplicidade. Não é só “querer a pessoa”: pode ser sentir falta daquela testemunha específica da tua vida.';
+  else if(trigger.includes('algo ruim')) emotion='Na dor, o sistema tende a buscar rotas antigas de segurança. Lembrar dessa pessoa como abrigo não responde sozinho se o vínculo ainda é um abrigo possível hoje.';
+  else if(trigger.includes('sinal')) emotion='Há um fato externo, mas ainda existe distância entre sinal, intenção, disponibilidade e mudança real. A esperança pode preencher esse espaço muito rápido.';
+  else if(trigger.includes('alguém')) emotion='Aqui podem estar misturados saudade, ciúme, comparação e medo de substituição. Às vezes a pergunta deixa de ser “eu quero voltar?” e vira “eu ainda tenho um lugar?”.';
+  else if(trigger.includes('Música')) emotion='Memória sensorial costuma chegar pelo corpo antes da explicação. Música, cheiro, rua ou objeto podem reativar uma época inteira em segundos.';
+
+  let cycle='Ainda não há dados suficientes para dizer se existe um ciclo.';
+  if(isAny(after,['esperando','confuso','reabre','por pouco']))
+    cycle=`Você já reconheceu uma consequência importante: depois do contato costuma acontecer “<b>${esc(after.toLowerCase())}</b>”. Isso sugere uma sequência possível: ativação → contato → alívio/esperança → nova incerteza.`;
+  else if(after.includes('boa e respeitosa'))
+    cycle='Teu histórico não aponta automaticamente para contato como algo destrutivo. O ponto passa a ser distinguir conversa possível de conversa usada para regular urgência.';
+
+  const mirror=mirrorText(`${need} ${detail}`);
+  const before=beforeText(`${need} ${detail}`,hist);
+  const question=isAny(need,['esperança','voltar'])
+    ?'Se essa pessoa dissesse “vamos tentar de novo”, o que teria mudado na realidade — não só na saudade — para essa história conseguir ser diferente?'
+    :'Se você recebesse exatamente a confirmação que procura, mas a relação ainda assim não voltasse, o que continuaria doendo?';
+
+  const readingSummary=stripTags(scene+' '+emotion);
+  deepReading('#mNext',[
+    {label:'O que aconteceu hoje',icon:'scene',html:scene},
+    {label:'O que parece ter sido ativado',icon:'emotion',html:emotion},
+    {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
+    {label:'O espelho dessa relação',icon:'mirror',html:mirror,note:'Leitura relacional e simbólica — não diagnóstico.'},
+    {label:'Isso pode vir de antes?',icon:'before',html:before},
+    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Você tem capacidade de criar vínculo, importância, intimidade e presença.','Quando a perda ameaça esse vínculo, a mesma capacidade pode virar urgência por confirmação, contato ou controle para diminuir a insegurança.')},
+    {label:'O que acontece depois',icon:'journey',html:cycle},
+    {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
+  ],question,()=>{
+    addLog('mandar','Quis mandar mensagem',{trigger,detail,need,after},{summary:readingSummary,question});show('journey')
+  });
 }
 
 // 2) BATEU SAUDADE
@@ -306,19 +425,37 @@ function sBack(kind,detail,tr){
  bind('sSep',sep=>sResult2(kind,detail,tr,sep))
 }
 function sResult2(kind,detail,tr,sep){
- let a=`Hoje a saudade está apontando especialmente para <b>${esc(kind.toLowerCase())}</b>. Dentro disso, a parte que mais pesa é <b>${esc(detail.toLowerCase())}</b>. Ela ficou mais presente depois de <b>${esc(tr.toLowerCase())}</b>.`;
- let b='Saudade não é uma instrução. Ela é um jeito de a memória mostrar que alguma coisa teve valor.';
- if(kind.includes('rotina')) b='Talvez o que esteja doendo seja também a arquitetura do cotidiano que desapareceu: horários, mensagens, pequenos rituais. É possível sentir falta disso sem concluir que a relação inteira precisa voltar.';
- else if(kind.includes('carinho')) b='O corpo também vive luto. Falta de toque, sexo, cheiro, cama e proximidade podem aparecer como saudade da pessoa inteira quando parte da dor é intimidade interrompida.';
- else if(kind.includes('ter alguém')) b='Talvez a ausência do “nós” tenha deixado um buraco social e cotidiano. Isso é diferente de dizer que só aquela pessoa poderia ocupar companhia, escuta e pertencimento.';
- else if(kind.includes('escolhido')) b='Talvez parte da falta seja a sensação de ter um lugar confirmado na vida de alguém. Quando esse lugar some, às vezes a dor parece dizer “perdi meu valor”, mesmo quando o que terminou foi um vínculo.';
- else if(kind.includes('fase')||kind.includes('versão')) b='Essa pessoa pode estar carregando uma época tua inteira. Talvez parte do trabalho seja descobrir quais pedaços daquela versão ainda são teus e podem existir sem a relação.';
- else if(kind.includes('planos')) b='Existe luto pelo passado vivido e pelo futuro imaginado. O segundo é estranho porque dói por coisas que nunca chegaram a acontecer.';
- else if(kind.includes('achei')) b='Talvez uma parte do luto seja por uma promessa: quem você acreditou que essa pessoa poderia se tornar e o que vocês poderiam viver. Perder uma possibilidade também dói.';
- let c='Qual parte dessa saudade pertence realmente a essa pessoa — e qual parte fala de algo que está faltando na tua vida hoje?';
- renderResult('#sNext','',a,b,c,()=>{
-   addLog('saudade','Bateu saudade',{kind,detail,tr,sep},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
- })
+  const hist=historySignals('saudade',{kind,detail,tr,sep});
+  const grief=griefMove(`${kind} ${detail} ${sep}`);
+  const scene=`Hoje a saudade está apontando especialmente para <b>${esc(kind.toLowerCase())}</b>. Dentro disso, a parte que mais pesa é <b>${esc(detail.toLowerCase())}</b>. Ela ficou mais presente depois de <b>${esc(tr.toLowerCase())}</b>.`;
+
+  let emotion='Saudade mostra que algo teve valor, mas não diz sozinha o que deve acontecer com esse vínculo no presente.';
+  if(kind.includes('rotina')) emotion='Parte da dor pode estar na arquitetura do cotidiano que sumiu: mensagens, horários, pequenos rituais e a previsibilidade de existir um “nós”.';
+  else if(kind.includes('carinho')) emotion='O corpo também perde: toque, cheiro, cama, sexo, abraço e familiaridade. Às vezes o corpo chama tudo isso de “saudade da pessoa inteira”.';
+  else if(kind.includes('ter alguém')) emotion='A ausência parece tocar companhia, testemunho e pertencimento. O fim de um casal também reorganiza a vida social e o silêncio da casa.';
+  else if(kind.includes('escolhido')) emotion='A perda pode estar tocando lugar e valor pessoal. Ser escolhido por alguém pode ter se tornado uma forma importante de se sentir reconhecido.';
+  else if(kind.includes('fase')||kind.includes('versão')) emotion='Essa pessoa pode estar carregando uma época tua inteira. Às vezes sentimos falta do outro e também de quem éramos quando aquela história existia.';
+  else if(kind.includes('planos')) emotion='Existe luto pelo que aconteceu e pelo que não chegou a acontecer. O futuro imaginado pode deixar saudade mesmo sem ter virado realidade.';
+  else if(kind.includes('achei')) emotion='Talvez parte da dor seja pela promessa: a pessoa que você esperava encontrar com o tempo e a história que acreditava que vocês poderiam construir.';
+
+  const mirror=mirrorText(`${kind} ${detail}`);
+  const before=beforeText(`${kind} ${detail}`,hist);
+  let shadow='Quando algo foi muito importante, a memória pode selecionar apenas o que falta e diminuir temporariamente o acesso ao que também doía.';
+  if(sep.includes('não quero voltar')) shadow='Você já consegue separar falta de decisão. Isso é importante: é possível amar partes da história e ainda assim não desejar reconstruí-la.';
+  if(sep.includes('relação, mas não do jeito')) shadow='Existe uma ambivalência madura aparecendo: desejo de vínculo junto com reconhecimento de que o formato anterior não bastaria.';
+
+  const question='Qual parte dessa saudade pertence realmente a essa pessoa — e qual parte fala de algo que está faltando na tua vida hoje?';
+  deepReading('#sNext',[
+    {label:'Do que você está sentindo falta',icon:'scene',html:scene},
+    {label:'O que existe por baixo da saudade',icon:'emotion',html:emotion},
+    {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
+    {label:'O espelho dessa relação',icon:'mirror',html:mirror,note:'Uma lente de leitura, não uma verdade sobre você.'},
+    {label:'Isso começou aqui?',icon:'before',html:before},
+    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Você foi capaz de atribuir valor, criar intimidade, rotina, futuro e pertencimento.','A memória pode transformar o valor real daquilo que existiu em argumento automático para trazer de volta o vínculo inteiro. '+shadow)},
+    {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
+  ],question,()=>{
+    addLog('saudade','Bateu saudade',{kind,detail,tr,sep},{summary:stripTags(scene+' '+emotion),question});show('journey')
+  });
 }
 
 // 3) RECEBI MENSAGEM
@@ -381,16 +518,35 @@ function rWant(text,body,story,ev){
  bind('rWant',want=>rResult2(text,body,story,ev,want))
 }
 function rResult2(text,body,story,ev,want){
- let a=`A mensagem chegou e teu corpo respondeu com <b>${esc(body.toLowerCase())}</b>. Logo depois, tua cabeça contou a história <b>${esc(story.toLowerCase())}</b>. Quando você olha só para o texto, avalia que <b>${esc(ev.toLowerCase())}</b>.`;
- let b='O ponto mais delicado talvez esteja no espaço entre o que foi escrito e o que você deseja que aquilo signifique.';
- if(ev==='Dizem claramente') b='Existe conteúdo concreto na mensagem. Mesmo assim, responder ao que foi dito e decidir o futuro da relação continuam sendo duas decisões diferentes.';
- else if(ev.includes('ambíguo')) b='Há alguma informação real, mas não informação suficiente. Ambiguidade costuma ser um lugar onde esperança e medo trabalham horas extras.';
- else if(ev.includes('completei')) b='O impacto parece estar vindo bastante do que a mensagem ativou em você. Isso não torna tua leitura absurda; só significa que ela ainda não é evidência sobre a intenção da outra pessoa.';
- if(want.includes('reabrir')) b+=' Como você já percebe vontade de reabrir a relação, vale não transformar uma única mensagem em prova de mudança estrutural.';
- let c='Qual seria a menor resposta possível que respondesse ao que foi realmente dito — sem responder ainda ao futuro inteiro da relação?';
- renderResult('#rNext',`<div class="card"><div class="eyebrow">A mensagem</div><p class="quote">“${esc(text)}”</p></div>`,a,b,c,()=>{
-   addLog('recebi','Recebeu mensagem',{text,body,story,ev,want},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
- })
+  const hist=historySignals('recebi',{body,story,ev,want});
+  const grief=griefMove(`${story} ${want} ${body}`);
+  const scene=`A mensagem foi: <span class="quote">“${esc(text)}”</span><br><br>Antes de qualquer análise, teu corpo respondeu com <b>${esc(body.toLowerCase())}</b>. A primeira história que tua cabeça contou foi <b>${esc(story.toLowerCase())}</b>. Quando você voltou apenas para as palavras, concluiu: <b>${esc(ev.toLowerCase())}</b>.`;
+
+  let emotion='O ponto central aqui pode estar no intervalo entre o fato que chegou e o significado que teu desejo ou teu medo colocaram nele.';
+  if(ev==='Dizem claramente') emotion='Há informação concreta na mensagem. Ainda assim, “o que esta mensagem diz” e “o que vai acontecer com a relação” continuam sendo perguntas diferentes.';
+  else if(ev.includes('ambíguo')) emotion='A mensagem contém algum sinal, mas não fecha a intenção. Ambiguidade é justamente o lugar onde esperança e medo costumam trabalhar mais.';
+  else if(ev.includes('completei')) emotion='Boa parte do impacto parece vir do que foi ativado em você. Isso não invalida tua leitura — apenas significa que ela ainda não é evidência sobre a intenção do outro.';
+
+  let mirror=mirrorText(`${story} ${want}`);
+  if(want.includes('pedido de desculpa')||want.includes('reconheça')) mirror='Talvez exista aqui uma necessidade de reparação: não necessariamente reatar, mas ter a própria experiência reconhecida por quem participou dela.';
+  if(want.includes('proteger')) mirror='Talvez a relação esteja mostrando uma capacidade nova ou necessária: conseguir manter vínculo com a própria proteção mesmo quando o outro reaparece.';
+
+  const before=beforeText(`${story} ${want}`,hist);
+  const question=want.includes('reabrir')
+    ?'Se essa mensagem fosse apenas uma abertura de conversa — e não uma prova de mudança — o que você precisaria observar antes de entregar esperança de novo?'
+    :'Qual seria a menor resposta possível que respondesse ao que foi realmente dito — sem responder ainda ao futuro inteiro da relação?';
+
+  deepReading('#rNext',[
+    {label:'Fato, corpo e história',icon:'scene',html:scene},
+    {label:'Onde a interpretação entra',icon:'emotion',html:emotion},
+    {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
+    {label:'O espelho dessa relação',icon:'mirror',html:mirror},
+    {label:'Isso pode tocar algo antigo?',icon:'before',html:before},
+    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Você consegue atribuir sentido, ler nuances e se importar com o vínculo.','Quando há muita expectativa ou medo, a mesma sensibilidade pode preencher lacunas e transformar poucos dados em uma história inteira.')},
+    {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
+  ],question,()=>{
+    addLog('recebi','Recebeu mensagem',{text,body,story,ev,want},{summary:stripTags(scene+' '+emotion),question});show('journey')
+  });
 }
 
 // 4) LEMBREI DE UMA CENA
@@ -450,17 +606,33 @@ function lNow(kind,scene,inside){
  bind('lNow',nowv=>lResult2(kind,scene,inside,nowv))
 }
 function lResult2(kind,scene,inside,nowv){
- const similar=state.logs.filter(x=>x.kind==='lembranca'&&x.data?.inside===inside).length;
- let a=`Voltou <b>${esc(kind.toLowerCase())}</b>. O que ficou preso naquela cena foi <b>${esc(inside.toLowerCase())}</b>. Hoje, quando ela reaparece, você percebe que ela tende a <b>${esc(nowv.toLowerCase())}</b>.`;
- let b='Uma cena não é a relação inteira. Mas algumas cenas viram símbolos e passam a carregar muito mais peso do que os minutos em que realmente aconteceram.';
- if(kind.includes('muito boa')||kind.includes('banal')||kind.includes('carinho')) b='Uma lembrança boa pode ser verdadeira sem ser prova de que a relação inteira era boa ou de que deveria continuar. O difícil é deixar uma coisa bonita continuar bonita sem obrigá-la a decidir o presente.';
- else if(isAny(kind,['briga','mentira','rejeitado','sozinho'])) b='Quando uma cena dolorosa volta, às vezes a cabeça está tentando finalmente organizar aquilo que na hora só conseguiu sobreviver. Entender depois não muda o fato, mas pode mudar o lugar que ele ocupa.';
- else if(kind.includes('despedida')) b='Despedidas costumam concentrar muita coisa: o que foi dito, o que faltou, o último toque, o que poderia ter sido diferente. Às vezes a memória volta procurando um final mais completo do que a realidade conseguiu dar.';
- if(similar>=1) b+=` E existe outro registro em que apareceu algo parecido com “${esc(inside.toLowerCase())}”. Ainda não é um padrão fechado, mas já é uma repetição real na tua Jornada.`;
- let c='Se essa cena deixasse de ser uma sentença sobre você ou sobre a relação, o que ela ainda teria para te contar?';
- renderResult('#lNext',`<div class="card"><div class="eyebrow">A cena que voltou</div><p class="quote">${esc(scene)}</p></div>`,a,b,c,()=>{
-   addLog('lembranca','Uma cena voltou',{kind,scene,inside,now:nowv},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
- })
+  const hist=historySignals('lembranca',{kind,inside,now:nowv});
+  const grief=griefMove(`${kind} ${inside} ${nowv}`);
+  const sceneRead=`Voltou <b>${esc(kind.toLowerCase())}</b>. O que ficou mais preso naquela cena foi <b>${esc(inside.toLowerCase())}</b>. Hoje, quando ela reaparece, você percebe que tende a <b>${esc(nowv.toLowerCase())}</b>.<br><br><span class="quote">${esc(scene)}</span>`;
+
+  let emotion='Algumas memórias voltam porque ainda carregam pergunta, desejo, culpa, beleza ou ameaça. A lembrança é verdadeira; a interpretação que ela ganha hoje pode mudar.';
+  if(kind.includes('muito boa')||kind.includes('banal')||kind.includes('carinho')) emotion='Uma memória boa pode continuar boa sem virar prova de que a relação inteira era boa, nem de que precisa voltar. O cérebro tende a ampliar aquilo que está faltando no presente.';
+  else if(isAny(kind,['briga','mentira','rejeitado','sozinho'])) emotion='Uma cena dolorosa pode voltar como tentativa de organizar algo que, na hora, só foi vivido. Entender hoje pode alterar o lugar da memória sem alterar o fato.';
+  else if(kind.includes('despedida')) emotion='Despedidas concentram o que foi dito e tudo que ficou por dizer. Às vezes a mente revisita o último capítulo procurando um fechamento mais completo do que a realidade ofereceu.';
+
+  let mirror=mirrorText(`${inside} ${nowv}`);
+  if(inside.includes('ter ido embora')) mirror='Talvez a cena esteja espelhando um conflito entre vínculo e limite: quanto tempo você permanece tentando salvar algo antes de conseguir se proteger?';
+  if(inside.includes('entendesse')) mirror='Talvez uma necessidade muito forte de ser compreendido tenha ficado associada a essa relação. Quando o outro não reconhece nossa experiência, às vezes continuamos a conversa internamente por muito tempo.';
+
+  const before=beforeText(`${inside} ${nowv}`,hist);
+  const question='Se essa cena deixasse de ser uma sentença sobre você ou sobre a relação, o que ela ainda teria para te contar?';
+
+  deepReading('#lNext',[
+    {label:'A memória que voltou',icon:'scene',html:sceneRead},
+    {label:'O que a memória pode estar tentando organizar',icon:'emotion',html:emotion},
+    {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
+    {label:'O espelho dessa relação',icon:'mirror',html:mirror},
+    {label:'Essa sensação já tinha história?',icon:'before',html:before},
+    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Você consegue guardar significado, detalhes, afeto e aprender com o que viveu.','Quando uma cena vira símbolo da relação inteira ou do teu próprio valor, ela pode ganhar um poder maior do que os minutos que realmente durou.')},
+    {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
+  ],question,()=>{
+    addLog('lembranca','Uma cena voltou',{kind,scene,inside,now:nowv},{summary:stripTags(sceneRead+' '+emotion),question});show('journey')
+  });
 }
 
 // 5) SÓ ESTOU MAL
@@ -527,16 +699,31 @@ function bNeed(feel,layer,before){
  bind('bNeed',need=>bResult2(feel,layer,before,need))
 }
 function bResult2(feel,layer,before,need){
- let a=`Agora está mais alto <b>${esc(feel.toLowerCase())}</b>. Por baixo disso aparece <b>${esc(layer.toLowerCase())}</b>. E você percebe que piorou depois de <b>${esc(before.toLowerCase())}</b>.`;
- let b=`Hoje talvez não seja um dia de entender a relação. Talvez seja um dia de respeitar que teu sistema está pedindo <b>${esc(need.toLowerCase())}</b> antes de qualquer conclusão.`;
- if(before.includes('cansado')) b+=' Cansaço não inventa a dor, mas costuma aumentar o volume dela.';
- if(before.includes('álcool')) b+=' Como você está alterado(a), vale adiar decisões de contato, bloqueio, reconciliação ou confronto até estar sóbrio(a).';
- if(feel.includes('culpando')) b+=' Culpa costuma transformar uma relação de duas pessoas numa história de um único responsável. Talvez exista responsabilidade tua sem que toda a história seja tua.';
- if(feel.includes('rejeitado')) b+=' Ser deixado, trocado ou não escolhido pode tocar valor pessoal muito rápido. O fim do vínculo e o teu valor não são a mesma coisa.';
- let c='Qual é a menor coisa concreta que atende essa necessidade sem exigir que você fique bem agora?';
- renderResult('#bNext','',a,b,c,()=>{
-   addLog('mal','Hoje apertou',{feel,layer,before,need},{summary:a.replace(/<[^>]+>/g,''),question:c});show('home')
- },'Guardar e voltar para Hoje')
+  const hist=historySignals('mal',{feel,layer,before,need});
+  const grief=griefMove(`${feel} ${layer}`);
+  const scene=`Agora está mais alto <b>${esc(feel.toLowerCase())}</b>. Por baixo disso aparece <b>${esc(layer.toLowerCase())}</b>. Você percebe que piorou depois de <b>${esc(before.toLowerCase())}</b>.`;
+
+  let emotion=`Antes de tentar entender a relação, teu sistema está pedindo <b>${esc(need.toLowerCase())}</b>. Quando a intensidade sobe, interpretação profunda pode virar mais uma cobrança.`;
+  if(before.includes('cansado')) emotion+=' Cansaço não inventa a dor, mas costuma baixar nossa capacidade de regulá-la.';
+  if(before.includes('álcool')) emotion+=' Como você está alterado(a), decisões de contato, confronto, reconciliação ou ruptura merecem esperar até você estar sóbrio(a).';
+  if(feel.includes('culpando')) emotion+=' A culpa pode reduzir uma relação construída por duas pessoas a uma história em que você é o único responsável.';
+  if(feel.includes('rejeitado')) emotion+=' Rejeição toca valor pessoal muito rápido. O fato de alguém ter saído do vínculo não é uma medida objetiva do teu valor.';
+
+  const mirror=mirrorText(`${feel} ${layer}`);
+  const beforeLayer=beforeText(`${feel} ${layer}`,hist);
+  const question='Qual é a menor coisa concreta que cuida de você nas próximas duas horas sem exigir que você entenda, decida ou resolva a relação agora?';
+
+  deepReading('#bNext',[
+    {label:'Como você está agora',icon:'scene',html:scene},
+    {label:'Primeiro: menos análise, mais sustentação',icon:'emotion',html:emotion,tone:'soft'},
+    {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
+    {label:'O que esse estado pode estar tocando',icon:'mirror',html:mirror,note:'Se essa leitura aumentar tua sobrecarga, ignora por enquanto. Hoje o corpo vem primeiro.'},
+    {label:'Isso pode ter uma história maior?',icon:'before',html:beforeLayer},
+    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Sentir intensamente também fala da tua capacidade de vínculo e importância.','Quando a intensidade toma o corpo inteiro, a necessidade de resolver imediatamente pode fazer você confundir urgência emocional com urgência de decisão.')},
+    {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
+  ],question,()=>{
+    addLog('mal','Hoje apertou',{feel,layer,before,need},{summary:stripTags(scene+' '+emotion),question});show('home')
+  },'Guardar e voltar para Hoje');
 }
 
 // 6) HOJE ESTOU MELHOR
@@ -608,17 +795,36 @@ function gFear(what,scene,help){
  bind('gFear',fear=>gResult2(what,scene,help,fear))
 }
 function gResult2(what,scene,help,fear){
- let a=`Hoje voltou <b>${esc(what.toLowerCase())}</b>. Você percebeu isso quando <b>${esc(scene.toLowerCase())}</b>, e algo que pode ter ajudado foi <b>${esc(help.toLowerCase())}</b>.`;
- let b='Isso não precisa ser transformado em prova de que você “superou”. É só evidência de que tua vida consegue ocupar espaço novamente.';
- if(fear.includes('piorar')) b+=' Melhorar e piorar de novo não apaga esse momento. Recuperações humanas raramente andam em linha reta.';
- else if(fear.includes('culpa')) b+=' Sentir algo bom não diminui o que essa relação significou. Seguir vivendo não é trair a própria história.';
- else if(fear.includes('esquecer')) b+=' Memória e sofrimento não são a mesma coisa. Você pode continuar lembrando sem precisar continuar doendo do mesmo jeito.';
- else if(fear.includes('testar')) b+=' Talvez valha observar a vontade de testar a própria recuperação através do ex. Você não precisa se ferir de novo para confirmar que melhorou.';
- else if(fear.includes('contar')) b+=' Pode haver um pedaço antigo de cumplicidade ainda ativo: quando algo acontece contigo, uma parte tua ainda procura aquela testemunha.';
- let c='O que existiu hoje que você gostaria de deixar ter mais espaço — sem transformar isso em meta, cobrança ou “prova de superação”?';
- renderResult('#gNext','',a,b,c,()=>{
-   addLog('melhor','Hoje a vida abriu espaço',{what,scene,help,fear},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
- })
+  const hist=historySignals('melhor',{what,scene,help,fear});
+  const grief=['Reorganização','Não significa que o luto terminou. Significa que, por alguns momentos, a relação deixou de ocupar o campo inteiro e outras partes da vida conseguiram voltar.'];
+  const sceneRead=`Hoje voltou <b>${esc(what.toLowerCase())}</b>. Você percebeu isso quando <b>${esc(scene.toLowerCase())}</b>. Algo que pode ter ajudado foi <b>${esc(help.toLowerCase())}</b>.`;
+
+  let emotion='Isso é mais do que “um dia bom”: é informação sobre quais condições permitem que você volte a existir para além da relação.';
+  if(fear.includes('piorar')) emotion+=' O medo de piorar pode fazer você desconfiar da própria melhora. Oscilar não apaga o que existiu hoje.';
+  else if(fear.includes('culpa')) emotion+=' Às vezes seguir vivendo parece uma espécie de deslealdade à história. Mas preservar a memória não exige preservar o mesmo nível de sofrimento.';
+  else if(fear.includes('esquecer')) emotion+=' Lembrar e sofrer não são sinônimos. Uma relação pode continuar importante mesmo quando deixa de organizar teu presente.';
+  else if(fear.includes('testar')) emotion+=' Pode aparecer vontade de conferir a própria recuperação através do ex. Isso corre o risco de transformar melhora em prova a ser testada no lugar que mais te ativa.';
+  else if(fear.includes('contar')) emotion+=' A cumplicidade antiga ainda pode estar viva como hábito: quando algo acontece contigo, uma parte tua procura a antiga testemunha.';
+
+  let mirror='Talvez a relação esteja começando a mostrar outra coisa além da falta: quais partes tuas ficaram menores durante ou depois do vínculo e agora conseguem reaparecer.';
+  if(what.includes('sozinho(a)')) mirror='Conseguir ficar sozinho sem sentir abandono o tempo inteiro pode ser um movimento importante: solidão e solitude começam a deixar de ser a mesma coisa.';
+  if(what.includes('planos')) mirror='Planejar algo que não depende do casal é uma forma de identidade voltar a ocupar o futuro.';
+  if(what.includes('reconheci')) mirror='Aqui aparece um tema central: reconstrução não é inventar uma pessoa nova; muitas vezes é voltar a reconhecer partes de si que ficaram encobertas.';
+
+  const before=beforeText(`${what} ${fear}`,hist);
+  const question='O que existiu hoje que merece mais espaço na tua vida — não como técnica para esquecer alguém, mas porque isso também é você?';
+
+  deepReading('#gNext',[
+    {label:'O que voltou a existir',icon:'scene',html:sceneRead},
+    {label:'O que esse dia ensina sobre você',icon:'emotion',html:emotion,tone:'good'},
+    {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
+    {label:'O espelho agora muda de direção',icon:'mirror',html:mirror},
+    {label:'O que talvez seja teu há mais tempo',icon:'before',html:before},
+    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('A relação revelou tua capacidade de vínculo; este momento revela tua capacidade de continuar existindo fora dele.','A sombra aqui pode ser transformar recuperação em desempenho: medir cada dia, provar que “superou”, ou sentir culpa quando a dor volta.')},
+    {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
+  ],question,()=>{
+    addLog('melhor','Hoje a vida abriu espaço',{what,scene,help,fear},{summary:stripTags(sceneRead+' '+emotion),question});show('journey')
+  });
 }
 
 // --- SOS ---

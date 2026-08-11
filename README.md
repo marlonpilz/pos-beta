@@ -1,12 +1,16 @@
-# PÓS Beta V7.1 — Seis Janelas FUNCIONAL
+# PÓS Beta V8 — Leitura em Camadas
 
-Correção importante:
-- As seis janelas da tela inicial agora abrem corretamente seus respectivos fluxos.
-- Bateu saudade
-- Quero mandar mensagem
-- Recebi mensagem
-- Lembrei de uma cena
-- Só estou mal
-- Hoje estou melhor
+As seis janelas mantêm os fluxos humanos da V7.1 e recebem devolutivas profundas em camadas:
 
-Substitua os arquivos da raiz do repositório GitHub/Vercel pelos arquivos deste pacote.
+1. Cena concreta
+2. Dinâmica emocional
+3. Movimento do luto (não linear)
+4. Espelho relacional / leitura simbólica
+5. Possível história anterior, sem presumir origem
+6. Luz e sombra
+7. Memória longitudinal / repetição
+8. Pergunta para levar
+
+Observação: hipóteses ficam mais fortes somente conforme a Jornada acumula recorrências reais.
+
+Deploy: substitua os arquivos da raiz do repositório conectado ao Vercel pelo conteúdo deste pacote.
