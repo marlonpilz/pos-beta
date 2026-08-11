@@ -1,277 +1,306 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PÓS — Beta V5</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0f1115" />
+<title>PÓS — V6</title>
 <style>
 :root{
- --bg:#0b0d10;--panel:#111419;--card:#171b21;--card2:#1d232b;--text:#f7f8fa;--muted:#9aa3af;
- --border:#29303a;--soft:#202630;--accent:#f5f7fa;--accentText:#0d0f12;--danger:#2b1b1d;--dangerBorder:#5a3036;
- --ok:#18231e;--okBorder:#315844;--shadow:0 14px 38px rgba(0,0,0,.22)
+ --bg:#0d0f13;--panel:#13161b;--card:#181c22;--card2:#20252c;--text:#f5f4f1;--muted:#9ea4ad;
+ --line:#2a3039;--soft:#22272f;--white:#f7f5ef;--ink:#111317;--warm:#d7c6ae;--danger:#2a191d;--dangerLine:#66353d;
+ --good:#17231e;--goodLine:#355845;--shadow:0 18px 44px rgba(0,0,0,.24)
 }
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#0b0d10 0%,#0d1014 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-button,input,textarea,select{font:inherit}.app{max-width:560px;margin:0 auto;min-height:100vh;padding:18px 16px 112px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.brand{font-size:26px;font-weight:850;letter-spacing:.16em}.beta{font-size:10px;color:var(--muted);padding:5px 9px;border:1px solid var(--border);border-radius:999px;text-transform:uppercase;letter-spacing:.08em}
-h1{font-size:29px;line-height:1.12;margin:10px 0 8px;letter-spacing:-.02em}h2{font-size:20px;line-height:1.25;margin:0 0 8px}h3{font-size:15px;margin:0 0 6px}p{line-height:1.55;margin:8px 0 12px}.muted{color:var(--muted);font-size:14px}.tiny{font-size:12px;color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}.soft{background:var(--soft)}.danger{background:var(--danger);border-color:var(--dangerBorder)}.ok{background:var(--ok);border-color:var(--okBorder)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.choice,.action,.btn,.chipBtn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:16px;padding:14px;cursor:pointer;transition:.15s}.choice{text-align:left;min-height:94px}.choice strong,.action strong{display:block;margin-bottom:5px}.choice small,.action small{display:block;color:var(--muted);line-height:1.35}.choice:hover,.choice.active,.action:hover,.radioOption:hover{background:var(--soft);border-color:#68717d}.btn{width:100%;text-align:center;font-weight:750;background:var(--accent);color:var(--accentText);margin-top:10px}.btn.secondary{background:var(--card);color:var(--text)}.btn.ghost{background:transparent;color:var(--muted)}.btn.dangerBtn{background:#331c20;color:#ffd8dc;border-color:#63333a}
-textarea,input,select{width:100%;background:#0e1115;color:var(--text);border:1px solid var(--border);border-radius:14px;padding:12px;outline:none}textarea:focus,input:focus,select:focus{border-color:#656f7d}textarea{min-height:96px;resize:vertical}.hidden{display:none!important}
-.pillrow{display:flex;gap:8px;flex-wrap:wrap}.pill{border:1px solid var(--border);border-radius:999px;padding:7px 10px;font-size:12px;color:#d5dae1;background:var(--panel)}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:11px}.stat b{font-size:18px;display:block}.stat span{font-size:11px;color:var(--muted)}
-.mem div,.timelineItem{padding:10px 0;border-bottom:1px solid var(--border)}.mem div:last-child,.timelineItem:last-child{border:0}.timelineItem b{font-size:12px;color:#dfe3e8}.timelineItem .kind{display:inline-block;margin-left:5px;color:var(--muted);font-size:11px}
-.callout{border-left:3px solid #828995;background:var(--soft);padding:13px 14px;border-radius:0 15px 15px 0;margin:12px 0}.insight{display:grid;gap:10px}.insightBlock{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}.insightBlock h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.insightBlock p{margin:4px 0 0}
-.bar{height:9px;border-radius:999px;background:#252b33;overflow:hidden}.bar>span{display:block;height:100%;background:#d5d9df;border-radius:999px}.progress{height:5px;background:#20252c;border-radius:999px;overflow:hidden;margin:8px 0 18px}.progress>span{display:block;height:100%;background:#e4e7eb}
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(11,13,16,.94);backdrop-filter:blur(14px);border-top:1px solid var(--border);z-index:20;padding-bottom:env(safe-area-inset-bottom)}.navin{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 6px}.nav button{background:none;border:0;color:var(--muted);padding:7px 2px;font-size:10.5px;cursor:pointer}.nav button.active{color:#fff;font-weight:750}.icon{font-size:19px;display:block;margin-bottom:2px}.sectionHead{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-top:24px}.tag{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:5px 8px;font-size:11px;color:var(--muted)}.divider{height:1px;background:var(--border);margin:15px 0}
-.radioGrid{display:grid;gap:8px}.radioOption{border:1px solid var(--border);border-radius:14px;padding:12px;cursor:pointer;background:#14181e;line-height:1.4}.radioOption.selected{background:var(--soft);border-color:#737c88}.radioOption small{display:block;color:var(--muted);margin-top:3px}.questionMeta{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:7px}.micro{font-size:11px;color:var(--muted)}
-.empty{padding:18px 0;color:var(--muted);font-size:14px}.notice{border:1px dashed #3b444f;border-radius:15px;padding:12px;color:var(--muted);font-size:13px}.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.kicker{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}.quote{font-size:18px;line-height:1.42;letter-spacing:-.01em}.screen{animation:fade .18s ease}@keyframes fade{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:none}}
-@media(max-width:420px){.grid2{grid-template-columns:1fr}.choice{min-height:auto}.grid3{grid-template-columns:1fr 1fr}.grid3 .stat:last-child{grid-column:1/-1}.nav button{font-size:9.5px}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top,#151920 0,#0d0f13 36%,#0b0d10 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,textarea,select{font:inherit}.app{max-width:590px;margin:auto;min-height:100vh;padding:18px 16px 116px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}.brand{font-weight:900;letter-spacing:.19em;font-size:25px}.version{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:6px 9px;border-radius:999px}
+h1{font-size:31px;line-height:1.08;letter-spacing:-.035em;margin:8px 0 10px}h2{font-size:21px;letter-spacing:-.015em;margin:0 0 8px}h3{font-size:15px;margin:0 0 6px}p{line-height:1.57;margin:8px 0 12px}.muted{color:var(--muted)}.tiny{font-size:12px;color:var(--muted)}.eyebrow{font-size:11px;color:var(--warm);text-transform:uppercase;letter-spacing:.1em;font-weight:750}.human{font-size:17px;line-height:1.48;letter-spacing:-.01em}
+.card{background:linear-gradient(180deg,var(--card),#161a20);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}.card.flat{box-shadow:none}.card.good{background:var(--good);border-color:var(--goodLine)}.card.danger{background:var(--danger);border-color:var(--dangerLine)}.soft{background:var(--soft)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{width:100%;min-height:110px;text-align:left;border:1px solid var(--line);background:linear-gradient(180deg,#191d23,#15191f);color:var(--text);border-radius:18px;padding:15px;cursor:pointer}.choice:hover,.choice.active{background:#232832;border-color:#626b77}.choice strong{display:block;font-size:15px;margin-bottom:6px}.choice small{display:block;line-height:1.35;color:var(--muted)}
+.btn{width:100%;border:1px solid var(--line);border-radius:16px;padding:13px 14px;cursor:pointer;font-weight:760;background:var(--white);color:var(--ink);margin-top:9px}.btn.secondary{background:var(--card);color:var(--text)}.btn.ghost{background:transparent;color:var(--muted)}.btn.red{background:#371e23;color:#ffd9df;border-color:#6c3942}.btn.inline{width:auto;margin:0;padding:9px 11px;font-size:12px}
+.stack{display:grid;gap:8px}.option{border:1px solid var(--line);border-radius:15px;background:#15191f;color:var(--text);padding:13px;text-align:left;cursor:pointer;line-height:1.38}.option:hover,.option.selected{background:#242a32;border-color:#707987}.option small{display:block;color:var(--muted);margin-top:4px}.question{margin:12px 0}.qmeta{font-size:11px;color:var(--muted);margin-bottom:7px}.divider{height:1px;background:var(--line);margin:15px 0}
+textarea,input,select{width:100%;border:1px solid var(--line);border-radius:15px;background:#0f1216;color:var(--text);padding:12px;outline:none}textarea{min-height:105px;resize:vertical}textarea:focus,input:focus,select:focus{border-color:#6f7884}
+.hidden{display:none!important}.fade{animation:fade .18s ease}@keyframes fade{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:none}}
+.nav{position:fixed;left:0;right:0;bottom:0;border-top:1px solid var(--line);background:rgba(11,13,16,.94);backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom);z-index:30}.navin{max-width:590px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 4px}.nav button{border:0;background:none;color:var(--muted);padding:7px 2px;font-size:10px;cursor:pointer}.nav button.active{color:white;font-weight:800}.nav .ico{font-size:19px;display:block;margin-bottom:2px}
+.insight{display:grid;gap:10px;margin:12px 0}.ins{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:14px}.ins .label{font-size:11px;color:var(--warm);font-weight:800;letter-spacing:.08em;text-transform:uppercase}.ins p{margin:6px 0 0}.quote{font-size:19px;line-height:1.45;letter-spacing:-.02em}.tag{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:5px 8px;font-size:11px;color:var(--muted);margin:3px 3px 0 0}.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{border:1px solid var(--line);border-radius:999px;padding:7px 9px;background:#15191f;color:#dfe2e6;font-size:12px;cursor:pointer}.chip.selected{background:#2a3038;border-color:#767f89}
+.timeline{border-left:1px solid var(--line);margin-left:8px;padding-left:17px}.eventItem{position:relative;padding:4px 0 19px}.eventItem:before{content:"";position:absolute;left:-22px;top:9px;width:9px;height:9px;background:#d7c6ae;border:3px solid #0d0f13;border-radius:50%}.eventItem .date{font-size:11px;color:var(--muted)}.eventItem b{font-size:14px}.eventItem p{font-size:13px;color:#c9cdd3;margin:5px 0}.empty{color:var(--muted);padding:18px 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{border:1px solid var(--line);background:var(--card);border-radius:15px;padding:11px}.stat b{display:block;font-size:17px}.stat span{font-size:10px;color:var(--muted)}
+.note{border-left:3px solid #8d8173;background:#20242b;padding:12px 13px;border-radius:0 14px 14px 0;color:#d8dbe0}.sosgrid{display:grid;gap:9px}.sosbtn{border:1px solid var(--dangerLine);background:#25181c;color:#fff;border-radius:17px;padding:14px;text-align:left;cursor:pointer}.sosbtn strong{display:block}.sosbtn small{display:block;color:#c8afb4;margin-top:4px}.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:24px 0 10px}.linkbtn{background:none;border:0;color:#d9d2c8;text-decoration:underline;cursor:pointer;padding:0}.meter{height:8px;background:#252a31;border-radius:999px;overflow:hidden}.meter span{height:100%;display:block;background:#d9cbb8;border-radius:999px}.hr{height:1px;background:var(--line);margin:10px 0}
+@media(max-width:440px){.grid2{grid-template-columns:1fr}.choice{min-height:auto}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.nav button{font-size:9px}}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="top"><div class="brand">PÓS</div><div class="beta">Beta V5 · protótipo</div></div>
+ <div class="top"><div class="brand">PÓS</div><div class="version">V6 · laboratório</div></div>
 
-  <section id="onboarding" class="hidden">
-    <div class="kicker">Um lugar para depois do fim</div>
-    <h1>Não precisa contar a história inteira.</h1>
-    <p class="muted">Só algumas informações para eu não responder como se todo término fosse igual.</p>
-    <div class="card">
-      <label class="tiny">Há quanto tempo terminou?</label>
-      <select id="breakupTime"><option>Menos de 7 dias</option><option>1 a 4 semanas</option><option>1 a 3 meses</option><option>3 a 6 meses</option><option>Mais de 6 meses</option></select>
-      <div class="divider"></div>
-      <label class="tiny">Quem encerrou?</label>
-      <div class="radioGrid" id="whoEnded"><div class="radioOption" data-value="Eu encerrei">Eu encerrei</div><div class="radioOption" data-value="A outra pessoa encerrou">A outra pessoa encerrou</div><div class="radioOption" data-value="Foi confuso / mútuo">Foi confuso / mútuo</div><div class="radioOption" data-value="Ainda nem sei se terminou de verdade">Ainda nem sei se terminou de verdade</div></div>
-      <div class="divider"></div>
-      <label class="tiny">Como está o contato hoje?</label>
-      <div class="radioGrid" id="contactStatus"><div class="radioOption" data-value="Falamos quase todos os dias">Falamos quase todos os dias</div><div class="radioOption" data-value="Falamos às vezes">Falamos às vezes</div><div class="radioOption" data-value="Estamos sem contato">Estamos sem contato</div><div class="radioOption" data-value="Bloqueio / desbloqueio / contato confuso">Bloqueio / desbloqueio / contato confuso</div></div>
-      <button id="finishOnboarding" class="btn">Entrar no PÓS</button>
-      <p class="micro">Nesta beta, tudo fica apenas neste navegador.</p>
-    </div>
-  </section>
+ <section id="onboarding" class="hidden fade">
+   <div class="eyebrow">Antes de começar</div>
+   <h1>Não vou te pedir a história inteira.</h1>
+   <p class="human muted">Só o suficiente para não falar contigo como se todo fim fosse igual.</p>
+   <div class="card">
+    <label class="tiny">O que vocês eram?</label>
+    <select id="relType"><option>Namoro</option><option>Casamento / união</option><option>Ficávamos / relação sem nome claro</option><option>Relação à distância</option><option>Idas e vindas</option><option>Outra coisa</option></select>
+    <div class="divider"></div>
+    <label class="tiny">Há quanto tempo isso acabou — ou começou a acabar?</label>
+    <select id="breakTime"><option>Hoje / últimos dias</option><option>1 a 4 semanas</option><option>1 a 3 meses</option><option>3 a 6 meses</option><option>Mais de 6 meses</option><option>Ainda não sei se acabou de verdade</option></select>
+    <div class="divider"></div>
+    <label class="tiny">Como está o contato agora?</label>
+    <div class="stack" id="contactPick"></div>
+    <div class="divider"></div>
+    <label class="tiny">Como você prefere que eu fale contigo?</label>
+    <div class="stack" id="tonePick"></div>
+    <button class="btn" id="enterBtn">Entrar</button>
+    <p class="tiny">Nesta versão, seus registros ficam só neste navegador.</p>
+   </div>
+ </section>
 
-  <section id="home" class="screen">
-    <div class="kicker">Hoje</div>
-    <h1 id="openingPrompt">O que te trouxe aqui?</h1>
-    <p id="openingSub" class="muted">Começa pelo que aconteceu agora. A história inteira pode esperar.</p>
-    <div class="grid2">
-      <button class="choice event" data-type="saudade"><strong>💭 Bateu saudade</strong><small>Tem alguma coisa da relação me puxando de volta.</small></button>
-      <button class="choice event" data-type="mandar"><strong>📱 Quero mandar mensagem</strong><small>Estou pensando em procurar essa pessoa.</small></button>
-      <button class="choice event" data-type="recebi"><strong>💬 Recebi mensagem</strong><small>Algo chegou e mexeu comigo.</small></button>
-      <button class="choice event" data-type="lembranca"><strong>🧩 Lembrei de uma cena</strong><small>Uma memória voltou e ficou aqui.</small></button>
-      <button class="choice event" data-type="mal"><strong>🌧️ Só estou mal</strong><small>Nem consigo dizer exatamente o porquê.</small></button>
-      <button class="choice event" data-type="melhor"><strong>🌤️ Hoje estou melhor</strong><small>Quero registrar quando a vida abre espaço também.</small></button>
-    </div>
-    <div class="sectionHead"><div><h2>Seu momento</h2><div class="muted">Construído só com o que você registrou.</div></div><span class="tag">memória local</span></div>
-    <div class="grid3"><div class="stat"><b id="homeDays">—</b><span>tempo desde o fim</span></div><div class="stat"><b id="homeLogs">0</b><span>registros</span></div><div class="stat"><b id="homeFocus">Agora</b><span>foco atual</span></div></div>
-    <div class="card"><h3>Uma coisa para levar hoje</h3><p id="dailyPrompt">Não precisa descobrir o padrão. Primeiro, percebe a cena.</p></div>
-  </section>
+ <section id="home" class="fade">
+  <div class="eyebrow">Agora</div>
+  <h1 id="openPrompt">O que aconteceu?</h1>
+  <p class="human muted" id="openSub">Pode começar pequeno. Uma cena já basta.</p>
+  <div class="grid2" id="homeGrid"></div>
+  <div class="sectionHead"><div><h2>O que já ficou por aqui</h2><div class="muted tiny">Sem transformar tudo em “padrão”. Primeiro, a vida como ela aconteceu.</div></div></div>
+  <div class="stats"><div class="stat"><b id="statLogs">0</b><span>momentos guardados</span></div><div class="stat"><b id="statDays">—</b><span>tempo do fim</span></div><div class="stat"><b id="statTone">Humano</b><span>jeito de conversar</span></div></div>
+  <div class="card flat"><div class="eyebrow">Para hoje</div><p class="quote" id="homeLine">Você não precisa entender a relação inteira para entender o que aconteceu agora.</p></div>
+ </section>
 
-  <section id="flow" class="screen hidden"><button id="backFlow" class="btn secondary">← Voltar para Hoje</button><div id="flowContent"></div></section>
+ <section id="flow" class="hidden fade"><button class="btn secondary" id="backHome">← Voltar</button><div id="flowBox"></div></section>
 
-  <section id="sos" class="screen hidden">
-    <div class="kicker">SOS</div><h1>Primeiro, reduzimos o tamanho do momento.</h1>
-    <p class="muted">Aqui não é para entender a relação inteira. É para ganhar clareza suficiente para atravessar o agora sem agir no automático.</p>
-    <div class="card"><h2>O que está mais urgente?</h2>
-      <div class="radioGrid">
-        <div class="radioOption sosAction" data-sos="mandar"><b>Quero mandar mensagem agora</b><small>Separar impulso, expectativa e consequência.</small></div>
-        <div class="radioOption sosAction" data-sos="stalk"><b>Quero olhar as redes</b><small>Entender o que você espera encontrar.</small></div>
-        <div class="radioOption sosAction" data-sos="voltar"><b>Quero pedir para voltar</b><small>Separar dor de mudança concreta.</small></div>
-        <div class="radioOption sosAction" data-sos="desabar"><b>Estou desabando</b><small>Voltar ao presente e verificar segurança.</small></div>
-      </div>
-    </div>
-    <div id="sosResult"></div>
-  </section>
+ <section id="sos" class="hidden fade">
+  <div class="eyebrow">SOS</div><h1>O que está prestes a acontecer?</h1><p class="human muted">Não vamos resolver tua vida aqui. Só impedir que um minuto difícil tome uma decisão grande sozinho.</p>
+  <div class="sosgrid" id="sosGrid"></div><div id="sosBox"></div>
+ </section>
 
-  <section id="journey" class="screen hidden">
-    <div class="kicker">Jornada</div><h1>O que está se repetindo — e o que está mudando.</h1>
-    <div class="grid3"><div class="stat"><b id="journeyLogs">0</b><span>registros</span></div><div class="stat"><b id="goodDays">0</b><span>momentos melhores</span></div><div class="stat"><b id="uniqueTriggers">0</b><span>gatilhos vistos</span></div></div>
-    <div class="card"><h2>Para onde sua atenção tem ido</h2><div class="tiny">Ex / relação</div><div class="bar"><span id="exBar" style="width:75%"></span></div><div class="tiny" style="margin-top:10px">Você / sua vida</div><div class="bar"><span id="selfBar" style="width:25%"></span></div><p id="focusCopy" class="muted">Ainda há poucos registros para dizer algo útil.</p></div>
-    <div class="card"><h2>Hipóteses em observação</h2><div id="hypotheses" class="mem"><div class="muted">As hipóteses aparecem somente quando alguma repetição começa a surgir.</div></div><p class="micro">Hipótese não é diagnóstico nem verdade. É algo para conferir com novas cenas.</p></div>
-    <div class="card"><h2>Últimos registros</h2><div id="timeline" class="mem"></div></div>
-  </section>
+ <section id="journey" class="hidden fade">
+   <div class="eyebrow">Jornada</div><h1>Não é uma linha reta.</h1><p class="human muted">Aqui ficam os momentos que voltaram, os momentos em que você caiu e também os dias em que a vida apareceu de novo.</p>
+   <div id="journeySummary"></div><div id="journeyPatterns"></div><div class="sectionHead"><div><h2>Seus registros</h2></div></div><div id="timeline"></div>
+ </section>
 
-  <section id="rebuild" class="screen hidden">
-    <div class="kicker">Recomeçar</div><h1>A vida não precisa esperar você “superar”.</h1>
-    <p class="muted">Aqui o foco vai saindo da relação e voltando, aos poucos, para áreas que continuam sendo suas.</p>
-    <div class="grid2">
-      <button class="choice rebuildItem" data-area="Amigos"><strong>👥 Amigos</strong><small>Vínculos que ficaram para depois.</small></button>
-      <button class="choice rebuildItem" data-area="Corpo"><strong>🏃 Corpo</strong><small>Sono, energia, movimento, presença.</small></button>
-      <button class="choice rebuildItem" data-area="Trabalho"><strong>🧭 Trabalho</strong><small>Projetos, direção e autonomia.</small></button>
-      <button class="choice rebuildItem" data-area="Prazer"><strong>🌊 Prazer</strong><small>Coisas que são suas porque você gosta.</small></button>
-      <button class="choice rebuildItem" data-area="Casa"><strong>🏠 Casa</strong><small>Rotina, espaço e pequenos rituais.</small></button>
-      <button class="choice rebuildItem" data-area="Novos vínculos"><strong>❤️ Novos vínculos</strong><small>Desejo de conhecer alguém sem usar alguém para anestesiar o vazio.</small></button>
-    </div>
-    <div id="rebuildDetail"></div>
-    <div class="card"><h2>Coisas que você já começou a recuperar</h2><div id="rebuildSaved" class="mem"></div></div>
-  </section>
+ <section id="restart" class="hidden fade">
+  <div class="eyebrow">Recomeçar</div><h1>Recomeçar não é esquecer.</h1><p class="human muted">É a vida parar de girar só em torno do que acabou. Escolhe uma parte pequena de você para trazer de volta.</p>
+  <div id="restartAreas" class="grid2"></div><div id="restartBox"></div><div class="sectionHead"><div><h2>Coisas que você começou a devolver para a própria vida</h2></div></div><div id="restartList"></div>
+ </section>
 
-  <section id="me" class="screen hidden">
-    <div class="kicker">Pra mim</div><h1>O contexto que o PÓS está usando.</h1>
-    <div class="card"><h2>Meu momento</h2><div class="mem"><div><b>Término:</b> <span id="meBreakup">—</span></div><div><b>Quem encerrou:</b> <span id="meWho">—</span></div><div><b>Contato atual:</b> <span id="meContact">—</span></div></div><button id="editContext" class="btn secondary">Editar contexto</button></div>
-    <div class="card"><h2>Memória que foi construída</h2><div id="memoryFacts" class="mem"></div><p class="micro">A V5 guarda eventos e respostas concretas. Ela evita transformar uma resposta isolada em “seu padrão”.</p></div>
-    <div class="card"><h2>Como você quer ser respondido?</h2><div class="radioGrid" id="toneChoice"><div class="radioOption" data-tone="Direto">Direto <small>Menos acolhimento, mais clareza.</small></div><div class="radioOption" data-tone="Equilibrado">Equilibrado <small>Clareza com espaço para sentir.</small></div><div class="radioOption" data-tone="Mais delicado">Mais delicado <small>Ritmo mais leve quando estiver difícil.</small></div></div></div>
-    <div class="card"><h2>Privacidade</h2><p class="muted">Nesta beta, os dados ficam no armazenamento local deste navegador. Não existe conta nem servidor.</p><button id="exportBeta" class="btn secondary">Baixar meus registros (.json)</button><button id="resetBeta" class="btn dangerBtn">Apagar tudo desta V5</button></div>
-    <div class="notice">Protótipo conceitual. Não substitui acompanhamento profissional e não deve ser usado como serviço de emergência.</div>
-  </section>
+ <section id="me" class="hidden fade">
+  <div class="eyebrow">Pra mim</div><h1>O PÓS vai te conhecendo pelo que você vive.</h1><p class="human muted">Não por um teste de personalidade. Pelas cenas que você escolheu guardar.</p>
+  <div id="meContext"></div><div id="meMemory"></div>
+  <div class="card"><h3>Privacidade nesta beta</h3><p class="muted">Tudo fica salvo localmente neste navegador. Você pode exportar ou apagar quando quiser.</p><button class="btn secondary" id="exportBtn">Exportar meus registros</button><button class="btn red" id="clearBtn">Apagar tudo deste navegador</button></div>
+ </section>
 </div>
 
-<div class="nav"><div class="navin"><button data-screen="home" class="active"><span class="icon">◉</span>Hoje</button><button data-screen="sos"><span class="icon">⚡</span>SOS</button><button data-screen="journey"><span class="icon">↗</span>Jornada</button><button data-screen="rebuild"><span class="icon">✦</span>Recomeçar</button><button data-screen="me"><span class="icon">○</span>Pra mim</button></div></div>
+<nav class="nav"><div class="navin">
+<button data-screen="home" class="active"><span class="ico">◉</span>Hoje</button>
+<button data-screen="sos"><span class="ico">✦</span>SOS</button>
+<button data-screen="journey"><span class="ico">⌁</span>Jornada</button>
+<button data-screen="restart"><span class="ico">↗</span>Recomeçar</button>
+<button data-screen="me"><span class="ico">○</span>Pra mim</button>
+</div></nav>
 
 <script>
-const KEY='pos_beta_v5_final';
-const defaultState={onboarded:false,onboarding:{breakupTime:'1 a 4 semanas',whoEnded:'',contactStatus:''},tone:'Equilibrado',logs:[],rebuild:[],openCount:0};
-let state;try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!state)state=structuredClone(defaultState);
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const escapeHtml=s=>String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
-function persist(){localStorage.setItem(KEY,JSON.stringify(state));renderAll()}
-function show(id){$$('.screen').forEach(s=>s.classList.add('hidden'));$('#onboarding').classList.add('hidden');$('#'+id).classList.remove('hidden');$$('.nav button[data-screen]').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='journey'||id==='rebuild'||id==='me')renderAll()}
-function stamp(){return new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}
-function addLog(kind,title,data,insight){state.logs.push({kind,title,data,insight,when:stamp(),ts:Date.now()});persist()}
-function tonePrefix(){if(state.tone==='Direto')return '';if(state.tone==='Mais delicado')return 'Sem forçar uma conclusão: ';return ''}
-function renderInsight(reading,hypothesis,question,cta='Guardar este momento'){
- return `<div class="insight"><div class="insightBlock"><h3>O que aparece hoje</h3><p>${reading}</p></div><div class="insightBlock"><h3>Uma hipótese para observar</h3><p>${tonePrefix()}${hypothesis}</p></div><div class="insightBlock"><h3>Uma pergunta para levar daqui</h3><p><b>${question}</b></p></div></div><button id="saveCurrent" class="btn">${cta}</button>`;
-}
-function questionCard(step,total,title,options,cls){return `<div class="card"><div class="questionMeta"><span>Passo ${step} de ${total}</span><span>uma coisa por vez</span></div><div class="progress"><span style="width:${Math.round(step/total*100)}%"></span></div><h2>${title}</h2><div class="radioGrid">${options.map(o=>`<div class="radioOption ${cls}" data-v="${escapeHtml(typeof o==='string'?o:o.v)}">${typeof o==='string'?escapeHtml(o):`<b>${escapeHtml(o.label||o.v)}</b>${o.sub?`<small>${escapeHtml(o.sub)}</small>`:''}`}</div>`).join('')}</div></div>`}
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const KEY='pos_v6_state';
+const fresh={onboarded:false,profile:{relType:'',breakTime:'',contact:'',tone:'Direto, mas sem me atropelar'},logs:[],steps:[],openIndex:0};
+let state=(()=>{try{return {...fresh,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return structuredClone(fresh)}})();
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function esc(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function now(){return new Date().toISOString()}
+function fmt(d){return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
 
-const openings=[['O que te trouxe aqui?','Não precisa organizar. Começa pelo que está mais vivo agora.'],['O que aconteceu para você chegar aqui?','Pode ter sido uma mensagem, uma lembrança, um silêncio ou só um aperto.'],['O que você está sentindo?','Sem precisar saber o motivo ainda.'],['Qual foi a cena que mais ficou na tua cabeça desde ontem?','Cena primeiro. A gente tenta entender depois.']];
-function applyOpening(){const p=openings[(state.openCount||0)%openings.length];$('#openingPrompt').textContent=p[0];$('#openingSub').textContent=p[1]}
-function incrementOpening(){state.openCount=((state.openCount||0)+1)%openings.length;localStorage.setItem(KEY,JSON.stringify(state))}
-
-function openFlow(type){show('flow');const map={saudade:flowSaudade,mandar:flowMandar,recebi:flowRecebi,lembranca:flowLembranca,mal:flowMal,melhor:flowMelhor};map[type]()}
-
-function flowMandar(){
- $('#flowContent').innerHTML=`<div class="card"><div class="kicker">Quero mandar mensagem</div><h1>O que acendeu essa vontade?</h1><p class="muted">Não é tudo a mesma coisa. Sonho, foto, lembrança, silêncio e contato real abrem dinâmicas diferentes.</p><div class="radioGrid">${[
- ['Sonhei com essa pessoa','O que ficou do sonho quando você acordou?'],['Vi uma foto / story','O que exatamente naquela imagem te atingiu?'],['Lembrei de uma cena','A memória veio sozinha ou algo puxou ela?'],['Fiquei sozinho(a)','A vontade apareceu junto com silêncio, noite ou vazio.'],['Ela(e) fez algum sinal','Houve contato, curtida, visualização ou aproximação.'],['Aconteceu algo e quis contar','Algo bom ou ruim te fez procurar o lugar que essa pessoa ocupava.'],['Ouvi uma música / passei por um lugar','Um estímulo puxou a memória.'],['Não sei. Só veio','Quando o gatilho ainda não está claro.']
- ].map(([v,s])=>`<div class="radioOption mTrigger" data-v="${v}"><b>${v}</b><small>${s}</small></div>`).join('')}</div></div><div id="mNext"></div>`;
- $$('.mTrigger').forEach(x=>x.onclick=()=>mandarBranch(x.dataset.v));
-}
-function mandarBranch(trigger){
- let q2,opts;
- if(trigger==='Sonhei com essa pessoa'){q2='Quando você acordou, o que ficou mais forte?';opts=['Saudade','Alívio por ter visto a pessoa no sonho','Ansiedade / aperto','Esperança de que o sonho signifique algo','Confusão. Não sei explicar'];}
- else if(trigger==='Vi uma foto / story'){q2='O que na imagem te pegou mais?';opts=['Parecia feliz sem mim','A aparência / atração','Estava com outra pessoa','Era um lugar / situação nossa','Só ver a pessoa já mexeu comigo'];}
- else if(trigger==='Lembrei de uma cena'){q2='Que tipo de cena voltou?';opts=['Uma cena boa','Uma briga / ferida','Uma despedida','Algo que eu queria ter feito diferente','Uma cena comum que hoje pesa'];}
- else if(trigger==='Fiquei sozinho(a)'){q2='O que apareceu junto com a solidão?';opts=['Vazio','Medo de ficar sem ninguém','Saudade específica dela(e)','Vontade de ser acolhido(a)','Tédio / noite longa'];}
- else if(trigger==='Ela(e) fez algum sinal'){q2='Que sinal foi esse?';opts=['Mandou mensagem','Curtiu / reagiu','Visualizou algo meu','Perguntou de mim por outra pessoa','Apareceu de algum jeito sem falar diretamente'];}
- else if(trigger==='Aconteceu algo e quis contar'){q2='O que aconteceu?';opts=['Algo muito bom','Algo ruim / difícil','Uma conquista','Uma notícia importante','Uma coisa banal que eu sempre contava'];}
- else if(trigger==='Ouvi uma música / passei por um lugar'){q2='O que esse estímulo puxou primeiro?';opts=['Uma época boa','Uma cena específica','A falta da rotina que existia','O corpo reagiu antes da cabeça','A sensação de “isso era nosso”'];}
- else {q2='Se você voltar alguns minutos, o que estava acontecendo?';opts=['Eu estava sozinho(a)','Estava mexendo no celular','Estava cansado(a) / deitado(a)','Algo deu errado','Nada especial. Veio do nada'];}
- $('#mNext').innerHTML=questionCard(2,4,q2,opts,'m2');$$('.m2').forEach(x=>x.onclick=()=>mandarStep3(trigger,x.dataset.v));
-}
-function mandarStep3(trigger,detail){
- const opts=[{v:'Quero voltar',label:'Que a gente voltasse',sub:'A mensagem é uma tentativa de reaproximação.'},{v:'Quero saber se ainda sente algo',label:'Saber se ainda sente algo',sub:'Preciso de uma resposta sobre o vínculo.'},{v:'Quero aliviar o que estou sentindo',label:'Parar esse aperto',sub:'Quero que o contato mude meu estado agora.'},{v:'Quero contar / compartilhar',label:'Só queria dividir isso com ela(e)',sub:'A pessoa ainda aparece como destinatário natural da minha vida.'},{v:'Nem sei, só quero falar',label:'Nem sei. Só quero falar',sub:'A intenção ainda está meio sem forma.'}];
- $('#mNext').innerHTML=questionCard(3,4,'Se a resposta viesse exatamente como você gostaria, o que você queria receber?',opts,'m3');$$('.m3').forEach(x=>x.onclick=()=>mandarStep4(trigger,detail,x.dataset.v));
-}
-function mandarStep4(trigger,detail,expectation){
- const opts=['Sim, já aconteceu e eu mandei','Sim, já aconteceu e eu não mandei','Já aconteceu mais de uma vez','É a primeira vez','Não lembro'];
- $('#mNext').innerHTML=questionCard(4,4,'Essa vontade já apareceu assim desde o fim?',opts,'m4');$$('.m4').forEach(x=>x.onclick=()=>mandarResult(trigger,detail,expectation,x.dataset.v));
-}
-function mandarResult(trigger,detail,expectation,repetition){
- let reading='',hyp='',question='';
- const t=trigger;
- if(t==='Sonhei com essa pessoa'){reading=`A vontade nasceu depois de um sonho, não de um movimento real da outra pessoa. Ao acordar, o que ficou mais forte foi <b>${escapeHtml(detail.toLowerCase())}</b>.`;hyp=detail.includes('Esperança')?'Talvez o sonho tenha virado uma tentativa de encontrar um sinal fora de você para uma história que ainda está aberta por dentro.':'Talvez o sonho tenha reativado uma memória emocional antes de existir uma intenção concreta de contato.';question='Se você não tratasse o sonho como mensagem, o que ainda sobraria da vontade de procurar essa pessoa?';}
- else if(t==='Vi uma foto / story'){reading=`A vontade apareceu depois de uma imagem. O ponto que mais te atingiu foi: <b>${escapeHtml(detail.toLowerCase())}</b>.`;hyp=detail.includes('feliz')?'Talvez a dor esteja menos na foto e mais no que você imaginou que a felicidade dela(e) diz sobre o seu lugar hoje.':detail.includes('outra pessoa')?'Talvez a imagem tenha ativado medo de substituição ou de encerramento definitivo, antes mesmo de você saber o que aquela cena realmente significa.':'Talvez a foto tenha condensado uma história inteira em poucos segundos, e o impulso de contato seja uma tentativa de responder ao que você sentiu — não à imagem em si.';question='O que você sabe de fato sobre essa imagem, e o que sua cabeça completou sozinha?';}
- else if(t==='Lembrei de uma cena'){reading=`Uma memória específica trouxe a vontade de contato. A cena que voltou foi <b>${escapeHtml(detail.toLowerCase())}</b>.`;hyp=detail.includes('boa')?'Talvez você esteja sentindo falta de uma versão da relação, e não necessariamente da relação como ela existia no final.':'Talvez a vontade de falar esteja tentando reparar, explicar ou reabrir algo que a memória deixou incompleto hoje.';question='Se essa cena pudesse ficar no passado sem ser corrigida hoje, o que seria mais difícil aceitar?';}
- else if(t==='Fiquei sozinho(a)'){reading=`A vontade apareceu junto com solidão, e o que veio junto foi <b>${escapeHtml(detail.toLowerCase())}</b>.`;hyp=detail.includes('acolhido')||detail.includes('Vazio')||detail.includes('sem ninguém')?'Talvez a pessoa esteja aparecendo como resposta para um estado interno que ficou difícil de sustentar sozinho agora.':'Talvez a saudade e o desconforto da solidão tenham se misturado até parecerem a mesma coisa.';question='Se alguém seguro te fizesse companhia agora, a vontade de mandar essa mensagem continuaria igual?';}
- else if(t==='Ela(e) fez algum sinal'){reading=`Desta vez houve um estímulo real: <b>${escapeHtml(detail.toLowerCase())}</b>. Isso muda o contexto, mas ainda não define a intenção da outra pessoa.`;hyp='Talvez parte da vontade venha do espaço que esse sinal abriu para esperança, interpretação ou curiosidade. Um sinal isolado ainda não conta a história inteira.';question='O que aconteceu de concreto — sem interpretar — e o que você gostaria que isso significasse?';}
- else if(t==='Aconteceu algo e quis contar'){reading=`Algo da sua vida aconteceu — <b>${escapeHtml(detail.toLowerCase())}</b> — e essa pessoa apareceu como alguém para quem você gostaria de contar.`;hyp='Talvez não seja apenas saudade da pessoa, mas saudade do lugar que ela ocupava como testemunha da sua vida.';question='Quem, além dela(e), poderia começar a ocupar esse lugar de escuta na sua vida hoje?';}
- else if(t==='Ouvi uma música / passei por um lugar'){reading=`Um estímulo externo puxou a relação de volta, principalmente <b>${escapeHtml(detail.toLowerCase())}</b>.`;hyp='Talvez seu corpo e sua memória tenham chegado à relação antes de uma decisão consciente. Lembrar não é a mesma coisa que precisar agir.';question='Se você deixasse essa lembrança passar sem transformá-la em ação, o que ela estaria pedindo para ser sentido?';}
- else {reading=`A vontade ainda não tem um gatilho claro. Voltando alguns minutos, você percebeu: <b>${escapeHtml(detail.toLowerCase())}</b>.`;hyp='Talvez ainda seja cedo para dizer de onde veio. Não saber também é dado; é melhor manter a pergunta aberta do que inventar uma causa.';question='O que estava acontecendo no seu corpo, na sua cabeça e no ambiente cinco minutos antes?';}
- if(expectation==='Quero aliviar o que estou sentindo')hyp+=' E como você espera principalmente aliviar o que sente, vale observar se o contato está funcionando como tentativa de regular esse estado.';
- if(expectation==='Quero saber se ainda sente algo')hyp+=' Também aparece uma busca de confirmação sobre o lugar que você ainda ocupa para essa pessoa.';
- if(expectation==='Quero voltar')hyp+=' Como você deseja reaproximação, a pergunta precisa incluir não só sentimento, mas o que mudou concretamente desde o fim.';
- if(expectation==='Quero contar / compartilhar')hyp+=' A relação talvez ainda funcione como endereço automático para acontecimentos importantes da sua vida.';
- if(repetition.includes('mais de uma vez')||repetition.includes('já aconteceu'))hyp+=' Como isso já apareceu antes, vale acompanhar se o mesmo tipo de gatilho volta a produzir a mesma urgência.';
- const payload={trigger,detail,expectation,repetition};
- $('#mNext').innerHTML=`<div class="card"><div class="kicker">Leitura deste momento</div><h1>Antes da mensagem, existe uma cena.</h1><div class="mem"><div><b>Gatilho:</b> ${escapeHtml(trigger)}</div><div><b>O que pegou:</b> ${escapeHtml(detail)}</div><div><b>O que você espera:</b> ${escapeHtml(expectation)}</div><div><b>Isso já aconteceu?</b> ${escapeHtml(repetition)}</div></div></div>${renderInsight(reading,hyp,question)}`;
- $('#saveCurrent').onclick=()=>{addLog('mandar','Quero mandar mensagem',payload,{reading,hypothesis:hyp,question});show('journey')};
-}
-
-function flowSaudade(){
- $('#flowContent').innerHTML=`<div class="card"><div class="kicker">Bateu saudade</div><h1>Do que exatamente você sentiu falta?</h1><p class="muted">“Saudade” é uma palavra só para experiências bem diferentes.</p>${questionCard(1,3,'O que veio primeiro?',['Uma lembrança boa','Saudade da rotina / companhia','Saudade de quem eu era naquela época','Saudade física / intimidade','Medo dela(e) seguir em frente','Só um vazio. Não sei'], 's1')}</div><div id="sNext"></div>`;
- $$('.s1').forEach(x=>x.onclick=()=>saudade2(x.dataset.v));
-}
-function saudade2(first){let q='Quando essa saudade aparece, o que ela te faz querer?';let opts=['Voltar para a relação','Falar com a pessoa','Voltar para uma época da minha vida','Só sentir proximidade com alguém','Não quero fazer nada. Só dói'];$('#sNext').innerHTML=questionCard(2,3,q,opts,'s2');$$('.s2').forEach(x=>x.onclick=()=>saudade3(first,x.dataset.v));}
-function saudade3(first,want){$('#sNext').innerHTML=questionCard(3,3,'Quando você lembra do final da relação, a saudade muda?',['Fica menor','Fica maior','Fico dividido(a)','Quase não penso no final, só no que era bom','Não sei'], 's3');$$('.s3').forEach(x=>x.onclick=()=>saudadeResult(first,want,x.dataset.v));}
-function saudadeResult(first,want,endEffect){let reading=`Hoje, a saudade parece estar mais ligada a <b>${escapeHtml(first.toLowerCase())}</b>. Quando ela vem, você tende a querer <b>${escapeHtml(want.toLowerCase())}</b>.`;let hyp=first.includes('lembrança boa')||endEffect.includes('só no que era bom')?'Talvez sua memória esteja colocando em primeiro plano uma versão específica da relação. Isso não invalida a saudade; só ajuda a separar “o que foi vivido” de “o que a relação inteira era”.':first.includes('rotina')?'Talvez parte da ausência seja da estrutura compartilhada — mensagens, presença, hábitos — e não apenas da pessoa em si.':first.includes('quem eu era')?'Talvez a saudade esteja carregando também uma versão sua que existia naquele período.':first.includes('seguir')?'Talvez a dor esteja misturada ao medo de perder definitivamente um lugar na vida da outra pessoa.':'Ainda não há informação suficiente para dizer do que essa saudade é feita. O mais útil hoje é não tratá-la como uma ordem.';let q=want==='Voltar para a relação'?'Se você pudesse recuperar somente a parte de que sente falta, sem recuperar o restante da relação, o que escolheria?':'Do que você sente falta que poderia começar a existir de outra forma na sua vida?';$('#sNext').innerHTML=`<div class="card"><div class="kicker">Leitura deste momento</div><h1>Saudade não conta a história inteira.</h1></div>${renderInsight(reading,hyp,q)}`;$('#saveCurrent').onclick=()=>{addLog('saudade','Bateu saudade',{first,want,endEffect},{reading,hypothesis:hyp,question:q});show('journey')}}
-
-function flowRecebi(){
- $('#flowContent').innerHTML=`<div class="card"><div class="kicker">Recebi mensagem</div><h1>Primeiro, separa mensagem de interpretação.</h1><p class="muted">A frase que chegou é um fato. O que ela significa ainda é outra pergunta.</p><textarea id="receivedText" placeholder="Escreve com suas palavras o que a pessoa disse — sem precisar colar a conversa inteira."></textarea><button id="rStart" class="btn">Continuar</button></div><div id="rNext"></div>`;
- $('#rStart').onclick=()=>{const text=$('#receivedText').value.trim();if(!text)return;r2(text)};
-}
-function r2(text){$('#rNext').innerHTML=questionCard(2,4,'O que você sentiu primeiro?',['Esperança','Ansiedade','Raiva','Alívio','Saudade','Confusão'], 'r2');$$('.r2').forEach(x=>x.onclick=()=>r3(text,x.dataset.v));}
-function r3(text,emotion){$('#rNext').innerHTML=questionCard(3,4,'O que você acha que essa mensagem significa?',['Quer voltar','Está com saudade','Só quer resolver algo','Está testando se ainda estou disponível','Não sei — estou tentando interpretar','Parece apenas uma mensagem objetiva'], 'r3');$$('.r3').forEach(x=>x.onclick=()=>r4(text,emotion,x.dataset.v));}
-function r4(text,emotion,meaning){$('#rNext').innerHTML=questionCard(4,4,'Existe algo concreto na mensagem que prova essa interpretação?',['Sim, está explícito','Tem algum sinal, mas não está explícito','Não. É mais o que eu senti lendo','Não sei'], 'r4');$$('.r4').forEach(x=>x.onclick=()=>rResult(text,emotion,meaning,x.dataset.v));}
-function rResult(text,emotion,meaning,evidence){let reading=`A mensagem mexeu primeiro com <b>${escapeHtml(emotion.toLowerCase())}</b>. Sua primeira leitura foi: <b>${escapeHtml(meaning.toLowerCase())}</b>. Sobre a evidência, você marcou: <b>${escapeHtml(evidence.toLowerCase())}</b>.`;let hyp=evidence==='Sim, está explícito'?'Aqui existe informação concreta para considerar. Mesmo assim, o que a pessoa deseja agora e o que sustentou o término continuam sendo perguntas separadas.':evidence.includes('não está explícito')?'Talvez exista um sinal real misturado a uma interpretação sua. A melhor proteção contra fantasia é manter as duas coisas separadas.':'Talvez o efeito emocional da mensagem esteja preenchendo lacunas que o texto, sozinho, ainda não preenche.';let q='Se você tirasse da mensagem tudo o que gostaria que ela significasse, o que sobraria literalmente?';$('#rNext').innerHTML=`<div class="card"><div class="kicker">Fato x leitura</div><div class="mem"><div><b>Mensagem:</b> ${escapeHtml(text)}</div><div><b>Sentimento:</b> ${escapeHtml(emotion)}</div><div><b>Interpretação:</b> ${escapeHtml(meaning)}</div></div></div>${renderInsight(reading,hyp,q)}`;$('#saveCurrent').onclick=()=>{addLog('recebi','Recebi mensagem',{text,emotion,meaning,evidence},{reading,hypothesis:hyp,question:q});show('journey')}}
-
-function flowLembranca(){
- $('#flowContent').innerHTML=`<div class="card"><div class="kicker">Lembrei de uma cena</div><h1>Cena primeiro. Explicação depois.</h1><p class="muted">Não tenta descobrir “o padrão”. Conta o que aconteceu como se uma câmera estivesse lá.</p><textarea id="sceneText" placeholder="Onde vocês estavam? O que aconteceu? O que foi dito ou feito?"></textarea><button id="lStart" class="btn">Continuar</button></div><div id="lNext"></div>`;
- $('#lStart').onclick=()=>{const scene=$('#sceneText').value.trim();if(!scene)return;l2(scene)};
-}
-function l2(scene){$('#lNext').innerHTML=questionCard(2,4,'Nessa cena, o que você fez logo depois?',['Tentei conversar / consertar','Me calei / me afastei','Fiquei cobrando uma resposta','Pedi desculpa mesmo sem saber se era minha culpa','Fui embora / encerrei','Não lembro'], 'l2');$$('.l2').forEach(x=>x.onclick=()=>l3(scene,x.dataset.v));}
-function l3(scene,action){$('#lNext').innerHTML=questionCard(3,4,'O que você mais temia naquele momento?',['Perder a pessoa','A briga piorar','Ser rejeitado(a)','Ser injustiçado(a)','Ficar sozinho(a)','Não sei se eu tinha um medo claro'], 'l3');$$('.l3').forEach(x=>x.onclick=()=>l4(scene,action,x.dataset.v));}
-function l4(scene,action,fear){$('#lNext').innerHTML=questionCard(4,4,'Hoje, olhando só para essa cena, o que ficou sem resposta?',['O que a outra pessoa realmente queria','Por que eu reagi daquele jeito','Se eu poderia ter feito diferente','Se aquilo já mostrava que a relação estava quebrando','Nada. Só voltou na minha cabeça'], 'l4');$$('.l4').forEach(x=>x.onclick=()=>lResult(scene,action,fear,x.dataset.v));}
-function lResult(scene,action,fear,open){let reading=`Na cena que voltou, sua resposta foi <b>${escapeHtml(action.toLowerCase())}</b> e o medo mais próximo foi <b>${escapeHtml(fear.toLowerCase())}</b>.`;let similar=state.logs.filter(x=>x.kind==='lembranca'&&x.data&&x.data.action===action).length;let hyp=similar>0?`Já existe pelo menos outra cena registrada em que você respondeu de forma parecida. Isso ainda não prova um padrão, mas agora existe repetição suficiente para manter essa resposta em observação.`:'Uma cena isolada não permite concluir um padrão. O mais útil é guardá-la e comparar com outras, principalmente o que você fez quando sentiu ameaça, distância ou conflito.';let q='Se essa cena não precisasse provar quem estava certo, o que ela revelaria sobre o que você precisava naquele momento?';$('#lNext').innerHTML=`<div class="card"><div class="kicker">Cena guardada</div><p class="quote">“${escapeHtml(scene)}”</p></div>${renderInsight(reading,hyp,q)}`;$('#saveCurrent').onclick=()=>{addLog('lembranca','Lembrei de uma cena',{scene,action,fear,open},{reading,hypothesis:hyp,question:q});show('journey')}}
-
-function flowMal(){
- $('#flowContent').innerHTML=`<div class="card"><div class="kicker">Só estou mal</div><h1>Então não vamos pedir uma explicação grande.</h1><p class="muted">Só localizar o que está mais pesado agora.</p>${questionCard(1,3,'Qual palavra chega mais perto?',['Solidão','Ansiedade','Saudade','Raiva','Culpa','Vazio / apatia','Estou chorando e não sei nomear'], 'b1')}</div><div id="bNext"></div>`;$$('.b1').forEach(x=>x.onclick=()=>b2(x.dataset.v));}
-function b2(feeling){$('#bNext').innerHTML=questionCard(2,3,'Isso parece mais ligado a quê?',['Ao término / à pessoa','A estar sozinho(a)','A algo que aconteceu hoje','Ao meu corpo / cansaço / sono','A várias coisas acumuladas','Não sei'], 'b2');$$('.b2').forEach(x=>x.onclick=()=>b3(feeling,x.dataset.v));}
-function b3(feeling,source){$('#bNext').innerHTML=questionCard(3,3,'O que seria suportável nas próximas duas horas?',['Ficar quieto(a) sem decidir nada','Falar com alguém seguro','Comer / tomar banho / deitar','Sair um pouco / respirar fora de casa','Escrever o que está passando na cabeça','Não sei o que consigo fazer'], 'b3');$$('.b3').forEach(x=>x.onclick=()=>bResult(feeling,source,x.dataset.v));}
-function bResult(feeling,source,next){let reading=`O que está mais forte agora é <b>${escapeHtml(feeling.toLowerCase())}</b>, e você percebe isso mais ligado a <b>${escapeHtml(source.toLowerCase())}</b>.`;let hyp='Talvez hoje não seja um momento de resolver a história, mas de reduzir exigência e atravessar uma janela curta de tempo sem transformar dor em decisão.';let q=`Você marcou como suportável: “${escapeHtml(next)}”. O que precisaria acontecer para você fazer só isso, sem cobrar nada além?`;$('#bNext').innerHTML=renderInsight(reading,hyp,q,'Guardar e voltar para Hoje');$('#saveCurrent').onclick=()=>{addLog('mal','Só estou mal',{feeling,source,next},{reading,hypothesis:hyp,question:q});show('home')}}
-
-function flowMelhor(){
- $('#flowContent').innerHTML=`<div class="card"><div class="kicker">Hoje estou melhor</div><h1>Isso também precisa entrar na memória.</h1><p class="muted">Se a gente só registra crise, parece que nada muda.</p>${questionCard(1,3,'O que esteve diferente hoje?',['Pensei menos na pessoa','Fiz algo por mim','Estive com pessoas','Meu corpo estava melhor','Trabalhei / produzi / me concentrei','Nem sei. Só acordei melhor'], 'g1')}</div><div id="gNext"></div>`;$$('.g1').forEach(x=>x.onclick=()=>g2(x.dataset.v));}
-function g2(diff){$('#gNext').innerHTML=questionCard(2,3,'Teve alguma coisa que ajudou esse dia a acontecer?',['Dormir melhor','Sair de casa','Conversar com alguém','Movimento / exercício / natureza','Trabalho / projeto / estudo','Menos contato / menos redes','Não consigo identificar'], 'g2');$$('.g2').forEach(x=>x.onclick=()=>g3(diff,x.dataset.v));}
-function g3(diff,help){$('#gNext').innerHTML=questionCard(3,3,'Hoje, sua vida pareceu um pouco mais sua em qual parte?',['Rotina','Corpo','Amigos / família','Trabalho / direção','Prazer / interesse','Ainda não senti isso'], 'g3');$$('.g3').forEach(x=>x.onclick=()=>gResult(diff,help,x.dataset.v));}
-function gResult(diff,help,area){let reading=`Hoje houve uma pequena abertura: <b>${escapeHtml(diff.toLowerCase())}</b>. Você percebeu que <b>${escapeHtml(help.toLowerCase())}</b> pode ter contribuído, e a área que pareceu um pouco mais sua foi <b>${escapeHtml(area.toLowerCase())}</b>.`;let hyp=help==='Não consigo identificar'?'Nem todo dia melhor precisa de uma causa clara. Registrar mesmo assim ajuda a não construir uma narrativa em que só a dor é previsível.':'Talvez exista aqui uma pista de condição favorável — não uma receita — que vale observar se reaparece em outros dias melhores.';let q='O que deste dia você gostaria de lembrar quando vier um dia ruim?';$('#gNext').innerHTML=renderInsight(reading,hyp,q);$('#saveCurrent').onclick=()=>{addLog('melhor','Hoje estou melhor',{diff,help,area},{reading,hypothesis:hyp,question:q});show('journey')}}
-
-// SOS
-function openSOS(kind){
- const host=$('#sosResult');
- if(kind==='mandar'){host.innerHTML=`<div class="card"><h2>Antes de abrir a conversa</h2>${questionCard(1,2,'O que você quer que a mensagem faça por você agora?',['Me aproximar da pessoa','Me dar uma resposta','Parar a ansiedade','Fazer a pessoa sentir minha falta','Nem sei. Só preciso fazer alguma coisa'], 'sm1')}</div><div id="sx"></div>`;$$('.sm1').forEach(x=>x.onclick=()=>{const v=x.dataset.v;$('#sx').innerHTML=questionCard(2,2,'Se vier silêncio ou uma resposta fria, você consegue sustentar isso agora?',['Sim','Talvez','Não','Não sei'], 'sm2');$$('.sm2').forEach(y=>y.onclick=()=>{const q=y.dataset.v;$('#sx').innerHTML=`<div class="callout"><h3>Antes de decidir</h3><p>${v==='Parar a ansiedade'?'A mensagem está sendo chamada para regular sua ansiedade. Isso não torna o impulso “errado”, mas muda o risco de depender da resposta para ficar melhor.':'Você já identificou o que espera que o contato produza.'}</p><p><b>Você disse que diante de silêncio ou resposta fria: ${escapeHtml(q.toLowerCase())}.</b></p><p class="muted">Não precisa decidir nos próximos 60 segundos. Volte ao fluxo completo “Quero mandar mensagem” se quiser entender a cena antes de agir.</p><button class="btn secondary" id="goMsg">Abrir fluxo completo</button></div>`;$('#goMsg').onclick=()=>openFlow('mandar')})})}
- else if(kind==='stalk'){host.innerHTML=`<div class="card"><h2>Antes de abrir as redes</h2>${questionCard(1,1,'O que você espera encontrar?',['Um sinal de que sente minha falta','Prova de que seguiu em frente','Se está com outra pessoa','Alguma coisa que me dê controle','Nem sei — só estou puxado(a) para olhar'], 'ss1')}</div>`;$$('.ss1').forEach(x=>x.onclick=()=>{host.innerHTML=`<div class="callout"><h3>Uma coisa para notar</h3><p>Você está prestes a buscar <b>${escapeHtml(x.dataset.v.toLowerCase())}</b>. Antes de abrir, pergunta: <b>se eu encontrar exatamente o que temo, o que vou fazer com isso nos próximos dez minutos?</b></p></div>`})}
- else if(kind==='voltar'){host.innerHTML=`<div class="card"><h2>Antes de pedir para voltar</h2>${questionCard(1,1,'O que mudou concretamente desde o que fez a relação terminar?',['Mudou algo claro nos dois','Mudou algo claro em mim','Só estamos com muita saudade','A dor diminuiu e estou esperançoso(a)','Não sei dizer o que mudou'], 'sv1')}</div>`;$$('.sv1').forEach(x=>x.onclick=()=>{let v=x.dataset.v;host.innerHTML=`<div class="callout"><h3>Separando duas coisas</h3><p>${v.includes('Mudou algo claro')?'Existe pelo menos uma mudança concreta para investigar. Ainda falta saber se ela toca aquilo que quebrou a relação e se é sustentável.':'Por enquanto, o que aparece é mais sentimento do que mudança estrutural.'}</p><p><b>Saudade pode justificar uma conversa. Sozinha, não prova que a relação agora funcionaria diferente.</b></p></div>`})}
- else {host.innerHTML=`<div class="card danger"><h2>Primeiro: segurança.</h2><p>Você não precisa explicar tudo agora.</p><div class="radioGrid"><div class="radioOption sd1" data-v="Não, estou muito mal mas estou seguro(a)">Estou muito mal, mas estou seguro(a)</div><div class="radioOption sd1" data-v="Não sei se estou seguro(a)">Não sei se estou seguro(a)</div><div class="radioOption sd1" data-v="Estou em risco de me machucar agora">Estou em risco de me machucar agora</div></div></div>`;$$('.sd1').forEach(x=>x.onclick=()=>{const v=x.dataset.v;if(v==='Estou em risco de me machucar agora'||v==='Não sei se estou seguro(a)'){host.innerHTML=`<div class="card danger"><h2>Não fica sozinho com isso agora.</h2><p>Saia de perto de qualquer coisa que possa ser usada para se machucar e procure uma pessoa segura ou um serviço de emergência da sua região <b>agora</b>.</p><p class="muted">O PÓS não é a ferramenta certa para atravessar risco imediato. A prioridade é presença humana e suporte de emergência.</p></div>`}else{host.innerHTML=`<div class="callout"><h3>Então reduzimos para o próximo bloco de tempo.</h3><p>Sem decidir relacionamento, sem revisar a vida inteira. Escolha uma coisa concreta: água, banho, comida, deitar, sair para um lugar seguro ou falar com alguém.</p><button class="btn secondary" id="goBad">Abrir “Só estou mal”</button></div>`;$('#goBad').onclick=()=>openFlow('mal')}})}
-}
-$$('.sosAction').forEach(x=>x.onclick=()=>openSOS(x.dataset.sos));
-
-// Recomeçar
-const rebuildData={
- 'Amigos':{q:'Quem ou que tipo de vínculo você gostaria de trazer um pouco mais para perto?',opts:['Um amigo específico','Família','Grupo / comunidade','Pessoas que eu deixei de ver','Ainda não quero socializar'],follow:'Qual seria uma aproximação pequena o bastante para não virar obrigação?'},
- 'Corpo':{q:'O que seu corpo está pedindo mais?',opts:['Sono / descanso','Movimento','Comer melhor / regular horários','Ar livre / natureza','Menos tela / estímulo','Não sei ler meu corpo ainda'],follow:'O que caberia hoje sem virar projeto de transformação?'},
- 'Trabalho':{q:'O que mais precisa voltar a existir aqui?',opts:['Direção','Renda','Concentração','Projeto próprio','Aprendizado','Só rotina básica'],follow:'Qual é o menor passo que devolve sensação de direção, não de cobrança?'},
- 'Prazer':{q:'O que você fazia porque gostava — e não para produzir resultado?',opts:['Música','Esporte / movimento','Natureza','Jogo / filme / série','Criar alguma coisa','Não lembro do que eu gostava'],follow:'Qual dessas coisas ainda parece minimamente viva quando você imagina fazer?'},
- 'Casa':{q:'O que deixaria seu espaço um pouco mais seu?',opts:['Arrumar um canto','Mudar pequenos objetos','Criar rotina de manhã/noite','Cozinhar / comer melhor em casa','Tirar coisas que me prendem à relação','Ainda estou sem energia para mexer nisso'],follow:'Qual mudança seria pequena, visível e reversível?'},
- 'Novos vínculos':{q:'O que está por trás da vontade de conhecer alguém?',opts:['Curiosidade genuína','Desejo / atração','Quero companhia','Quero provar que segui em frente','Quero esquecer a ex / o ex','Ainda não quero ninguém'],follow:'Você quer uma pessoa nova — ou quer que uma sensação antiga pare de doer?'}
+const openings=[
+ ['O que te trouxe aqui?','Não precisa organizar antes de falar. Começa pelo que aconteceu.'],
+ ['O que aconteceu para você chegar aqui?','Uma cena já é suficiente.'],
+ ['O que está mais alto dentro de você agora?','Pode ser saudade, raiva, vontade, confusão — ou nem ter nome.'],
+ ['Qual foi a cena que ficou voltando?','Às vezes a cabeça volta para um pedaço da história antes de entender por quê.'],
+ ['O que aconteceu hoje que mexeu com essa história de novo?','Talvez tenha sido grande. Talvez tenha sido só uma música.'],
+ ['Se eu tivesse chegado cinco minutos antes, o que eu teria te visto fazendo?','É por aí que a gente começa.']
+];
+const homeCards=[
+ ['saudade','💭 Bateu saudade','Alguma coisa da relação me puxou de volta.'],
+ ['mandar','📱 Quero mandar mensagem','Estou perto de procurar essa pessoa.'],
+ ['recebi','💬 Recebi mensagem','Chegou alguma coisa e mexeu comigo.'],
+ ['lembranca','🧩 Lembrei de uma cena','Uma memória voltou e não foi embora.'],
+ ['mal','🌧️ Só estou mal','Nem consigo explicar direito.'],
+ ['melhor','🌤️ Hoje estou melhor','A vida abriu um pouco de espaço.']
+];
+const HUMAN_MAP={
+ triggers:['sonho','foto/story','música','cheiro','lugar','objeto','data','rotina','silêncio','sexo/intimidade','família','amigos','notícia boa','dia ruim','álcool/noite','encontro inesperado','ver com outra pessoa','mensagem','bloqueio/desbloqueio','assunto prático','plano futuro que morreu'],
+ states:['saudade','esperança','medo','raiva','culpa','vergonha','alívio','ciúme','injustiça','solidão','desejo','curiosidade','vazio','confusão','necessidade de confirmação','necessidade de fechamento'],
+ impulses:['mandar mensagem','ligar','stalkear','apagar tudo','bloquear','desbloquear','pedir para voltar','cobrar explicação','pedir desculpa','mostrar que está bem','provocar ciúme','reler conversa','ver fotos','perguntar para amigos','ficar sozinho','buscar alguém novo','voltar para rotina antiga'],
+ needs:['proximidade','ser escolhido','ser visto','segurança','resposta','reparação','controle','descanso','pertencimento','intimidade','continuidade','dignidade','liberdade','sentir-se vivo','recuperar uma versão de si'],
+ aftermath:['alívio curto','mais ansiedade','espera','vergonha','nova esperança','reabertura de conflito','confusão','silêncio','contato prático','reaproximação','distância','clareza','nova ruminação']
 };
-$$('.rebuildItem').forEach(b=>b.onclick=()=>{const area=b.dataset.area,d=rebuildData[area];$('#rebuildDetail').innerHTML=`<div class="card"><div class="kicker">${area}</div><h2>${d.q}</h2><div class="radioGrid">${d.opts.map(o=>`<div class="radioOption rbOpt" data-v="${escapeHtml(o)}">${escapeHtml(o)}</div>`).join('')}</div></div>`;$$('.rbOpt').forEach(x=>x.onclick=()=>{const v=x.dataset.v;$('#rebuildDetail').innerHTML=`<div class="card"><div class="kicker">${area}</div><p><b>${escapeHtml(v)}</b></p><p>${d.follow}</p><textarea id="rbText" placeholder="Escreve em uma frase, se quiser..."></textarea><button id="rbSave" class="btn">Guardar esse passo</button></div>`;$('#rbSave').onclick=()=>{state.rebuild.push({area,choice:v,text:$('#rbText').value.trim(),when:stamp(),ts:Date.now()});persist();renderRebuild();$('#rebuildDetail').innerHTML=`<div class="callout"><h3>Guardado.</h3><p>Recomeçar não precisa competir com a dor. Pode acontecer ao lado dela.</p></div>`}})});
+function tonePrefix(){return state.profile.tone.startsWith('Bem direto')?'Vou direto ao ponto. ':state.profile.tone.startsWith('Mais cuidadoso')?'Vou com calma. ':''}
+function addLog(kind,title,data,reading){state.logs.unshift({id:crypto.randomUUID?.()||String(Date.now()+Math.random()),at:now(),kind,title,data,reading});save();renderHome()}
+function show(id){['onboarding','home','flow','sos','journey','restart','me'].forEach(x=>$('#'+x).classList.toggle('hidden',x!==id));$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));if(id==='journey')renderJourney();if(id==='restart')renderRestart();if(id==='me')renderMe();window.scrollTo(0,0)}
+function options(items,cls='opt'){return `<div class="stack">${items.map((x,i)=>`<button class="option ${cls}" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
+function q(title,items,cls,sub=''){return `<div class="card question"><div class="qmeta">${sub||'Escolhe a que chega mais perto'}</div><h2>${title}</h2>${options(items,cls)}</div>`}
+function insight(a,b,c,button='Guardar este momento'){return `<div class="insight"><div class="ins"><div class="label">O que parece estar acontecendo</div><p>${a}</p></div><div class="ins"><div class="label">Uma coisa que talvez valha olhar</div><p>${b}</p></div><div class="ins"><div class="label">Leva essa pergunta contigo</div><p class="quote">${c}</p></div></div><button class="btn" id="saveMoment">${button}</button>`}
+function bind(cls,fn){$$('.'+cls).forEach(el=>el.onclick=()=>fn(el.dataset.v,el))}
 
-function renderRebuild(){if(!$('#rebuildSaved'))return;$('#rebuildSaved').innerHTML=state.rebuild.length?state.rebuild.slice().reverse().map(x=>`<div><b>${escapeHtml(x.area)}</b> · ${escapeHtml(x.when)}<br>${escapeHtml(x.choice)}${x.text?`<br><span class="muted">${escapeHtml(x.text)}</span>`:''}</div>`).join(''):'<div class="muted">Nenhum passo registrado ainda.</div>'}
-
-function deriveHypotheses(){const h=[];const logs=state.logs;if(logs.length<2)return h;const mandar=logs.filter(x=>x.kind==='mandar');if(mandar.length>=2){const counts={};mandar.forEach(x=>{const t=x.data?.trigger;if(t)counts[t]=(counts[t]||0)+1});const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];if(top&&top[1]>=2)h.push(`Em ${top[1]} momentos de vontade de contato, o gatilho foi “${top[0]}”. Vale observar se esse contexto costuma aumentar a urgência.`);const relief=mandar.filter(x=>x.data?.expectation==='Quero aliviar o que estou sentindo').length;if(relief>=2)h.push(`Em ${relief} vontades de mandar mensagem, a expectativa principal foi aliviar o que você estava sentindo. Isso pode indicar que o contato às vezes entra como tentativa de regular o estado do momento.`)}const scenes=logs.filter(x=>x.kind==='lembranca');if(scenes.length>=2){const acts={};scenes.forEach(x=>{const a=x.data?.action;if(a)acts[a]=(acts[a]||0)+1});const top=Object.entries(acts).sort((a,b)=>b[1]-a[1])[0];if(top&&top[1]>=2)h.push(`Em ${top[1]} cenas registradas, sua resposta foi “${top[0]}”. Ainda não é um padrão fechado, mas já é repetição suficiente para observar.`)}const good=logs.filter(x=>x.kind==='melhor');if(good.length>=2){const helps={};good.forEach(x=>{const a=x.data?.help;if(a)helps[a]=(helps[a]||0)+1});const top=Object.entries(helps).sort((a,b)=>b[1]-a[1])[0];if(top&&top[1]>=2)h.push(`Em ${top[1]} momentos melhores, apareceu “${top[0]}” como possível condição favorável. Não é receita; é uma pista para acompanhar.`)}return h.slice(0,4)}
-function renderAll(){
- $('#homeLogs').textContent=state.logs.length;$('#journeyLogs').textContent=state.logs.length;$('#goodDays').textContent=state.logs.filter(x=>x.kind==='melhor').length;$('#homeDays').textContent=state.onboarding.breakupTime||'—';
- const trig=new Set(state.logs.map(x=>x.data?.trigger).filter(Boolean));$('#uniqueTriggers').textContent=trig.size;
- const recent=state.logs.slice(-5);const relationKinds=['saudade','mandar','recebi','lembranca','mal'];const exCount=recent.filter(x=>relationKinds.includes(x.kind)).length;const selfCount=recent.filter(x=>x.kind==='melhor').length+state.rebuild.slice(-5).length;let exPct=recent.length?Math.round(exCount/Math.max(1,exCount+selfCount)*100):70;exPct=Math.min(90,Math.max(25,exPct));$('#exBar').style.width=exPct+'%';$('#selfBar').style.width=(100-exPct)+'%';
- $('#focusCopy').textContent=state.logs.length<3?'Ainda há poucos registros para dizer algo útil.':exPct>65?'Sua atenção ainda está majoritariamente na relação. Isso é descrição do momento, não uma nota de progresso.':exPct>45?'A relação ainda ocupa espaço, mas sua própria vida começou a aparecer mais nos registros.':'Nos registros recentes, sua própria vida já ocupa mais espaço do que a relação.';
- $('#homeFocus').textContent=state.logs.length===0?'Agora':exPct>65?'Relação':exPct>45?'Transição':'Você';
- const daily=state.logs.length===0?'Não precisa descobrir o padrão. Primeiro, percebe a cena.':state.logs.at(-1).kind==='melhor'?'Um dia melhor também é dado. Não registre apenas o que dói.':state.logs.at(-1).kind==='mandar'?'Vontade de contato é informação. Não precisa virar ação imediatamente.':'Uma cena isolada explica pouco. Várias cenas começam a mostrar alguma coisa.';$('#dailyPrompt').textContent=daily;
- $('#timeline').innerHTML=state.logs.length?state.logs.slice().reverse().map(x=>`<div class="timelineItem"><b>${escapeHtml(x.when)}</b><span class="kind">${escapeHtml(x.title)}</span><br>${escapeHtml(x.insight?.reading?.replace(/<[^>]*>/g,'')||'Registro guardado.')}</div>`).join(''):'<div class="empty">Nenhum registro ainda. A Jornada começa a existir quando você usa o PÓS.</div>';
- const hs=deriveHypotheses();$('#hypotheses').innerHTML=hs.length?hs.map(x=>`<div>${escapeHtml(x)}</div>`).join(''):'<div class="muted">As hipóteses aparecem somente quando alguma repetição começa a surgir.</div>';
- $('#meBreakup').textContent=state.onboarding.breakupTime||'—';$('#meWho').textContent=state.onboarding.whoEnded||'—';$('#meContact').textContent=state.onboarding.contactStatus||'—';
- $('#memoryFacts').innerHTML=state.logs.length?state.logs.slice(-6).reverse().map(x=>`<div><b>${escapeHtml(x.title)}</b><br><span class="muted">${escapeHtml(x.when)}</span></div>`).join(''):'<div class="muted">Nada guardado ainda.</div>';
- $$('#toneChoice .radioOption').forEach(x=>x.classList.toggle('selected',x.dataset.tone===state.tone));renderRebuild();
+function setupOnboarding(){
+ const contacts=['Ainda falamos quase todo dia','Falamos de vez em quando','Estamos sem contato','Bloqueou / desbloqueou / está confuso','Só existe contato por coisas práticas'];
+ const tones=['Bem direto. Se eu estiver viajando, me mostra.','Direto, mas sem me atropelar.','Mais cuidadoso. Hoje eu estou sensível.'];
+ $('#contactPick').innerHTML=options(contacts,'contact');$('#tonePick').innerHTML=options(tones,'tone');
+ let c=state.profile.contact,t=state.profile.tone;bind('contact',(v,e)=>{c=v;$$('.contact').forEach(x=>x.classList.remove('selected'));e.classList.add('selected')});bind('tone',(v,e)=>{t=v;$$('.tone').forEach(x=>x.classList.remove('selected'));e.classList.add('selected')});
+ $('#enterBtn').onclick=()=>{state.profile={relType:$('#relType').value,breakTime:$('#breakTime').value,contact:c||contacts[2],tone:t||tones[1]};state.onboarded=true;save();renderHome();show('home')}
+}
+function renderHome(){
+ const o=openings[state.openIndex%openings.length];$('#openPrompt').textContent=o[0];$('#openSub').textContent=o[1];
+ $('#homeGrid').innerHTML=homeCards.map(c=>`<button class="choice event" data-kind="${c[0]}"><strong>${c[1]}</strong><small>${c[2]}</small></button>`).join('');
+ bind('event',(v)=>startFlow(v));$('#statLogs').textContent=state.logs.length;$('#statDays').textContent=state.profile.breakTime||'—';$('#statTone').textContent=state.profile.tone?.startsWith('Bem direto')?'Direto':state.profile.tone?.startsWith('Mais cuidadoso')?'Calmo':'Franco';
+ const last=state.logs[0];$('#homeLine').textContent=last?.reading?.question||'Você não precisa entender a relação inteira para entender o que aconteceu agora.';
+ state.openIndex=(state.openIndex+1)%openings.length;save();
 }
 
-$$('.nav button[data-screen]').forEach(b=>b.onclick=()=>show(b.dataset.screen));$('#backFlow').onclick=()=>show('home');$$('.event').forEach(b=>b.onclick=()=>openFlow(b.dataset.type));
-function selectGroup(id,field){$$('#'+id+' .radioOption').forEach(x=>x.onclick=()=>{$$('#'+id+' .radioOption').forEach(y=>y.classList.remove('selected'));x.classList.add('selected');state.onboarding[field]=x.dataset.value})}
-selectGroup('whoEnded','whoEnded');selectGroup('contactStatus','contactStatus');
-$('#finishOnboarding').onclick=()=>{state.onboarding.breakupTime=$('#breakupTime').value;if(!state.onboarding.whoEnded||!state.onboarding.contactStatus){alert('Escolhe também quem encerrou e como está o contato.');return}state.onboarded=true;persist();show('home')};
-$('#editContext').onclick=()=>{$$('.screen').forEach(s=>s.classList.add('hidden'));$('#onboarding').classList.remove('hidden');$('#breakupTime').value=state.onboarding.breakupTime;$$('#whoEnded .radioOption').forEach(x=>x.classList.toggle('selected',x.dataset.value===state.onboarding.whoEnded));$$('#contactStatus .radioOption').forEach(x=>x.classList.toggle('selected',x.dataset.value===state.onboarding.contactStatus))};
-$$('#toneChoice .radioOption').forEach(x=>x.onclick=()=>{state.tone=x.dataset.tone;persist()});
-$('#resetBeta').onclick=()=>{if(confirm('Apagar todos os registros desta V5 neste navegador?')){localStorage.removeItem(KEY);location.reload()}};
-$('#exportBeta').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='POS-meus-registros-v5.json';a.click();URL.revokeObjectURL(a.href)};
-applyOpening();incrementOpening();renderAll();if(!state.onboarded){$$('.screen').forEach(s=>s.classList.add('hidden'));$('#onboarding').classList.remove('hidden')}
+function startFlow(kind){show('flow');const f={mandar:flowMandar,saudade:flowSaudade,recebi:flowRecebi,lembranca:flowLembranca,mal:flowMal,melhor:flowMelhor}[kind];f?.()}
+$('#backHome').onclick=()=>show('home');
+
+// --- QUERO MANDAR MENSAGEM ---
+const mandarTriggers=['Sonhei com essa pessoa','Vi uma foto / story / perfil','Lembrei de alguma coisa','Fiquei sozinho(a) e bateu vontade','Aconteceu algo bom e eu quis contar','Aconteceu algo ruim e eu quis procurar','Ela(e) fez algum sinal','Vi essa pessoa com alguém / imaginei isso','Música, lugar, cheiro ou objeto me levou pra lá','Não aconteceu nada. A vontade só veio'];
+function flowMandar(){
+ $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Quero mandar mensagem</div><h1>O que aconteceu antes de abrir essa conversa?</h1><p class="human muted">Não quero saber ainda se você “deve” mandar. Quero entender o minuto anterior.</p>${options(mandarTriggers,'mTrig')}</div><div id="mNext"></div>`;bind('mTrig',mTrigger)
+}
+function mTrigger(trigger){
+ const routes={
+ 'Sonhei com essa pessoa':['No sonho, a gente estava bem','Ela(e) estava distante / me ignorava','Ela(e) estava com outra pessoa','A gente discutia','Tinha carinho / sexo / intimidade','Foi um sonho estranho, difícil de explicar'],
+ 'Vi uma foto / story / perfil':['Parecia feliz sem mim','Achei bonita(o) / senti atração','Tinha alguém junto','Era um lugar / situação que era nossa','Pareceu uma indireta / sinal','Nem sei. Só ver já mexeu'],
+ 'Lembrei de alguma coisa':['Uma lembrança muito boa','Uma coisa banal do dia a dia','Uma cena íntima','Uma briga / ferida','O começo da relação','O fim / a última conversa'],
+ 'Fiquei sozinho(a) e bateu vontade':['Senti falta de ter com quem falar','Senti falta do corpo / carinho','Senti falta da rotina','Bateu medo de ficar sozinho(a)','Quis saber se ainda pensa em mim','Só queria parar essa sensação'],
+ 'Aconteceu algo bom e eu quis contar':['Era a primeira pessoa para quem eu contaria','Eu queria que sentisse orgulho','Queria dividir a alegria com alguém conhecido','Queria uma desculpa para retomar contato'],
+ 'Aconteceu algo ruim e eu quis procurar':['Era quem me acalmava','Queria colo / segurança','Queria alguém que conhecesse minha história','Na dor eu volto automaticamente para essa pessoa'],
+ 'Ela(e) fez algum sinal':['Mandou mensagem','Curtiu / reagiu a algo','Visualizou / apareceu','Desbloqueou / voltou a seguir','Perguntou de mim para alguém','Foi algo ambíguo e eu li como sinal'],
+ 'Vi essa pessoa com alguém / imaginei isso':['Senti ciúme','Senti que fui substituído(a)','Comecei a me comparar','Deu medo de perder de vez','Quis aparecer / lembrar que existo','Fiquei com raiva'],
+ 'Música, lugar, cheiro ou objeto me levou pra lá':['Me transportou para uma fase boa','Lembrei de uma cena específica','Meu corpo reagiu antes de eu pensar','Veio saudade da vida que eu tinha','Fiquei procurando mais lembranças'],
+ 'Não aconteceu nada. A vontade só veio':['Eu estava cansado(a)','Era noite / estava sem fazer nada','Eu estava bebendo','Eu estava ansioso(a)','Eu estava bem e do nada veio','Não consigo localizar']
+ };
+ const items=routes[trigger]||['Só mexeu comigo'];$('#mNext').innerHTML=q('O que foi que te pegou nisso?',items,'mRoute');bind('mRoute',(detail)=>mWant(trigger,detail));
+}
+function mWant(trigger,detail){
+ $('#mNext').innerHTML=q('Se você mandar e tudo acontecer do jeito que você gostaria, o que você espera receber?',['Uma conversa. Só isso.','Quero sentir que ainda existe algo','Quero que ela(e) diga que sente minha falta','Quero tentar voltar','Quero aliviar essa angústia','Quero uma explicação / fechamento','Quero provocar alguma reação','Não sei. Só quero contato'],'mWant');bind('mWant',(want)=>mHistory(trigger,detail,want));
+}
+function mHistory(trigger,detail,want){
+ const previous=state.logs.filter(x=>x.kind==='mandar');let extra=previous.length?`Você já registrou ${previous.length} momento(s) parecido(s).`:'Ainda não tem outro momento igual guardado aqui.';
+ $('#mNext').innerHTML=q('E quando você procura essa pessoa, o que costuma acontecer depois?',['Eu me acalmo por um tempo','Fico olhando o celular esperando','A conversa me confunde mais','A gente se aproxima e depois se afasta de novo','Eu me arrependo','Às vezes é bom e respeitoso','Quase nunca procuro','Não sei ainda'],'mAfter',extra);bind('mAfter',(after)=>mResult(trigger,detail,want,after));
+}
+function mResult(trigger,detail,want,after){
+ let a=`${tonePrefix()}A vontade não apareceu do nada. Ela veio depois de <b>${esc(trigger.toLowerCase())}</b>, e o que mais te pegou foi <b>${esc(detail.toLowerCase())}</b>. O que você está querendo encontrar do outro lado da mensagem é: <b>${esc(want.toLowerCase())}</b>.`;
+ let b='Talvez essa mensagem esteja tentando resolver duas coisas ao mesmo tempo: falar com essa pessoa e mudar o que você está sentindo agora.';
+ if(trigger.startsWith('Sonhei')) b='Um sonho consegue acordar uma relação inteira dentro da gente sem que nada tenha acontecido no mundo real. Talvez a urgência seja menos “preciso falar” e mais “acordei dentro daquela história de novo”.';
+ else if(trigger.startsWith('Vi uma foto')) b='Imagem é um pedaço sem contexto. Talvez teu corpo tenha reagido a segundos de informação como se tivesse recebido uma resposta sobre a vida inteira dela(e).';
+ else if(trigger.includes('sozinho')) b='Talvez a pessoa esteja se misturando com outra falta: presença, colo, rotina, alguém do outro lado. Se for isso, contato e solidão não são exatamente o mesmo problema.';
+ else if(trigger.includes('sinal')) b='Aqui existe algo externo, mas sinal e intenção ainda são coisas diferentes. O risco é teu desejo completar as partes que a outra pessoa não disse.';
+ else if(trigger.includes('alguém')) b='Talvez a vontade de procurar tenha menos a ver com reconstruir a relação e mais com não suportar a ideia de perder teu lugar nela.';
+ else if(trigger.includes('bom')) b='Às vezes a saudade aparece não na dor, mas quando falta aquela testemunha que conhecia nossa vida. Isso pode ser diferente de querer a relação de volta.';
+ else if(trigger.includes('ruim')) b='Na hora em que a vida aperta, o corpo costuma procurar caminhos conhecidos de segurança. Conhecido não significa necessariamente disponível — nem bom para você hoje.';
+ else if(trigger.includes('Música')) b='Memórias sensoriais chegam rápido: uma música, um cheiro, uma rua podem colocar o passado inteiro no presente por alguns minutos.';
+ if(want.includes('aliviar')) b+=' E como você quer principalmente aliviar a angústia, vale perceber se a mensagem virou uma tentativa de regular o estado de agora.';
+ if(after.includes('esperando')||after.includes('confunde')||after.includes('arrependo')) b+=` Você também já sabe que depois costuma acontecer: ${esc(after.toLowerCase())}. Isso importa.`;
+ const c=want.includes('voltar')?'Se a resposta fosse “sim, vamos voltar”, o que precisaria ser diferente desta vez para não voltarem exatamente para o lugar que terminou?':'Se você não pudesse mandar essa mensagem pelos próximos 30 minutos, o que essa vontade estaria tentando te contar sobre você?';
+ $('#mNext').innerHTML=`<div class="card"><div class="eyebrow">Antes de enviar</div><p class="quote">A mensagem pode esperar dois minutos. O que você sentiu não precisa.</p></div>${insight(a,b,c)}`;
+ $('#saveMoment').onclick=()=>{addLog('mandar','Quis mandar mensagem',{trigger,detail,want,after},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}
+}
+
+// --- SAUDADE ---
+function flowSaudade(){
+ $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Bateu saudade</div><h1>Saudade de quê, exatamente?</h1><p class="human muted">Porque “saudade dela(e)” às vezes tem cinco coisas diferentes misturadas.</p>${options(['Da pessoa como ela era comigo','Da rotina que a gente tinha','Do carinho / sexo / intimidade','De ter alguém','De uma fase da minha vida','De planos que a gente tinha','De como eu me sentia sendo escolhido(a)','De uma versão de mim que existia ali','Não consigo separar'],'sWhat')}</div><div id="sNext"></div>`;bind('sWhat',s2)
+}
+function s2(what){$('#sNext').innerHTML=q('O que trouxe essa saudade hoje?',['Uma lembrança boa','Vi / ouvi / passei por alguma coisa','Fiquei sozinho(a)','Vi algo dessa pessoa','Uma data / horário / rotina','Alguém falou dela(e)','Não sei. Acordei assim'],'sTrig');bind('sTrig',tr=>s3(what,tr))}
+function s3(what,tr){$('#sNext').innerHTML=q('Se a relação voltasse amanhã exatamente como era antes de terminar, o que você sentiria?',['Eu iria na hora','Eu gostaria, mas teria medo','Eu não quero a relação de volta. Só sinto falta','Eu ficaria dividido(a)','Eu sei que do jeito que era não dava','Não consigo responder agora'],'sBack');bind('sBack',back=>sResult(what,tr,back))}
+function sResult(what,tr,back){let a=`Hoje a saudade está puxando principalmente <b>${esc(what.toLowerCase())}</b>. Ela apareceu depois de <b>${esc(tr.toLowerCase())}</b>. E quando você imagina a relação voltando igual ao que era, sua resposta é: <b>${esc(back.toLowerCase())}</b>.`;let b=what.includes('rotina')?'Talvez uma parte do luto seja da arquitetura da vida: mensagens, horários, presença, pequenos rituais. Isso pode doer mesmo quando a relação não caberia mais.':what.includes('fase')||what.includes('versão de mim')?'Talvez essa pessoa esteja carregando também uma época — e uma versão sua — que você ainda não sabe como reencontrar sem ela(e).':what.includes('planos')?'Tem luto pelo que aconteceu e luto pelo futuro que deixou de acontecer. Às vezes o segundo dói mais porque nunca chegou a existir.':what.includes('ser escolhido')?'Talvez a falta não seja apenas da pessoa, mas da sensação de ter um lugar garantido para alguém.':back.includes('não dava')||back.includes('não quero')?'Você consegue sentir saudade e, ao mesmo tempo, saber que voltar não seria bom. Essas duas coisas não se anulam.':'Saudade é informação sobre vínculo e memória; não é automaticamente uma instrução para voltar.';let c='Se você pudesse trazer de volta só uma parte do que sente falta — sem trazer a relação inteira — o que seria?';$('#sNext').innerHTML=insight(a,b,c);$('#saveMoment').onclick=()=>{addLog('saudade','Bateu saudade',{what,tr,back},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}}
+
+// --- RECEBI MENSAGEM ---
+function flowRecebi(){
+ $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Recebi mensagem</div><h1>O que chegou?</h1><p class="human muted">Não precisa colar a conversa. Conta do teu jeito.</p><textarea id="msgText" placeholder="Ex.: mandou 'oi, como você tá?' depois de três semanas..."></textarea><button class="btn" id="msgGo">Continuar</button></div><div id="rNext"></div>`;$('#msgGo').onclick=()=>{let t=$('#msgText').value.trim();if(t)r2(t)}
+}
+function r2(text){$('#rNext').innerHTML=q('O que aconteceu em você quando viu?', ['Meu coração acelerou / fiquei agitado(a)','Veio esperança','Veio raiva','Veio saudade','Fiquei frio(a) / travado(a)','Senti alívio','Fiquei confuso(a)','Quase nada'],'rFeel');bind('rFeel',feel=>r3(text,feel))}
+function r3(text,feel){$('#rNext').innerHTML=q('Sem pensar muito: o que tua cabeça disse que essa mensagem significava?', ['Quer voltar','Está com saudade','Está testando se ainda estou aqui','Quer resolver algo prático','Está carente / sozinha(o)','Quer pedir desculpa','Não faço ideia','Parece só o que está escrito'],'rMeaning');bind('rMeaning',meaning=>r4(text,feel,meaning))}
+function r4(text,feel,meaning){$('#rNext').innerHTML=q('E o que está realmente escrito sustenta essa leitura?', ['Sim. Está claro','Tem pistas, mas não está claro','Não. Eu completei bastante coisa','É impossível saber ainda'],'rEvidence');bind('rEvidence',ev=>rResult(text,feel,meaning,ev))}
+function rResult(text,feel,meaning,ev){let a=`Chegou uma mensagem e teu primeiro movimento foi <b>${esc(feel.toLowerCase())}</b>. Tua cabeça rapidamente leu aquilo como <b>${esc(meaning.toLowerCase())}</b>. Quando você olha só para o que está escrito, você diz: <b>${esc(ev.toLowerCase())}</b>.`;let b=ev==='Sim. Está claro'?'Há algo concreto para responder. Mesmo assim, “o que essa pessoa quer agora” e “o que seria bom para você fazer” continuam sendo perguntas diferentes.':ev.includes('pistas')?'Talvez exista um sinal real, mas ainda não uma resposta completa. É nesse espaço vazio que esperança e medo costumam escrever o resto da conversa.':'O impacto emocional da mensagem pode estar dizendo mais sobre o que ela ativou em você do que sobre a intenção de quem enviou.';let c='Se você lesse essa mensagem como se tivesse sido enviada para um amigo, o que diria que ela realmente diz — e o que ainda não diz?';$('#rNext').innerHTML=`<div class="card"><div class="eyebrow">O que chegou</div><p class="quote">“${esc(text)}”</p></div>${insight(a,b,c)}`;$('#saveMoment').onclick=()=>{addLog('recebi','Recebeu mensagem',{text,feel,meaning,ev},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}}
+
+// --- LEMBRANÇA ---
+function flowLembranca(){
+ $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Uma cena voltou</div><h1>Que tipo de lembrança foi?</h1><p class="human muted">Pode ser bonita. Pode ser horrível. Pode ser uma coisa boba que ninguém entenderia por que ficou.</p>${options(['Uma cena muito boa','Uma cena banal do dia a dia','Uma cena de carinho / intimidade','Uma briga','Uma mentira / quebra de confiança','Uma despedida','Uma cena em que me senti sozinho(a) mesmo acompanhado(a)','Algo que hoje eu vejo diferente','Uma cena que não sei por que voltou'],'lKind')}</div><div id="lNext"></div>`;bind('lKind',l2)
+}
+function l2(kind){$('#lNext').innerHTML=`<div class="card"><div class="qmeta">Cena, não interpretação</div><h2>Se tivesse uma câmera ali, o que ela teria visto?</h2><textarea id="sceneText" placeholder="Onde vocês estavam? O que foi dito? O que você fez? O que a outra pessoa fez?"></textarea><button class="btn" id="sceneGo">Continuar</button></div>`;$('#sceneGo').onclick=()=>{let scene=$('#sceneText').value.trim();if(scene)l3(kind,scene)}}
+function l3(kind,scene){$('#lNext').innerHTML=q('Naquela hora, o que você mais queria que acontecesse?', ['Que ela(e) me entendesse','Que ficasse / não fosse embora','Que pedisse desculpa','Que me escolhesse','Que a briga parasse','Que eu conseguisse ir embora','Que voltasse a ser como antes','Na hora eu nem sabia'],'lNeed');bind('lNeed',need=>l4(kind,scene,need))}
+function l4(kind,scene,need){$('#lNext').innerHTML=q('E hoje, por que você acha que essa cena ainda tem força?', ['Porque ainda não entendi o que aconteceu','Porque me culpo','Porque tenho raiva','Porque foi muito bom e acabou','Porque hoje vejo coisas que não via','Porque ainda espero uma reparação','Não sei. Ela só voltou'],'lWhy');bind('lWhy',why=>lResult(kind,scene,need,why))}
+function lResult(kind,scene,need,why){let same=state.logs.filter(x=>x.kind==='lembranca'&&x.data?.need===need).length;let a=`A cena que voltou foi <b>${esc(kind.toLowerCase())}</b>. Naquele momento, o que você mais queria era <b>${esc(need.toLowerCase())}</b>. Hoje ela ainda parece viva porque <b>${esc(why.toLowerCase())}</b>.`;let b=same?`Não é a primeira cena guardada em que aparece essa mesma necessidade. Ainda não vou chamar isso de padrão, mas já vale observar quando “${esc(need.toLowerCase())}” aparece em histórias diferentes.`:'Uma memória isolada não precisa virar diagnóstico sobre você ou sobre a relação. Às vezes ela só precisa ganhar contexto para parar de carregar a história inteira sozinha.';let c='Se essa cena pudesse deixar de ser uma prova de quem estava certo, o que ela mostraria sobre o que você precisava naquela época?';$('#lNext').innerHTML=`<div class="card"><div class="eyebrow">A cena</div><p class="quote">${esc(scene)}</p></div>${insight(a,b,c)}`;$('#saveMoment').onclick=()=>{addLog('lembranca','Uma cena voltou',{kind,scene,need,why},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}}
+
+// --- SÓ ESTOU MAL ---
+function flowMal(){
+ $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Só estou mal</div><h1>Então hoje não precisamos entender tudo.</h1><p class="human muted">Me ajuda só a localizar onde dói.</p>${options(['Estou com saudade','Estou ansioso(a) / agitado(a)','Estou com raiva','Estou me culpando','Estou me sentindo rejeitado(a)','Estou muito sozinho(a)','Estou vazio(a) / sem sentir quase nada','Estou chorando e nem sei explicar','Estou com medo de fazer alguma coisa contra mim'],'bFeel')}</div><div id="bNext"></div>`;bind('bFeel',b2)
+}
+function b2(feel){if(feel.includes('contra mim'))return crisisPath();$('#bNext').innerHTML=q('O que estava acontecendo pouco antes disso apertar?', ['Eu estava sozinho(a)','Vi algo da pessoa','Lembrei de alguma coisa','A gente teve contato','Alguma outra parte da minha vida deu errado','Eu dormi mal / estou esgotado(a)','Não aconteceu nada específico'],'bBefore');bind('bBefore',before=>b3(feel,before))}
+function b3(feel,before){$('#bNext').innerHTML=q('Qual impulso está vindo junto?', ['Mandar mensagem','Olhar redes / procurar informação','Sumir de todo mundo','Chorar / deitar / ficar quieto(a)','Beber / sair / tentar desligar','Pedir colo para alguém','Nenhum. Só quero que passe'],'bImpulse');bind('bImpulse',imp=>bResult(feel,before,imp))}
+function bResult(feel,before,imp){let a=`Agora o que está mais alto é <b>${esc(feel.toLowerCase())}</b>. Isso apertou depois de <b>${esc(before.toLowerCase())}</b>, e o impulso que veio junto foi <b>${esc(imp.toLowerCase())}</b>.`;let b='Talvez hoje a tarefa não seja entender a relação. Talvez seja atravessar este pedaço da noite sem transformar um estado passageiro em uma decisão que vai continuar amanhã.';if(before.includes('dormi mal'))b='Cansaço muda o tamanho das coisas. Talvez parte do que parece impossível agora esteja amplificada por um corpo que também está pedindo descanso.';if(imp.includes('redes'))b='Procurar informação pode dar sensação de controle por alguns minutos e abrir dez perguntas novas depois. Vale perceber se você quer saber alguma coisa — ou quer parar de não saber.';let c='O que deixaria os próximos 20 minutos apenas 10% menos pesados?';$('#bNext').innerHTML=insight(a,b,c,'Guardar e voltar para Hoje');$('#saveMoment').onclick=()=>{addLog('mal','Hoje apertou',{feel,before,imp},{summary:a.replace(/<[^>]+>/g,''),question:c});show('home')}}
+
+// --- HOJE ESTOU MELHOR ---
+function flowMelhor(){
+ $('#flowBox').innerHTML=`<div class="card good"><div class="eyebrow">Hoje estou melhor</div><h1>O que voltou a existir hoje?</h1><p class="human muted">Não quero registrar só os dias em que essa história te engole.</p>${options(['Tive paz por algumas horas','Consegui trabalhar / estudar','Ri de verdade','Fiquei bem sozinho(a)','Saí com alguém / vi amigos','Mexi o corpo / fui para a rua / natureza','Fiz alguma coisa que era minha','Pensei menos nessa pessoa','Pensei nela(e), mas não desabei','Senti vontade de futuro'],'gWhat')}</div><div id="gNext"></div>`;bind('gWhat',g2)
+}
+function g2(what){$('#gNext').innerHTML=q('O que ajudou esse dia a ser diferente?', ['Dormir melhor','Estar com outras pessoas','Ter uma coisa para fazer','Movimento / natureza / sair de casa','Não ter contato com essa pessoa','Ter tido um contato tranquilo','Eu me tratei melhor hoje','Não sei. Só aconteceu'],'gHelp');bind('gHelp',help=>g3(what,help))}
+function g3(what,help){$('#gNext').innerHTML=q('Teve algum momento em que você percebeu “caramba, eu estou aqui” sem a relação ocupar tudo?', ['Sim, e lembro da cena','Sim, mas foi rápido','Acho que sim','Não exatamente'],'gAlive');bind('gAlive',alive=>gResult(what,help,alive))}
+function gResult(what,help,alive){let a=`Hoje apareceu uma coisa importante: <b>${esc(what.toLowerCase())}</b>. Você percebe que ajudou <b>${esc(help.toLowerCase())}</b>. E sobre ter existido um momento realmente seu: <b>${esc(alive.toLowerCase())}</b>.`;let b='Isso não precisa significar que você “superou”. Só mostra que a tua vida ainda consegue produzir estados que não dependem inteiramente dessa relação.';let c='O que aconteceu hoje que você gostaria de oferecer de novo para si nesta semana — sem transformar isso em obrigação?';$('#gNext').innerHTML=insight(a,b,c);$('#saveMoment').onclick=()=>{addLog('melhor','Hoje a vida abriu espaço',{what,help,alive},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}}
+
+// --- SOS ---
+function renderSOS(){
+ const items=[['msg','Vou mandar mensagem agora','Estou com a conversa aberta / quase enviando.'],['stalk','Estou indo olhar as redes de novo','Quero ver, conferir, descobrir alguma coisa.'],['back','Quero pedir para voltar','A vontade ficou grande demais.'],['contact','Ela(e) me chamou e eu travei','Preciso responder sem me atropelar.'],['crisis','Estou desabando','Não é só saudade. Eu não estou me sentindo seguro(a) comigo.']];
+ $('#sosGrid').innerHTML=items.map(x=>`<button class="sosbtn sosAct" data-v="${x[0]}"><strong>${x[1]}</strong><small>${x[2]}</small></button>`).join('');bind('sosAct',sosAction)
+}
+function sosAction(v){
+ if(v==='crisis')return crisisPath(true);
+ const map={
+  msg:['Antes de enviar, olha só para uma coisa: o que você espera sentir cinco minutos depois?',['Alívio','Esperança','Controle','Proximidade','Quero uma resposta','Não sei']],
+  stalk:['Antes de abrir, o que você está tentando descobrir?',['Se está com alguém','Se está feliz','Se postou indireta','Se ainda me acompanha','Só quero sentir que ainda sei da vida dela(e)','Nem sei']],
+  back:['Se ela(e) dissesse “sim” agora, qual problema que fez a relação terminar já estaria diferente?',['Alguma coisa mudou de verdade','Nada mudou ainda','Não sei. Só quero parar essa dor','A gente nunca conseguiu conversar sobre isso']],
+  contact:['Primeiro separa duas coisas: responder e decidir o futuro da relação. O que você precisa fazer agora?',['Responder só o que foi perguntado','Pedir tempo','Dizer como eu me senti','Entender por que chamou','Eu não preciso responder agora']]
+ };
+ const [title,opts]=map[v];$('#sosBox').innerHTML=q(title,opts,'sosChoice','Não precisa resolver tudo');bind('sosChoice',ans=>{
+   let msg=v==='msg'?'Talvez a mensagem esteja tentando mudar teu estado antes de tentar mudar a relação.':v==='stalk'?'Talvez você esteja procurando certeza num lugar que costuma entregar fragmentos.':v==='back'?'A vontade de voltar pode ser verdadeira e ainda assim chegar antes da resposta sobre o que mudaria.':'Você pode responder uma mensagem sem decidir a relação inteira hoje.';
+   $('#sosBox').innerHTML=`<div class="card"><div class="eyebrow">Só por agora</div><p class="quote">${msg}</p><p class="muted">Você respondeu: ${esc(ans)}.</p><button class="btn" id="sosSave">Guardar este SOS</button></div>`;$('#sosSave').onclick=()=>{addLog('sos','SOS',{type:v,ans},{summary:msg,question:'O que muda se eu esperar dez minutos antes da próxima ação?'});show('home')}
+ })
+}
+function crisisPath(inSOS=false){
+ const box=inSOS?'#sosBox':'#bNext';$(box).innerHTML=`<div class="card danger"><div class="eyebrow">Isso precisa de gente de verdade agora</div><h1>Não fica sozinho(a) com isso.</h1><p class="human">Se existe chance de você se machucar ou fazer algo contra si, este aplicativo não é o lugar para segurar isso sozinho.</p><p>Chama alguém que possa ficar com você fisicamente ou por telefone. Se o risco for imediato, procure um serviço de emergência da sua região.</p><div class="divider"></div><p><b>CVV — Centro de Valorização da Vida</b><br><a style="color:#fff" href="tel:+55188">188</a> · atendimento 24h</p><p><a style="color:#fff" href="https://www.cvv.org.br/chat/" target="_blank" rel="noopener">Abrir chat do CVV</a></p><button class="btn secondary" onclick="show('home')">Voltar para o início</button></div>`
+}
+
+// --- JORNADA ---
+function countsBy(field){const m={};state.logs.forEach(l=>{const v=l.data?.[field];if(v)m[v]=(m[v]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1])}
+function renderJourney(){
+ const n=state.logs.length;const better=state.logs.filter(x=>x.kind==='melhor').length;const painful=state.logs.filter(x=>['mal','sos','mandar'].includes(x.kind)).length;
+ $('#journeySummary').innerHTML=n?`<div class="card"><div class="eyebrow">Até aqui</div><div class="stats"><div class="stat"><b>${n}</b><span>momentos</span></div><div class="stat"><b>${painful}</b><span>apertos / impulsos</span></div><div class="stat"><b>${better}</b><span>dias com espaço</span></div></div></div>`:`<div class="card"><p class="muted">Ainda não tem nada para organizar. A Jornada nasce do uso, não de um teste inicial.</p></div>`;
+ let patterns=[];[['trigger','gatilho'],['what','tipo de saudade'],['need','necessidade em cenas'],['help','coisa que ajudou']].forEach(([f,label])=>{let c=countsBy(f)[0];if(c&&c[1]>=2)patterns.push(`<div class="ins"><div class="label">Tem algo repetindo</div><p>“${esc(c[0])}” apareceu ${c[1]} vezes como ${label}. Não é um diagnóstico. É só algo que já merece ser observado.</p></div>`)});
+ $('#journeyPatterns').innerHTML=patterns.length?`<div class="insight">${patterns.join('')}</div>`:(n>=3?`<div class="note">Tem registros suficientes para contar uma história, mas ainda não apareceu repetição forte. Isso também é informação.</div>`:'');
+ $('#timeline').innerHTML=n?`<div class="timeline">${state.logs.map(l=>`<div class="eventItem"><div class="date">${fmt(l.at)}</div><b>${esc(l.title)}</b><p>${esc(l.reading?.summary||'Momento guardado.')}</p>${l.reading?.question?`<span class="tag">${esc(l.reading.question)}</span>`:''}</div>`).join('')}</div>`:`<div class="empty">Seus registros vão aparecer aqui.</div>`
+}
+
+// --- RECOMEÇAR ---
+const areas={
+ body:['Corpo','Voltar a sentir que você mora em algum lugar.',['Dar uma volta sem levar o término como tarefa','Comer alguma coisa de verdade','Tomar banho e trocar de roupa','Fazer um movimento que você gostava antes']],
+ people:['Gente','Lembrar que vínculo não existe só em casal.',['Mandar mensagem para alguém seguro','Aceitar um convite simples','Encontrar alguém sem falar da relação o tempo todo','Perguntar como outra pessoa está']],
+ home:['Casa','Fazer o espaço voltar a ter alguma coisa sua.',['Mudar um canto da casa','Guardar um objeto que está te prendendo hoje','Colocar uma música que não pertence à relação','Fazer uma refeição só para você']],
+ work:['Trabalho / estudo','Ter um pedaço do dia que não pergunta sobre o ex.',['Fazer uma tarefa pequena de 20 minutos','Voltar para algo que ficou parado','Organizar só o próximo passo','Encerrar o dia sem tentar recuperar tudo de uma vez']],
+ pleasure:['Prazer','Reaprender o que te dá vontade sem precisar compartilhar.',['Ouvir algo novo','Ir a um lugar que é teu','Fazer uma coisa inútil e boa','Retomar um hobby sem meta']],
+ future:['Futuro','Criar uma imagem que não precise apagar o passado.',['Planejar uma semana, não a vida inteira','Escolher uma coisa que você quer viver por você','Imaginar um lugar onde essa história não é o centro','Anotar uma possibilidade sem se comprometer com ela']]
+};
+function renderRestart(){
+ $('#restartAreas').innerHTML=Object.entries(areas).map(([k,v])=>`<button class="choice area" data-kind="${k}"><strong>${v[0]}</strong><small>${v[1]}</small></button>`).join('');$$('.area').forEach(e=>e.onclick=()=>openArea(e.dataset.kind));
+ $('#restartList').innerHTML=state.steps.length?state.steps.map(s=>`<div class="card flat"><div class="tiny">${fmt(s.at)} · ${esc(areas[s.area]?.[0]||s.area)}</div><p>${esc(s.step)}</p></div>`).join(''):`<div class="empty">Ainda não tem nada aqui. E não precisa ter pressa.</div>`
+}
+function openArea(k){const [name,desc,steps]=areas[k];$('#restartBox').innerHTML=`<div class="card"><div class="eyebrow">${name}</div><h2>Qual dessas cabe na tua vida sem virar projeto?</h2>${options(steps,'stepPick')}</div>`;bind('stepPick',step=>{$('#restartBox').innerHTML=`<div class="card good"><div class="eyebrow">Só isso</div><p class="quote">${esc(step)}</p><p class="muted">Não é meta de recuperação. É só uma coisa pequena devolvida para tua vida.</p><button class="btn" id="keepStep">Guardar</button></div>`;$('#keepStep').onclick=()=>{state.steps.unshift({at:now(),area:k,step});save();renderRestart()}})}
+
+// --- PRA MIM ---
+function renderMe(){
+ const p=state.profile;$('#meContext').innerHTML=`<div class="card"><div class="eyebrow">Contexto</div><div class="hr"></div><p><b>${esc(p.relType||'Relação')}</b><br><span class="muted">${esc(p.breakTime||'')}</span></p><p><b>Contato hoje</b><br><span class="muted">${esc(p.contact||'')}</span></p><p><b>Como eu quero ser respondido</b><br><span class="muted">${esc(p.tone||'')}</span></p><button class="btn secondary" id="redoProfile">Refazer contexto</button></div>`;$('#redoProfile').onclick=()=>{state.onboarded=false;save();setupOnboarding();show('onboarding')};
+ const topTriggers=countsBy('trigger').slice(0,3),topNeeds=countsBy('need').slice(0,3),helps=countsBy('help').slice(0,3);
+ const row=(title,arr)=>arr.length?`<div><h3>${title}</h3>${arr.map(x=>`<span class="tag">${esc(x[0])} · ${x[1]}x</span>`).join('')}</div>`:'';
+ $('#meMemory').innerHTML=`<div class="card"><div class="eyebrow">Coisas que o PÓS já consegue lembrar</div><p class="muted">Só aparecem quando existem registros suficientes. Aqui nenhuma repetição vira rótulo.</p>${row('O que costuma puxar você de volta',topTriggers)}${row('O que apareceu como necessidade em cenas',topNeeds)}${row('O que ajudou em dias melhores',helps)}${!topTriggers.length&&!topNeeds.length&&!helps.length?'<div class="empty">Ainda é cedo. Primeiro vem a história; depois vêm as repetições.</div>':''}</div>`
+}
+
+$('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='POS-meus-registros.json';a.click();URL.revokeObjectURL(a.href)};
+$('#clearBtn').onclick=()=>{if(confirm('Apagar todos os registros desta beta neste navegador?')){localStorage.removeItem(KEY);location.reload()}};
+$$('.nav button').forEach(b=>b.onclick=()=>{show(b.dataset.screen);if(b.dataset.screen==='sos')renderSOS()});
+
+// init
+$('#homeGrid').innerHTML='';setupOnboarding();if(!state.onboarded)show('onboarding');else{renderHome();show('home')}
 </script>
-</body>
-</html>
+</body></html>
