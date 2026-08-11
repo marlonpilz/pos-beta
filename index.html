@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PÓS — Beta V2</title>
+<title>PÓS — Beta V3</title>
 <style>
 :root{
  --bg:#0c0d0f;--panel:#121417;--card:#171a1e;--card2:#1d2126;--text:#f7f7f7;--muted:#9da4ad;
@@ -35,7 +35,7 @@ textarea,input,select{width:100%;background:#0f1114;color:var(--text);border:1px
 </head>
 <body>
 <div class="app">
-  <div class="top"><div class="brand">PÓS</div><div class="beta">BETA V2</div></div>
+  <div class="top"><div class="brand">PÓS</div><div class="beta">BETA V3</div></div>
 
   <!-- ONBOARDING -->
   <section id="onboarding" class="hidden">
@@ -68,8 +68,8 @@ textarea,input,select{width:100%;background:#0f1114;color:var(--text);border:1px
   <!-- HOJE -->
   <section id="home" class="screen">
     <div class="muted">Boa noite.</div>
-    <h1>O que aconteceu hoje?</h1>
-    <p class="muted">Escolhe o ponto mais próximo do que está pegando agora.</p>
+    <h1 id="openingPrompt">O que te trouxe aqui?</h1>
+    <p id="openingSub" class="muted">Escolhe o ponto mais próximo do que está pegando agora.</p>
     <div class="grid2">
       <button class="choice event" data-type="saudade"><strong>💭 Bateu saudade</strong><small>Minha cabeça voltou pra relação.</small></button>
       <button class="choice event" data-type="mandar"><strong>📱 Quero mandar mensagem</strong><small>Estou quase procurando.</small></button>
@@ -209,7 +209,7 @@ if(!state) state={
  onboarded:false,
  onboarding:{breakupTime:'1 a 4 semanas',whoEnded:'',contactStatus:''},
  profile:{relationship:'4 anos',breakup:'12 dias',repair:'Você costumava tentar reparar primeiro',cost:'Partes da sua vida foram ficando menores',hope:'Você ainda esperava que a relação voltasse a ser como antes'},
- logs:[], scenes:[]
+ logs:[], scenes:[], openCount:0
 };
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 function save(){localStorage.setItem(key,JSON.stringify(state));renderAll()}
@@ -308,6 +308,41 @@ $$('.rebuildItem').forEach(b=>b.addEventListener('click',()=>{
  }[area];
  $('#rebuildDetail').innerHTML=`<div class="card"><h2>${area}</h2><p>${copy}</p><textarea placeholder="Se quiser, registra uma resposta..."></textarea><button class="btn secondary">Guardar para depois</button></div>`;
 }));
+
+
+const openingPrompts = [
+  {
+    title:'O que te trouxe aqui?',
+    sub:'Não precisa organizar. Só começa pelo que está mais vivo agora.'
+  },
+  {
+    title:'O que aconteceu para você chegar aqui?',
+    sub:'Pode ser uma mensagem, uma lembrança, uma briga, um silêncio ou só um aperto.'
+  },
+  {
+    title:'O que você está sentindo?',
+    sub:'Sem precisar explicar o porquê ainda.'
+  },
+  {
+    title:'Qual foi a cena que mais ficou na tua cabeça desde ontem?',
+    sub:'Cena primeiro. A gente tenta entender depois.'
+  }
+];
+
+function applyOpeningPrompt(){
+  const idx = (state.openCount || 0) % openingPrompts.length;
+  const p = openingPrompts[idx];
+  $('#openingPrompt').textContent = p.title;
+  $('#openingSub').textContent = p.sub;
+}
+
+function countNewOpening(){
+  state.openCount = ((state.openCount || 0) + 1) % openingPrompts.length;
+  localStorage.setItem(key, JSON.stringify(state));
+}
+
+applyOpeningPrompt();
+countNewOpening();
 
 renderAll();
 if(!state.onboarded){$$('.screen').forEach(s=>s.classList.add('hidden'));$('#onboarding').classList.remove('hidden')}

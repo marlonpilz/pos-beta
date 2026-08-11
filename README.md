@@ -1,23 +1,15 @@
-# PÓS — Beta V2
+# PÓS — Beta V3
 
-Beta conceitual navegável do produto PÓS.
+Mudança principal:
+- A pergunta de abertura muda a cada nova visita:
+  1. O que te trouxe aqui?
+  2. O que aconteceu para você chegar aqui?
+  3. O que você está sentindo?
+  4. Qual foi a cena que mais ficou na tua cabeça desde ontem?
+  5. Volta para a primeira.
 
-## Inclui
-- Onboarding inicial
-- Tela Hoje
-- Modo SOS
-- Jornada
-- Memória estruturada simulada
-- Área Recomeçar
-- Perfil / privacidade
-- Estado local via localStorage
+A sequência fica registrada localmente no navegador.
 
-## Importante
-Não possui IA real, autenticação ou banco de dados.
-Não deve ser usada para relatos sensíveis reais em produção.
-
-## Publicação rápida na Vercel
-1. Suba estes arquivos para um repositório no GitHub.
-2. Na Vercel: Add New > Project.
-3. Importe o repositório.
-4. Deploy.
+## Publicação
+Substitua os arquivos do repositório atual por estes e faça commit.
+A Vercel publica a atualização automaticamente.
