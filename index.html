@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0f1115" />
-<title>PÓS — V8 | Leitura em Camadas</title>
+<title>PÓS — V8.1 | Leitura em Camadas</title>
 <style>
 :root{
  --bg:#0d0f13;--panel:#13161b;--card:#181c22;--card2:#20252c;--text:#f5f4f1;--muted:#9ea4ad;
@@ -29,7 +29,7 @@ textarea,input,select{width:100%;border:1px solid var(--line);border-radius:15px
 </head>
 <body>
 <div class="app">
- <div class="top"><div class="brand">PÓS</div><div class="version">V8 · leitura em camadas</div></div>
+ <div class="top"><div class="brand">PÓS</div><div class="version">V8.1 · leitura em camadas</div></div>
 
  <section id="onboarding" class="hidden fade">
    <div class="eyebrow">Antes de começar</div>
@@ -96,7 +96,7 @@ textarea,input,select{width:100%;border:1px solid var(--line);border-radius:15px
 
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='pos_beta_v8_camadas';
+const KEY='pos_beta_v81_camadas';
 const fresh={onboarded:false,profile:{relType:'',breakTime:'',contact:'',tone:'Direto, mas sem me atropelar'},logs:[],steps:[],openIndex:0};
 let state=(()=>{try{return {...fresh,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return structuredClone(fresh)}})();
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
@@ -354,7 +354,6 @@ function mResult(trigger,detail,need,after){
     {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
     {label:'O espelho dessa relação',icon:'mirror',html:mirror,note:'Leitura relacional e simbólica — não diagnóstico.'},
     {label:'Isso pode vir de antes?',icon:'before',html:before},
-    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Você tem capacidade de criar vínculo, importância, intimidade e presença.','Quando a perda ameaça esse vínculo, a mesma capacidade pode virar urgência por confirmação, contato ou controle para diminuir a insegurança.')},
     {label:'O que acontece depois',icon:'journey',html:cycle},
     {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
   ],question,()=>{
@@ -451,7 +450,6 @@ function sResult2(kind,detail,tr,sep){
     {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
     {label:'O espelho dessa relação',icon:'mirror',html:mirror,note:'Uma lente de leitura, não uma verdade sobre você.'},
     {label:'Isso começou aqui?',icon:'before',html:before},
-    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Você foi capaz de atribuir valor, criar intimidade, rotina, futuro e pertencimento.','A memória pode transformar o valor real daquilo que existiu em argumento automático para trazer de volta o vínculo inteiro. '+shadow)},
     {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
   ],question,()=>{
     addLog('saudade','Bateu saudade',{kind,detail,tr,sep},{summary:stripTags(scene+' '+emotion),question});show('journey')
@@ -542,7 +540,6 @@ function rResult2(text,body,story,ev,want){
     {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
     {label:'O espelho dessa relação',icon:'mirror',html:mirror},
     {label:'Isso pode tocar algo antigo?',icon:'before',html:before},
-    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Você consegue atribuir sentido, ler nuances e se importar com o vínculo.','Quando há muita expectativa ou medo, a mesma sensibilidade pode preencher lacunas e transformar poucos dados em uma história inteira.')},
     {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
   ],question,()=>{
     addLog('recebi','Recebeu mensagem',{text,body,story,ev,want},{summary:stripTags(scene+' '+emotion),question});show('journey')
@@ -628,7 +625,6 @@ function lResult2(kind,scene,inside,nowv){
     {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
     {label:'O espelho dessa relação',icon:'mirror',html:mirror},
     {label:'Essa sensação já tinha história?',icon:'before',html:before},
-    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Você consegue guardar significado, detalhes, afeto e aprender com o que viveu.','Quando uma cena vira símbolo da relação inteira ou do teu próprio valor, ela pode ganhar um poder maior do que os minutos que realmente durou.')},
     {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
   ],question,()=>{
     addLog('lembranca','Uma cena voltou',{kind,scene,inside,now:nowv},{summary:stripTags(sceneRead+' '+emotion),question});show('journey')
@@ -719,7 +715,6 @@ function bResult2(feel,layer,before,need){
     {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
     {label:'O que esse estado pode estar tocando',icon:'mirror',html:mirror,note:'Se essa leitura aumentar tua sobrecarga, ignora por enquanto. Hoje o corpo vem primeiro.'},
     {label:'Isso pode ter uma história maior?',icon:'before',html:beforeLayer},
-    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('Sentir intensamente também fala da tua capacidade de vínculo e importância.','Quando a intensidade toma o corpo inteiro, a necessidade de resolver imediatamente pode fazer você confundir urgência emocional com urgência de decisão.')},
     {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
   ],question,()=>{
     addLog('mal','Hoje apertou',{feel,layer,before,need},{summary:stripTags(scene+' '+emotion),question});show('home')
@@ -820,7 +815,6 @@ function gResult2(what,scene,help,fear){
     {label:'No movimento do luto',icon:'grief',html:`<b>${grief[0]}.</b> ${grief[1]}`},
     {label:'O espelho agora muda de direção',icon:'mirror',html:mirror},
     {label:'O que talvez seja teu há mais tempo',icon:'before',html:before},
-    {label:'Luz e sombra',icon:'shadow',html:lightShadowText('A relação revelou tua capacidade de vínculo; este momento revela tua capacidade de continuar existindo fora dele.','A sombra aqui pode ser transformar recuperação em desempenho: medir cada dia, provar que “superou”, ou sentir culpa quando a dor volta.')},
     {label:'O que tua Jornada já mostra',icon:'journey',html:journeyText(hist)}
   ],question,()=>{
     addLog('melhor','Hoje a vida abriu espaço',{what,scene,help,fear},{summary:stripTags(sceneRead+' '+emotion),question});show('journey')
