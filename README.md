@@ -1,6 +1,7 @@
-# PÓS Beta V7 — Seis Janelas
+# PÓS Beta V7.1 — Seis Janelas FUNCIONAL
 
-Versão aprofundada das seis portas humanas:
+Correção importante:
+- As seis janelas da tela inicial agora abrem corretamente seus respectivos fluxos.
 - Bateu saudade
 - Quero mandar mensagem
 - Recebi mensagem
@@ -8,4 +9,4 @@ Versão aprofundada das seis portas humanas:
 - Só estou mal
 - Hoje estou melhor
 
-Para Vercel/GitHub: substitua os arquivos da raiz do repositório pelo conteúdo desta pasta.
+Substitua os arquivos da raiz do repositório GitHub/Vercel pelos arquivos deste pacote.

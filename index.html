@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0f1115" />
-<title>PÓS — V6</title>
+<title>PÓS — V7.1 | Seis Janelas</title>
 <style>
 :root{
  --bg:#0d0f13;--panel:#13161b;--card:#181c22;--card2:#20252c;--text:#f5f4f1;--muted:#9ea4ad;
@@ -29,7 +29,7 @@ textarea,input,select{width:100%;border:1px solid var(--line);border-radius:15px
 </head>
 <body>
 <div class="app">
- <div class="top"><div class="brand">PÓS</div><div class="version">V6 · laboratório</div></div>
+ <div class="top"><div class="brand">PÓS</div><div class="version">V7.1 · seis janelas</div></div>
 
  <section id="onboarding" class="hidden fade">
    <div class="eyebrow">Antes de começar</div>
@@ -96,7 +96,7 @@ textarea,input,select{width:100%;border:1px solid var(--line);border-radius:15px
 
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='pos_v6_state';
+const KEY='pos_beta_v71_seis_janelas';
 const fresh={onboarded:false,profile:{relType:'',breakTime:'',contact:'',tone:'Direto, mas sem me atropelar'},logs:[],steps:[],openIndex:0};
 let state=(()=>{try{return {...fresh,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return structuredClone(fresh)}})();
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
@@ -146,7 +146,7 @@ function setupOnboarding(){
 function renderHome(){
  const o=openings[state.openIndex%openings.length];$('#openPrompt').textContent=o[0];$('#openSub').textContent=o[1];
  $('#homeGrid').innerHTML=homeCards.map(c=>`<button class="choice event" data-kind="${c[0]}"><strong>${c[1]}</strong><small>${c[2]}</small></button>`).join('');
- bind('event',(v)=>startFlow(v));$('#statLogs').textContent=state.logs.length;$('#statDays').textContent=state.profile.breakTime||'—';$('#statTone').textContent=state.profile.tone?.startsWith('Bem direto')?'Direto':state.profile.tone?.startsWith('Mais cuidadoso')?'Calmo':'Franco';
+ $$('.event').forEach(el=>el.onclick=()=>startFlow(el.dataset.kind));$('#statLogs').textContent=state.logs.length;$('#statDays').textContent=state.profile.breakTime||'—';$('#statTone').textContent=state.profile.tone?.startsWith('Bem direto')?'Direto':state.profile.tone?.startsWith('Mais cuidadoso')?'Calmo':'Franco';
  const last=state.logs[0];$('#homeLine').textContent=last?.reading?.question||'Você não precisa entender a relação inteira para entender o que aconteceu agora.';
  state.openIndex=(state.openIndex+1)%openings.length;save();
 }
@@ -154,92 +154,472 @@ function renderHome(){
 function startFlow(kind){show('flow');const f={mandar:flowMandar,saudade:flowSaudade,recebi:flowRecebi,lembranca:flowLembranca,mal:flowMal,melhor:flowMelhor}[kind];f?.()}
 $('#backHome').onclick=()=>show('home');
 
-// --- QUERO MANDAR MENSAGEM ---
-const mandarTriggers=['Sonhei com essa pessoa','Vi uma foto / story / perfil','Lembrei de alguma coisa','Fiquei sozinho(a) e bateu vontade','Aconteceu algo bom e eu quis contar','Aconteceu algo ruim e eu quis procurar','Ela(e) fez algum sinal','Vi essa pessoa com alguém / imaginei isso','Música, lugar, cheiro ou objeto me levou pra lá','Não aconteceu nada. A vontade só veio'];
-function flowMandar(){
- $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Quero mandar mensagem</div><h1>O que aconteceu antes de abrir essa conversa?</h1><p class="human muted">Não quero saber ainda se você “deve” mandar. Quero entender o minuto anterior.</p>${options(mandarTriggers,'mTrig')}</div><div id="mNext"></div>`;bind('mTrig',mTrigger)
+// --- 6 JANELAS HUMANAS — V7 ---
+
+// Helpers específicos dos fluxos
+function renderResult(target, intro, a, b, c, saveFn, button='Guardar este momento'){
+  $(target).innerHTML = `${intro||''}${insight(a,b,c,button)}`;
+  $('#saveMoment').onclick = saveFn;
 }
+function isAny(v, arr){ return arr.some(x=>v.includes(x)); }
+
+// 1) QUERO MANDAR MENSAGEM
+const mandarTriggers=[
+ 'Sonhei com essa pessoa',
+ 'Vi uma foto / story / perfil',
+ 'Lembrei de alguma coisa nossa',
+ 'Fiquei sozinho(a) e bateu vontade',
+ 'Aconteceu algo bom e eu quis contar',
+ 'Aconteceu algo ruim e eu quis procurar',
+ 'Ela(e) fez algum sinal',
+ 'Vi / imaginei essa pessoa com alguém',
+ 'Música, lugar, cheiro ou objeto me levou pra lá',
+ 'Não aconteceu nada. A vontade só veio'
+];
+
+function flowMandar(){
+ $('#flowBox').innerHTML=`<div class="card">
+  <div class="eyebrow">Quero mandar mensagem</div>
+  <h1>O que aconteceu antes de você pensar em procurar?</h1>
+  <p class="human muted">A mensagem é o fim da cena. Quero pegar o começo.</p>
+  ${options(mandarTriggers,'mTrig')}
+ </div><div id="mNext"></div>`;
+ bind('mTrig',mTrigger)
+}
+
 function mTrigger(trigger){
  const routes={
- 'Sonhei com essa pessoa':['No sonho, a gente estava bem','Ela(e) estava distante / me ignorava','Ela(e) estava com outra pessoa','A gente discutia','Tinha carinho / sexo / intimidade','Foi um sonho estranho, difícil de explicar'],
- 'Vi uma foto / story / perfil':['Parecia feliz sem mim','Achei bonita(o) / senti atração','Tinha alguém junto','Era um lugar / situação que era nossa','Pareceu uma indireta / sinal','Nem sei. Só ver já mexeu'],
- 'Lembrei de alguma coisa':['Uma lembrança muito boa','Uma coisa banal do dia a dia','Uma cena íntima','Uma briga / ferida','O começo da relação','O fim / a última conversa'],
- 'Fiquei sozinho(a) e bateu vontade':['Senti falta de ter com quem falar','Senti falta do corpo / carinho','Senti falta da rotina','Bateu medo de ficar sozinho(a)','Quis saber se ainda pensa em mim','Só queria parar essa sensação'],
- 'Aconteceu algo bom e eu quis contar':['Era a primeira pessoa para quem eu contaria','Eu queria que sentisse orgulho','Queria dividir a alegria com alguém conhecido','Queria uma desculpa para retomar contato'],
- 'Aconteceu algo ruim e eu quis procurar':['Era quem me acalmava','Queria colo / segurança','Queria alguém que conhecesse minha história','Na dor eu volto automaticamente para essa pessoa'],
- 'Ela(e) fez algum sinal':['Mandou mensagem','Curtiu / reagiu a algo','Visualizou / apareceu','Desbloqueou / voltou a seguir','Perguntou de mim para alguém','Foi algo ambíguo e eu li como sinal'],
- 'Vi essa pessoa com alguém / imaginei isso':['Senti ciúme','Senti que fui substituído(a)','Comecei a me comparar','Deu medo de perder de vez','Quis aparecer / lembrar que existo','Fiquei com raiva'],
- 'Música, lugar, cheiro ou objeto me levou pra lá':['Me transportou para uma fase boa','Lembrei de uma cena específica','Meu corpo reagiu antes de eu pensar','Veio saudade da vida que eu tinha','Fiquei procurando mais lembranças'],
- 'Não aconteceu nada. A vontade só veio':['Eu estava cansado(a)','Era noite / estava sem fazer nada','Eu estava bebendo','Eu estava ansioso(a)','Eu estava bem e do nada veio','Não consigo localizar']
+  'Sonhei com essa pessoa':['A gente estava bem de novo','Ela(e) estava distante / não me escolhia','Ela(e) estava com outra pessoa','A gente brigava','Tinha carinho / beijo / sexo','Era confuso, mas acordei mexido(a)'],
+  'Vi uma foto / story / perfil':['Parecia feliz sem mim','Achei bonita(o) e senti atração','Tinha alguém junto','Era um lugar / situação que era nossa','Pareceu uma indireta / recado','Só ver o rosto já bastou'],
+  'Lembrei de alguma coisa nossa':['Uma cena muito boa','Uma coisa banal do cotidiano','Uma cena íntima','Uma conversa que ficou pendente','Uma briga / ferida','O começo da relação','O fim / a despedida'],
+  'Fiquei sozinho(a) e bateu vontade':['Senti falta de ter com quem falar','Senti falta de toque / colo / sexo','A casa / noite ficou vazia','Bateu medo de ficar sozinho(a)','Quis saber se ainda pensa em mim','Quis parar de sentir o que eu estava sentindo'],
+  'Aconteceu algo bom e eu quis contar':['Era a primeira pessoa para quem eu contaria','Eu queria que ela(e) sentisse orgulho','Eu queria dividir com alguém que conhecia a história','A alegria ficou estranha sem poder compartilhar','Também seria uma desculpa para retomar contato'],
+  'Aconteceu algo ruim e eu quis procurar':['Era quem me acalmava','Queria colo / segurança','Queria alguém que conhecesse minha história','Na dor, meu corpo ainda procura essa pessoa','Queria ouvir que vai ficar tudo bem'],
+  'Ela(e) fez algum sinal':['Mandou mensagem','Curtiu / reagiu','Visualizou / apareceu','Desbloqueou / voltou a seguir','Perguntou de mim para alguém','Foi ambíguo e eu transformei em sinal'],
+  'Vi / imaginei essa pessoa com alguém':['Senti ciúme','Senti que fui substituído(a)','Comecei a me comparar','Deu medo de perder de vez','Quis aparecer para lembrar que existo','Fiquei com raiva / injustiçado(a)'],
+  'Música, lugar, cheiro ou objeto me levou pra lá':['Voltei para uma fase boa','Uma cena veio inteira','Meu corpo reagiu antes de eu pensar','Senti saudade da vida daquela época','Fui atrás de mais lembranças depois'],
+  'Não aconteceu nada. A vontade só veio':['Era noite','Eu estava cansado(a)','Eu estava ansioso(a)','Eu tinha bebido','Eu estava bem e veio do nada','Não consigo localizar']
  };
- const items=routes[trigger]||['Só mexeu comigo'];$('#mNext').innerHTML=q('O que foi que te pegou nisso?',items,'mRoute');bind('mRoute',(detail)=>mWant(trigger,detail));
-}
-function mWant(trigger,detail){
- $('#mNext').innerHTML=q('Se você mandar e tudo acontecer do jeito que você gostaria, o que você espera receber?',['Uma conversa. Só isso.','Quero sentir que ainda existe algo','Quero que ela(e) diga que sente minha falta','Quero tentar voltar','Quero aliviar essa angústia','Quero uma explicação / fechamento','Quero provocar alguma reação','Não sei. Só quero contato'],'mWant');bind('mWant',(want)=>mHistory(trigger,detail,want));
-}
-function mHistory(trigger,detail,want){
- const previous=state.logs.filter(x=>x.kind==='mandar');let extra=previous.length?`Você já registrou ${previous.length} momento(s) parecido(s).`:'Ainda não tem outro momento igual guardado aqui.';
- $('#mNext').innerHTML=q('E quando você procura essa pessoa, o que costuma acontecer depois?',['Eu me acalmo por um tempo','Fico olhando o celular esperando','A conversa me confunde mais','A gente se aproxima e depois se afasta de novo','Eu me arrependo','Às vezes é bom e respeitoso','Quase nunca procuro','Não sei ainda'],'mAfter',extra);bind('mAfter',(after)=>mResult(trigger,detail,want,after));
-}
-function mResult(trigger,detail,want,after){
- let a=`${tonePrefix()}A vontade não apareceu do nada. Ela veio depois de <b>${esc(trigger.toLowerCase())}</b>, e o que mais te pegou foi <b>${esc(detail.toLowerCase())}</b>. O que você está querendo encontrar do outro lado da mensagem é: <b>${esc(want.toLowerCase())}</b>.`;
- let b='Talvez essa mensagem esteja tentando resolver duas coisas ao mesmo tempo: falar com essa pessoa e mudar o que você está sentindo agora.';
- if(trigger.startsWith('Sonhei')) b='Um sonho consegue acordar uma relação inteira dentro da gente sem que nada tenha acontecido no mundo real. Talvez a urgência seja menos “preciso falar” e mais “acordei dentro daquela história de novo”.';
- else if(trigger.startsWith('Vi uma foto')) b='Imagem é um pedaço sem contexto. Talvez teu corpo tenha reagido a segundos de informação como se tivesse recebido uma resposta sobre a vida inteira dela(e).';
- else if(trigger.includes('sozinho')) b='Talvez a pessoa esteja se misturando com outra falta: presença, colo, rotina, alguém do outro lado. Se for isso, contato e solidão não são exatamente o mesmo problema.';
- else if(trigger.includes('sinal')) b='Aqui existe algo externo, mas sinal e intenção ainda são coisas diferentes. O risco é teu desejo completar as partes que a outra pessoa não disse.';
- else if(trigger.includes('alguém')) b='Talvez a vontade de procurar tenha menos a ver com reconstruir a relação e mais com não suportar a ideia de perder teu lugar nela.';
- else if(trigger.includes('bom')) b='Às vezes a saudade aparece não na dor, mas quando falta aquela testemunha que conhecia nossa vida. Isso pode ser diferente de querer a relação de volta.';
- else if(trigger.includes('ruim')) b='Na hora em que a vida aperta, o corpo costuma procurar caminhos conhecidos de segurança. Conhecido não significa necessariamente disponível — nem bom para você hoje.';
- else if(trigger.includes('Música')) b='Memórias sensoriais chegam rápido: uma música, um cheiro, uma rua podem colocar o passado inteiro no presente por alguns minutos.';
- if(want.includes('aliviar')) b+=' E como você quer principalmente aliviar a angústia, vale perceber se a mensagem virou uma tentativa de regular o estado de agora.';
- if(after.includes('esperando')||after.includes('confunde')||after.includes('arrependo')) b+=` Você também já sabe que depois costuma acontecer: ${esc(after.toLowerCase())}. Isso importa.`;
- const c=want.includes('voltar')?'Se a resposta fosse “sim, vamos voltar”, o que precisaria ser diferente desta vez para não voltarem exatamente para o lugar que terminou?':'Se você não pudesse mandar essa mensagem pelos próximos 30 minutos, o que essa vontade estaria tentando te contar sobre você?';
- $('#mNext').innerHTML=`<div class="card"><div class="eyebrow">Antes de enviar</div><p class="quote">A mensagem pode esperar dois minutos. O que você sentiu não precisa.</p></div>${insight(a,b,c)}`;
- $('#saveMoment').onclick=()=>{addLog('mandar','Quis mandar mensagem',{trigger,detail,want,after},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}
+ $('#mNext').innerHTML=q('O que exatamente te pegou nisso?',routes[trigger]||['Só mexeu comigo'],'mDetail');
+ bind('mDetail',detail=>mNeed(trigger,detail))
 }
 
-// --- SAUDADE ---
+function mNeed(trigger,detail){
+ let question='Se essa pessoa respondesse do jeito perfeito, o que mudaria dentro de você agora?';
+ let opts=['Eu me sentiria menos sozinho(a)','Eu saberia que ainda importo','Eu teria esperança de voltar','Eu teria uma resposta / fechamento','Eu me acalmaria','Eu me sentiria desejado(a) / escolhido(a)','Eu conseguiria contar o que aconteceu comigo','Não sei. Eu só quero essa pessoa perto'];
+ if(trigger.includes('algo bom')) opts=['Eu sentiria que alguém importante viu meu momento','Eu teria de volta nossa cumplicidade','Eu gostaria de sentir orgulho vindo dela(e)','Eu teria uma porta aberta para conversar','Não sei. Só queria dividir com ela(e)'];
+ if(trigger.includes('algo ruim')) opts=['Eu me acalmaria','Eu me sentiria protegido(a)','Eu não precisaria passar por isso sozinho(a)','Eu ouviria a voz que sempre me regulava','Talvez eu só queira voltar para algo conhecido'];
+ if(trigger.includes('sinal')) question='O que você está esperando que esse sinal confirme?';
+ $('#mNext').innerHTML=q(question,opts,'mNeed');
+ bind('mNeed',need=>mReality(trigger,detail,need))
+}
+
+function mReality(trigger,detail,need){
+ const past=state.logs.filter(x=>x.kind==='mandar');
+ $('#mNext').innerHTML=q(
+   'Quando você procura essa pessoa nesses momentos, como costuma ficar depois?',
+   ['Alivia e fica tudo bem','Alivia por pouco tempo e depois volta','Eu fico esperando resposta / olhando o celular','Eu ganho esperança e depois fico confuso(a)','A conversa reabre coisas que estavam fechando','Às vezes é uma conversa boa e respeitosa','Quase nunca procuro','Ainda não sei'],
+   'mAfter',
+   past.length?`Você já guardou ${past.length} momento(s) de vontade de contato.`:'Sem julgamento. Só pensa no depois, não no impulso.'
+ );
+ bind('mAfter',after=>mResult(trigger,detail,need,after))
+}
+
+function mResult(trigger,detail,need,after){
+ let a=`A vontade de procurar apareceu depois de <b>${esc(trigger.toLowerCase())}</b>. Dentro disso, o que mais te pegou foi <b>${esc(detail.toLowerCase())}</b>. Se viesse a resposta perfeita, hoje ela serviria principalmente para <b>${esc(need.toLowerCase())}</b>.`;
+ let b='Talvez existam duas vontades misturadas: falar com essa pessoa e sair do estado em que você entrou agora.';
+ if(trigger.includes('Sonhei')) b='O sonho trouxe a relação para o presente sem que nada novo tivesse acontecido entre vocês. Talvez a urgência seja uma continuação emocional do sonho, não uma informação nova sobre a relação.';
+ else if(trigger.includes('foto')) b='Uma imagem mostra segundos e o cérebro completa o resto. Talvez a dor esteja vindo tanto do que você viu quanto da história que precisou inventar para preencher o que não sabe.';
+ else if(trigger.includes('sozinho')) b='Talvez você esteja com saudade da pessoa e, ao mesmo tempo, tentando resolver solidão, silêncio ou falta de contato humano com o endereço mais conhecido.';
+ else if(trigger.includes('algo bom')) b='Tem relações que viram testemunhas da nossa vida. Às vezes a vontade de contar uma coisa boa é luto de cumplicidade — não necessariamente vontade de reconstruir o casal.';
+ else if(trigger.includes('algo ruim')) b='Na dor, a gente tende a procurar rotas antigas de segurança. O fato de teu corpo lembrar dessa pessoa como abrigo não responde sozinho se ela ainda pode ocupar esse lugar hoje.';
+ else if(trigger.includes('sinal')) b='Há um acontecimento externo, mas ainda existe diferença entre sinal, intenção e disponibilidade real. A esperança costuma preencher muito rápido o que ficou ambíguo.';
+ else if(trigger.includes('alguém')) b='Pode ter entrado algo além da saudade: comparação, medo de substituição e a sensação de perder definitivamente um lugar que um dia foi teu.';
+ else if(trigger.includes('Música')) b='Memória sensorial não pede licença. Um cheiro, uma rua ou uma música podem fazer o corpo chegar no passado antes da cabeça perceber onde está.';
+ if(isAny(after,['esperando','confuso','reabre','por pouco'])) b+=` E tem um dado teu que importa: depois do contato, você reconhece que costuma acontecer “${esc(after.toLowerCase())}”.`;
+ let c=isAny(need,['esperança','voltar'])?'Se essa pessoa dissesse “vamos tentar de novo”, o que teria mudado na realidade — não só na saudade — para essa história ser diferente?':'Se a mensagem não pudesse ser enviada hoje, de que outra forma você tentaria cuidar exatamente do que está pedindo aqui?';
+ renderResult('#mNext',`<div class="card"><div class="eyebrow">Antes de enviar</div><p class="quote">A vontade é real. Isso não obriga a transformar a vontade em ação no mesmo minuto.</p></div>`,a,b,c,()=>{
+   addLog('mandar','Quis mandar mensagem',{trigger,detail,need,after},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
+ });
+}
+
+// 2) BATEU SAUDADE
+const saudadeKinds=[
+ 'Da pessoa — do jeito dela comigo',
+ 'Da rotina que a gente tinha',
+ 'Do carinho / toque / sexo',
+ 'De ter alguém do meu lado',
+ 'De me sentir escolhido(a)',
+ 'De uma fase da minha vida',
+ 'Dos planos que a gente tinha',
+ 'Da versão de mim que existia naquela época',
+ 'De quem eu achei que essa pessoa seria',
+ 'Está tudo misturado. Eu só sinto falta'
+];
 function flowSaudade(){
- $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Bateu saudade</div><h1>Saudade de quê, exatamente?</h1><p class="human muted">Porque “saudade dela(e)” às vezes tem cinco coisas diferentes misturadas.</p>${options(['Da pessoa como ela era comigo','Da rotina que a gente tinha','Do carinho / sexo / intimidade','De ter alguém','De uma fase da minha vida','De planos que a gente tinha','De como eu me sentia sendo escolhido(a)','De uma versão de mim que existia ali','Não consigo separar'],'sWhat')}</div><div id="sNext"></div>`;bind('sWhat',s2)
+ $('#flowBox').innerHTML=`<div class="card">
+  <div class="eyebrow">Bateu saudade</div>
+  <h1>Quando você diz “estou com saudade”, de que parte está falando?</h1>
+  <p class="human muted">Não precisamos diminuir a saudade. Só separar as coisas que chegaram juntas.</p>
+  ${options(saudadeKinds,'sKind')}
+ </div><div id="sNext"></div>`;
+ bind('sKind',sBranch)
 }
-function s2(what){$('#sNext').innerHTML=q('O que trouxe essa saudade hoje?',['Uma lembrança boa','Vi / ouvi / passei por alguma coisa','Fiquei sozinho(a)','Vi algo dessa pessoa','Uma data / horário / rotina','Alguém falou dela(e)','Não sei. Acordei assim'],'sTrig');bind('sTrig',tr=>s3(what,tr))}
-function s3(what,tr){$('#sNext').innerHTML=q('Se a relação voltasse amanhã exatamente como era antes de terminar, o que você sentiria?',['Eu iria na hora','Eu gostaria, mas teria medo','Eu não quero a relação de volta. Só sinto falta','Eu ficaria dividido(a)','Eu sei que do jeito que era não dava','Não consigo responder agora'],'sBack');bind('sBack',back=>sResult(what,tr,back))}
-function sResult(what,tr,back){let a=`Hoje a saudade está puxando principalmente <b>${esc(what.toLowerCase())}</b>. Ela apareceu depois de <b>${esc(tr.toLowerCase())}</b>. E quando você imagina a relação voltando igual ao que era, sua resposta é: <b>${esc(back.toLowerCase())}</b>.`;let b=what.includes('rotina')?'Talvez uma parte do luto seja da arquitetura da vida: mensagens, horários, presença, pequenos rituais. Isso pode doer mesmo quando a relação não caberia mais.':what.includes('fase')||what.includes('versão de mim')?'Talvez essa pessoa esteja carregando também uma época — e uma versão sua — que você ainda não sabe como reencontrar sem ela(e).':what.includes('planos')?'Tem luto pelo que aconteceu e luto pelo futuro que deixou de acontecer. Às vezes o segundo dói mais porque nunca chegou a existir.':what.includes('ser escolhido')?'Talvez a falta não seja apenas da pessoa, mas da sensação de ter um lugar garantido para alguém.':back.includes('não dava')||back.includes('não quero')?'Você consegue sentir saudade e, ao mesmo tempo, saber que voltar não seria bom. Essas duas coisas não se anulam.':'Saudade é informação sobre vínculo e memória; não é automaticamente uma instrução para voltar.';let c='Se você pudesse trazer de volta só uma parte do que sente falta — sem trazer a relação inteira — o que seria?';$('#sNext').innerHTML=insight(a,b,c);$('#saveMoment').onclick=()=>{addLog('saudade','Bateu saudade',{what,tr,back},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}}
+function sBranch(kind){
+ const branch={
+  'Da pessoa — do jeito dela comigo':['Do jeito que me olhava','Das conversas','Do humor / jeito dela(e)','De como me acolhia','Da parceria','Até das manias'],
+  'Da rotina que a gente tinha':['Bom dia / boa noite / mensagens','Chegar em casa e ter alguém','Fim de semana','Comer / cozinhar juntos','Dormir / acordar juntos','Os pequenos rituais que ninguém via'],
+  'Do carinho / toque / sexo':['Do abraço / colo','De dormir junto','Do beijo','Do sexo','De me sentir desejado(a)','Da intimidade de conhecer o corpo do outro'],
+  'De ter alguém do meu lado':['De ter para quem contar as coisas','De não fazer tudo sozinho(a)','De companhia no silêncio','De saber que tinha alguém disponível','De pertencer a um “nós”'],
+  'De me sentir escolhido(a)':['De ser prioridade','De sentir que alguém me queria','De ter um lugar definido','De ser admirado(a)','De não precisar disputar espaço'],
+  'De uma fase da minha vida':['Eu gostava de quem eu era','Minha vida parecia mais leve','Eu tinha mais amigos / movimento','Eu tinha mais esperança','A relação virou símbolo daquela época'],
+  'Dos planos que a gente tinha':['Casa / morar juntos','Viagens','Filhos / família','Projetos financeiros','Datas / festas / futuro próximo','Uma vida inteira imaginada'],
+  'Da versão de mim que existia naquela época':['Eu era mais espontâneo(a)','Eu me sentia mais bonito(a)','Eu sonhava mais','Eu tinha mais energia','Eu me reconhecia mais'],
+  'De quem eu achei que essa pessoa seria':['Da promessa do começo','Do potencial que eu via','Do futuro que eu imaginava','De momentos em que parecia que ia dar certo','Da pessoa que eu esperava que aparecesse'],
+  'Está tudo misturado. Eu só sinto falta':['Da presença','Do passado','Do futuro que não aconteceu','De como eu me sentia','Não consigo separar mesmo']
+ };
+ $('#sNext').innerHTML=q('Qual pedaço disso dói mais hoje?',branch[kind]||branch['Está tudo misturado. Eu só sinto falta'],'sDetail');
+ bind('sDetail',detail=>sTrigger(kind,detail))
+}
+function sTrigger(kind,detail){
+ $('#sNext').innerHTML=q('O que trouxe isso para perto hoje?',[
+  'Acordei assim / sonhei',
+  'Uma música, cheiro, lugar ou objeto',
+  'Vi algo dessa pessoa',
+  'Uma data / horário / hábito antigo',
+  'Alguém falou dela(e)',
+  'Eu estava sozinho(a)',
+  'Minha vida hoje não está muito boa',
+  'Nada específico'
+ ],'sTrig');
+ bind('sTrig',tr=>sBack(kind,detail,tr))
+}
+function sBack(kind,detail,tr){
+ $('#sNext').innerHTML=q('E se você pudesse ter de volta exatamente essa parte sem trazer a relação inteira, isso já faria diferença?',[
+  'Sim. Acho que é dessa parte que sinto falta',
+  'Não. Eu quero a pessoa inteira',
+  'Talvez. Nunca tinha separado assim',
+  'Eu quero a relação, mas não do jeito que era',
+  'Eu sei que não quero voltar',
+  'Ainda não consigo saber'
+ ],'sSep');
+ bind('sSep',sep=>sResult2(kind,detail,tr,sep))
+}
+function sResult2(kind,detail,tr,sep){
+ let a=`Hoje a saudade está apontando especialmente para <b>${esc(kind.toLowerCase())}</b>. Dentro disso, a parte que mais pesa é <b>${esc(detail.toLowerCase())}</b>. Ela ficou mais presente depois de <b>${esc(tr.toLowerCase())}</b>.`;
+ let b='Saudade não é uma instrução. Ela é um jeito de a memória mostrar que alguma coisa teve valor.';
+ if(kind.includes('rotina')) b='Talvez o que esteja doendo seja também a arquitetura do cotidiano que desapareceu: horários, mensagens, pequenos rituais. É possível sentir falta disso sem concluir que a relação inteira precisa voltar.';
+ else if(kind.includes('carinho')) b='O corpo também vive luto. Falta de toque, sexo, cheiro, cama e proximidade podem aparecer como saudade da pessoa inteira quando parte da dor é intimidade interrompida.';
+ else if(kind.includes('ter alguém')) b='Talvez a ausência do “nós” tenha deixado um buraco social e cotidiano. Isso é diferente de dizer que só aquela pessoa poderia ocupar companhia, escuta e pertencimento.';
+ else if(kind.includes('escolhido')) b='Talvez parte da falta seja a sensação de ter um lugar confirmado na vida de alguém. Quando esse lugar some, às vezes a dor parece dizer “perdi meu valor”, mesmo quando o que terminou foi um vínculo.';
+ else if(kind.includes('fase')||kind.includes('versão')) b='Essa pessoa pode estar carregando uma época tua inteira. Talvez parte do trabalho seja descobrir quais pedaços daquela versão ainda são teus e podem existir sem a relação.';
+ else if(kind.includes('planos')) b='Existe luto pelo passado vivido e pelo futuro imaginado. O segundo é estranho porque dói por coisas que nunca chegaram a acontecer.';
+ else if(kind.includes('achei')) b='Talvez uma parte do luto seja por uma promessa: quem você acreditou que essa pessoa poderia se tornar e o que vocês poderiam viver. Perder uma possibilidade também dói.';
+ let c='Qual parte dessa saudade pertence realmente a essa pessoa — e qual parte fala de algo que está faltando na tua vida hoje?';
+ renderResult('#sNext','',a,b,c,()=>{
+   addLog('saudade','Bateu saudade',{kind,detail,tr,sep},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
+ })
+}
 
-// --- RECEBI MENSAGEM ---
+// 3) RECEBI MENSAGEM
 function flowRecebi(){
- $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Recebi mensagem</div><h1>O que chegou?</h1><p class="human muted">Não precisa colar a conversa. Conta do teu jeito.</p><textarea id="msgText" placeholder="Ex.: mandou 'oi, como você tá?' depois de três semanas..."></textarea><button class="btn" id="msgGo">Continuar</button></div><div id="rNext"></div>`;$('#msgGo').onclick=()=>{let t=$('#msgText').value.trim();if(t)r2(t)}
+ $('#flowBox').innerHTML=`<div class="card">
+  <div class="eyebrow">Recebi mensagem</div>
+  <h1>O que chegou?</h1>
+  <p class="human muted">Conta do teu jeito. Primeiro a mensagem. Depois a história que tua cabeça começou a escrever em volta dela.</p>
+  <textarea id="msgText" placeholder="Ex.: Depois de três semanas, mandou: 'oi, lembrei de você hoje. como você tá?'"></textarea>
+  <button class="btn" id="msgGo">Continuar</button>
+ </div><div id="rNext"></div>`;
+ $('#msgGo').onclick=()=>{const text=$('#msgText').value.trim();if(text)rBody(text)}
 }
-function r2(text){$('#rNext').innerHTML=q('O que aconteceu em você quando viu?', ['Meu coração acelerou / fiquei agitado(a)','Veio esperança','Veio raiva','Veio saudade','Fiquei frio(a) / travado(a)','Senti alívio','Fiquei confuso(a)','Quase nada'],'rFeel');bind('rFeel',feel=>r3(text,feel))}
-function r3(text,feel){$('#rNext').innerHTML=q('Sem pensar muito: o que tua cabeça disse que essa mensagem significava?', ['Quer voltar','Está com saudade','Está testando se ainda estou aqui','Quer resolver algo prático','Está carente / sozinha(o)','Quer pedir desculpa','Não faço ideia','Parece só o que está escrito'],'rMeaning');bind('rMeaning',meaning=>r4(text,feel,meaning))}
-function r4(text,feel,meaning){$('#rNext').innerHTML=q('E o que está realmente escrito sustenta essa leitura?', ['Sim. Está claro','Tem pistas, mas não está claro','Não. Eu completei bastante coisa','É impossível saber ainda'],'rEvidence');bind('rEvidence',ev=>rResult(text,feel,meaning,ev))}
-function rResult(text,feel,meaning,ev){let a=`Chegou uma mensagem e teu primeiro movimento foi <b>${esc(feel.toLowerCase())}</b>. Tua cabeça rapidamente leu aquilo como <b>${esc(meaning.toLowerCase())}</b>. Quando você olha só para o que está escrito, você diz: <b>${esc(ev.toLowerCase())}</b>.`;let b=ev==='Sim. Está claro'?'Há algo concreto para responder. Mesmo assim, “o que essa pessoa quer agora” e “o que seria bom para você fazer” continuam sendo perguntas diferentes.':ev.includes('pistas')?'Talvez exista um sinal real, mas ainda não uma resposta completa. É nesse espaço vazio que esperança e medo costumam escrever o resto da conversa.':'O impacto emocional da mensagem pode estar dizendo mais sobre o que ela ativou em você do que sobre a intenção de quem enviou.';let c='Se você lesse essa mensagem como se tivesse sido enviada para um amigo, o que diria que ela realmente diz — e o que ainda não diz?';$('#rNext').innerHTML=`<div class="card"><div class="eyebrow">O que chegou</div><p class="quote">“${esc(text)}”</p></div>${insight(a,b,c)}`;$('#saveMoment').onclick=()=>{addLog('recebi','Recebeu mensagem',{text,feel,meaning,ev},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}}
+function rBody(text){
+ $('#rNext').innerHTML=q('O que aconteceu no teu corpo antes mesmo de você decidir o que pensar?',[
+  'Coração acelerou / ansiedade',
+  'Sorri / veio alegria',
+  'Congelei / fiquei sem reação',
+  'Veio raiva',
+  'Veio saudade',
+  'Veio alívio',
+  'Fiquei desconfiado(a)',
+  'Quase nada'
+ ],'rBody');
+ bind('rBody',body=>rStory(text,body))
+}
+function rStory(text,body){
+ $('#rNext').innerHTML=q('Qual foi a primeira história que tua cabeça contou sobre essa mensagem?',[
+  '“Quer voltar”',
+  '“Está com saudade”',
+  '“Quer saber se ainda estou disponível”',
+  '“Está arrependido(a)”',
+  '“Está carente / sozinho(a)”',
+  '“Quer resolver algo prático”',
+  '“Vai me machucar de novo”',
+  '“Não sei. Ainda não consigo interpretar”'
+ ],'rStory');
+ bind('rStory',story=>rEvidence(text,body,story))
+}
+function rEvidence(text,body,story){
+ $('#rNext').innerHTML=q('Agora volta só para as palavras que chegaram. O quanto elas realmente dizem isso?',[
+  'Dizem claramente',
+  'Tem sinais, mas ainda é ambíguo',
+  'Quase nada. Eu completei muita coisa',
+  'A mensagem diz outra coisa',
+  'Não consigo separar ainda'
+ ],'rEv');
+ bind('rEv',ev=>rWant(text,body,story,ev))
+}
+function rWant(text,body,story,ev){
+ $('#rNext').innerHTML=q('Antes de responder, o que você mais gostaria que acontecesse a partir daqui?',[
+  'Quero conversar sem expectativa',
+  'Quero entender por que chamou',
+  'Quero reabrir a relação',
+  'Quero que peça desculpa / reconheça algo',
+  'Quero me proteger e manter distância',
+  'Quero resolver só o assunto prático',
+  'Eu não sei. A mensagem me bagunçou'
+ ],'rWant');
+ bind('rWant',want=>rResult2(text,body,story,ev,want))
+}
+function rResult2(text,body,story,ev,want){
+ let a=`A mensagem chegou e teu corpo respondeu com <b>${esc(body.toLowerCase())}</b>. Logo depois, tua cabeça contou a história <b>${esc(story.toLowerCase())}</b>. Quando você olha só para o texto, avalia que <b>${esc(ev.toLowerCase())}</b>.`;
+ let b='O ponto mais delicado talvez esteja no espaço entre o que foi escrito e o que você deseja que aquilo signifique.';
+ if(ev==='Dizem claramente') b='Existe conteúdo concreto na mensagem. Mesmo assim, responder ao que foi dito e decidir o futuro da relação continuam sendo duas decisões diferentes.';
+ else if(ev.includes('ambíguo')) b='Há alguma informação real, mas não informação suficiente. Ambiguidade costuma ser um lugar onde esperança e medo trabalham horas extras.';
+ else if(ev.includes('completei')) b='O impacto parece estar vindo bastante do que a mensagem ativou em você. Isso não torna tua leitura absurda; só significa que ela ainda não é evidência sobre a intenção da outra pessoa.';
+ if(want.includes('reabrir')) b+=' Como você já percebe vontade de reabrir a relação, vale não transformar uma única mensagem em prova de mudança estrutural.';
+ let c='Qual seria a menor resposta possível que respondesse ao que foi realmente dito — sem responder ainda ao futuro inteiro da relação?';
+ renderResult('#rNext',`<div class="card"><div class="eyebrow">A mensagem</div><p class="quote">“${esc(text)}”</p></div>`,a,b,c,()=>{
+   addLog('recebi','Recebeu mensagem',{text,body,story,ev,want},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
+ })
+}
 
-// --- LEMBRANÇA ---
+// 4) LEMBREI DE UMA CENA
 function flowLembranca(){
- $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Uma cena voltou</div><h1>Que tipo de lembrança foi?</h1><p class="human muted">Pode ser bonita. Pode ser horrível. Pode ser uma coisa boba que ninguém entenderia por que ficou.</p>${options(['Uma cena muito boa','Uma cena banal do dia a dia','Uma cena de carinho / intimidade','Uma briga','Uma mentira / quebra de confiança','Uma despedida','Uma cena em que me senti sozinho(a) mesmo acompanhado(a)','Algo que hoje eu vejo diferente','Uma cena que não sei por que voltou'],'lKind')}</div><div id="lNext"></div>`;bind('lKind',l2)
+ $('#flowBox').innerHTML=`<div class="card">
+  <div class="eyebrow">Lembrei de uma cena</div>
+  <h1>Que lembrança voltou?</h1>
+  <p class="human muted">Uma memória pode voltar porque foi linda, porque doeu, porque ficou sem resposta — ou porque hoje você consegue enxergar algo que não enxergava naquela época.</p>
+  ${options([
+   'Uma cena muito boa',
+   'Uma coisa banal que hoje faz falta',
+   'Uma cena de carinho / intimidade',
+   'Uma briga',
+   'Uma mentira / quebra de confiança',
+   'Uma vez em que me senti rejeitado(a)',
+   'Uma vez em que me senti sozinho(a) mesmo acompanhado(a)',
+   'Uma despedida / último encontro',
+   'Uma cena que hoje eu vejo diferente',
+   'Nem sei por que essa cena voltou'
+  ],'lKind')}
+ </div><div id="lNext"></div>`;
+ bind('lKind',lScene)
 }
-function l2(kind){$('#lNext').innerHTML=`<div class="card"><div class="qmeta">Cena, não interpretação</div><h2>Se tivesse uma câmera ali, o que ela teria visto?</h2><textarea id="sceneText" placeholder="Onde vocês estavam? O que foi dito? O que você fez? O que a outra pessoa fez?"></textarea><button class="btn" id="sceneGo">Continuar</button></div>`;$('#sceneGo').onclick=()=>{let scene=$('#sceneText').value.trim();if(scene)l3(kind,scene)}}
-function l3(kind,scene){$('#lNext').innerHTML=q('Naquela hora, o que você mais queria que acontecesse?', ['Que ela(e) me entendesse','Que ficasse / não fosse embora','Que pedisse desculpa','Que me escolhesse','Que a briga parasse','Que eu conseguisse ir embora','Que voltasse a ser como antes','Na hora eu nem sabia'],'lNeed');bind('lNeed',need=>l4(kind,scene,need))}
-function l4(kind,scene,need){$('#lNext').innerHTML=q('E hoje, por que você acha que essa cena ainda tem força?', ['Porque ainda não entendi o que aconteceu','Porque me culpo','Porque tenho raiva','Porque foi muito bom e acabou','Porque hoje vejo coisas que não via','Porque ainda espero uma reparação','Não sei. Ela só voltou'],'lWhy');bind('lWhy',why=>lResult(kind,scene,need,why))}
-function lResult(kind,scene,need,why){let same=state.logs.filter(x=>x.kind==='lembranca'&&x.data?.need===need).length;let a=`A cena que voltou foi <b>${esc(kind.toLowerCase())}</b>. Naquele momento, o que você mais queria era <b>${esc(need.toLowerCase())}</b>. Hoje ela ainda parece viva porque <b>${esc(why.toLowerCase())}</b>.`;let b=same?`Não é a primeira cena guardada em que aparece essa mesma necessidade. Ainda não vou chamar isso de padrão, mas já vale observar quando “${esc(need.toLowerCase())}” aparece em histórias diferentes.`:'Uma memória isolada não precisa virar diagnóstico sobre você ou sobre a relação. Às vezes ela só precisa ganhar contexto para parar de carregar a história inteira sozinha.';let c='Se essa cena pudesse deixar de ser uma prova de quem estava certo, o que ela mostraria sobre o que você precisava naquela época?';$('#lNext').innerHTML=`<div class="card"><div class="eyebrow">A cena</div><p class="quote">${esc(scene)}</p></div>${insight(a,b,c)}`;$('#saveMoment').onclick=()=>{addLog('lembranca','Uma cena voltou',{kind,scene,need,why},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}}
+function lScene(kind){
+ $('#lNext').innerHTML=`<div class="card"><div class="qmeta">Sem explicar quem estava certo</div>
+ <h2>Se tivesse uma câmera ali, o que ela teria gravado?</h2>
+ <textarea id="sceneText" placeholder="Onde vocês estavam? O que aconteceu? O que foi dito? O que você fez? O que a outra pessoa fez?"></textarea>
+ <button class="btn" id="sceneGo">Continuar</button></div>`;
+ $('#sceneGo').onclick=()=>{const scene=$('#sceneText').value.trim();if(scene)lInside(kind,scene)}
+}
+function lInside(kind,scene){
+ $('#lNext').innerHTML=q('Naquela cena, qual coisa ficou mais presa dentro de você?',[
+  'Algo que eu queria ter dito',
+  'Algo que eu queria ter ouvido',
+  'Eu queria ter sido escolhido(a)',
+  'Eu queria que a pessoa ficasse',
+  'Eu queria que a pessoa me entendesse',
+  'Eu queria ter ido embora antes',
+  'Eu queria reparação / pedido de desculpa',
+  'Eu queria voltar para aquele momento bom',
+  'Na época eu nem sabia o que eu queria'
+ ],'lInside');
+ bind('lInside',inside=>lNow(kind,scene,inside))
+}
+function lNow(kind,scene,inside){
+ $('#lNext').innerHTML=q('Quando essa cena volta hoje, o que ela tenta fazer com a história?',[
+  'Me faz idealizar a relação',
+  'Me faz sentir culpa',
+  'Me faz sentir raiva',
+  'Me faz duvidar de mim',
+  'Me dá saudade',
+  'Me faz querer uma explicação',
+  'Parece provar que nunca fui importante',
+  'Hoje ela me mostra algo que eu não via',
+  'Ainda não sei'
+ ],'lNow');
+ bind('lNow',nowv=>lResult2(kind,scene,inside,nowv))
+}
+function lResult2(kind,scene,inside,nowv){
+ const similar=state.logs.filter(x=>x.kind==='lembranca'&&x.data?.inside===inside).length;
+ let a=`Voltou <b>${esc(kind.toLowerCase())}</b>. O que ficou preso naquela cena foi <b>${esc(inside.toLowerCase())}</b>. Hoje, quando ela reaparece, você percebe que ela tende a <b>${esc(nowv.toLowerCase())}</b>.`;
+ let b='Uma cena não é a relação inteira. Mas algumas cenas viram símbolos e passam a carregar muito mais peso do que os minutos em que realmente aconteceram.';
+ if(kind.includes('muito boa')||kind.includes('banal')||kind.includes('carinho')) b='Uma lembrança boa pode ser verdadeira sem ser prova de que a relação inteira era boa ou de que deveria continuar. O difícil é deixar uma coisa bonita continuar bonita sem obrigá-la a decidir o presente.';
+ else if(isAny(kind,['briga','mentira','rejeitado','sozinho'])) b='Quando uma cena dolorosa volta, às vezes a cabeça está tentando finalmente organizar aquilo que na hora só conseguiu sobreviver. Entender depois não muda o fato, mas pode mudar o lugar que ele ocupa.';
+ else if(kind.includes('despedida')) b='Despedidas costumam concentrar muita coisa: o que foi dito, o que faltou, o último toque, o que poderia ter sido diferente. Às vezes a memória volta procurando um final mais completo do que a realidade conseguiu dar.';
+ if(similar>=1) b+=` E existe outro registro em que apareceu algo parecido com “${esc(inside.toLowerCase())}”. Ainda não é um padrão fechado, mas já é uma repetição real na tua Jornada.`;
+ let c='Se essa cena deixasse de ser uma sentença sobre você ou sobre a relação, o que ela ainda teria para te contar?';
+ renderResult('#lNext',`<div class="card"><div class="eyebrow">A cena que voltou</div><p class="quote">${esc(scene)}</p></div>`,a,b,c,()=>{
+   addLog('lembranca','Uma cena voltou',{kind,scene,inside,now:nowv},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
+ })
+}
 
-// --- SÓ ESTOU MAL ---
+// 5) SÓ ESTOU MAL
 function flowMal(){
- $('#flowBox').innerHTML=`<div class="card"><div class="eyebrow">Só estou mal</div><h1>Então hoje não precisamos entender tudo.</h1><p class="human muted">Me ajuda só a localizar onde dói.</p>${options(['Estou com saudade','Estou ansioso(a) / agitado(a)','Estou com raiva','Estou me culpando','Estou me sentindo rejeitado(a)','Estou muito sozinho(a)','Estou vazio(a) / sem sentir quase nada','Estou chorando e nem sei explicar','Estou com medo de fazer alguma coisa contra mim'],'bFeel')}</div><div id="bNext"></div>`;bind('bFeel',b2)
+ $('#flowBox').innerHTML=`<div class="card">
+  <div class="eyebrow">Só estou mal</div>
+  <h1>Tá. Então hoje você não precisa explicar a relação inteira.</h1>
+  <p class="human muted">Só me mostra como esse mal-estar está chegando em você.</p>
+  ${options([
+   'Estou com saudade demais',
+   'Estou ansioso(a) / meu corpo não para',
+   'Estou com muita raiva',
+   'Estou me culpando',
+   'Estou me sentindo rejeitado(a) / descartado(a)',
+   'Estou muito sozinho(a)',
+   'Estou vazio(a) / desligado(a)',
+   'Estou chorando e nem sei por quê',
+   'Estou sem conseguir parar de pensar',
+   'Estou com medo do que posso fazer comigo'
+  ],'bFeel')}
+ </div><div id="bNext"></div>`;
+ bind('bFeel',bContext)
 }
-function b2(feel){if(feel.includes('contra mim'))return crisisPath();$('#bNext').innerHTML=q('O que estava acontecendo pouco antes disso apertar?', ['Eu estava sozinho(a)','Vi algo da pessoa','Lembrei de alguma coisa','A gente teve contato','Alguma outra parte da minha vida deu errado','Eu dormi mal / estou esgotado(a)','Não aconteceu nada específico'],'bBefore');bind('bBefore',before=>b3(feel,before))}
-function b3(feel,before){$('#bNext').innerHTML=q('Qual impulso está vindo junto?', ['Mandar mensagem','Olhar redes / procurar informação','Sumir de todo mundo','Chorar / deitar / ficar quieto(a)','Beber / sair / tentar desligar','Pedir colo para alguém','Nenhum. Só quero que passe'],'bImpulse');bind('bImpulse',imp=>bResult(feel,before,imp))}
-function bResult(feel,before,imp){let a=`Agora o que está mais alto é <b>${esc(feel.toLowerCase())}</b>. Isso apertou depois de <b>${esc(before.toLowerCase())}</b>, e o impulso que veio junto foi <b>${esc(imp.toLowerCase())}</b>.`;let b='Talvez hoje a tarefa não seja entender a relação. Talvez seja atravessar este pedaço da noite sem transformar um estado passageiro em uma decisão que vai continuar amanhã.';if(before.includes('dormi mal'))b='Cansaço muda o tamanho das coisas. Talvez parte do que parece impossível agora esteja amplificada por um corpo que também está pedindo descanso.';if(imp.includes('redes'))b='Procurar informação pode dar sensação de controle por alguns minutos e abrir dez perguntas novas depois. Vale perceber se você quer saber alguma coisa — ou quer parar de não saber.';let c='O que deixaria os próximos 20 minutos apenas 10% menos pesados?';$('#bNext').innerHTML=insight(a,b,c,'Guardar e voltar para Hoje');$('#saveMoment').onclick=()=>{addLog('mal','Hoje apertou',{feel,before,imp},{summary:a.replace(/<[^>]+>/g,''),question:c});show('home')}}
+function bContext(feel){
+ if(feel.includes('fazer comigo')) return crisisPath();
+ const branch={
+  'Estou com saudade demais':['Quero procurar essa pessoa','Estou lembrando só das partes boas','Meu corpo está pedindo presença / colo','Tenho medo de nunca sentir isso de novo','Só quero que pare de doer'],
+  'Estou ansioso(a) / meu corpo não para':['Estou esperando uma mensagem','Vi alguma coisa','Estou imaginando cenários','Tenho medo de essa pessoa seguir em frente','Não sei o motivo. Só estou acelerado(a)'],
+  'Estou com muita raiva':['Do que fizeram comigo','De mim por ter aceitado coisas','Porque parece injusto','Porque a outra pessoa parece bem','Porque eu ainda me importo'],
+  'Estou me culpando':['Por coisas que fiz','Por coisas que não fiz','Acho que estraguei tudo','Penso que se eu fosse diferente teria dado certo','Estou carregando toda a responsabilidade'],
+  'Estou me sentindo rejeitado(a) / descartado(a)':['Sinto que fui substituído(a)','Parece que nunca importei','Fico me comparando','Quero provar meu valor','Quero que a pessoa se arrependa'],
+  'Estou muito sozinho(a)':['A noite está difícil','Sinto falta de conversa','Sinto falta de toque','Não quero incomodar ninguém','Parece que todo mundo tem alguém menos eu'],
+  'Estou vazio(a) / desligado(a)':['Não quero falar com ninguém','Nada me dá vontade','Estou funcionando no automático','Parece que a relação levou uma parte de mim','Nem tristeza eu consigo sentir'],
+  'Estou chorando e nem sei por quê':['Veio de repente','Aconteceu alguma lembrança','Eu segurei o dia inteiro','Estou exausto(a)','Parece que é tudo ao mesmo tempo'],
+  'Estou sem conseguir parar de pensar':['Repasso conversas','Imagino o que a pessoa está fazendo','Procuro onde errei','Crio conversas que nunca aconteceram','Vou de uma memória para outra sem parar']
+ };
+ $('#bNext').innerHTML=q('O que está mais perto disso?',branch[feel]||['Não consigo separar'],'bLayer');
+ bind('bLayer',layer=>bBefore(feel,layer))
+}
+function bBefore(feel,layer){
+ $('#bNext').innerHTML=q('E o que aconteceu pouco antes de piorar?',[
+  'Eu fiquei sozinho(a)',
+  'Vi / ouvi alguma coisa da pessoa',
+  'A gente teve contato',
+  'Uma memória apareceu',
+  'Outra parte da minha vida deu errado',
+  'Eu dormi mal / estou muito cansado(a)',
+  'Usei álcool / estou alterado(a)',
+  'Nada claro. Foi crescendo'
+ ],'bBefore');
+ bind('bBefore',before=>bNeed(feel,layer,before))
+}
+function bNeed(feel,layer,before){
+ $('#bNext').innerHTML=q('Sem tentar “resolver a vida”: o que você mais precisa nas próximas duas horas?',[
+  'Não ficar sozinho(a)',
+  'Dormir / descansar',
+  'Chorar sem precisar entender',
+  'Falar com alguém que não vá me julgar',
+  'Ficar longe do celular / redes',
+  'Comer / tomar banho / cuidar do corpo',
+  'Sair um pouco do lugar onde estou',
+  'Só atravessar esse estado sem tomar decisões'
+ ],'bNeed');
+ bind('bNeed',need=>bResult2(feel,layer,before,need))
+}
+function bResult2(feel,layer,before,need){
+ let a=`Agora está mais alto <b>${esc(feel.toLowerCase())}</b>. Por baixo disso aparece <b>${esc(layer.toLowerCase())}</b>. E você percebe que piorou depois de <b>${esc(before.toLowerCase())}</b>.`;
+ let b=`Hoje talvez não seja um dia de entender a relação. Talvez seja um dia de respeitar que teu sistema está pedindo <b>${esc(need.toLowerCase())}</b> antes de qualquer conclusão.`;
+ if(before.includes('cansado')) b+=' Cansaço não inventa a dor, mas costuma aumentar o volume dela.';
+ if(before.includes('álcool')) b+=' Como você está alterado(a), vale adiar decisões de contato, bloqueio, reconciliação ou confronto até estar sóbrio(a).';
+ if(feel.includes('culpando')) b+=' Culpa costuma transformar uma relação de duas pessoas numa história de um único responsável. Talvez exista responsabilidade tua sem que toda a história seja tua.';
+ if(feel.includes('rejeitado')) b+=' Ser deixado, trocado ou não escolhido pode tocar valor pessoal muito rápido. O fim do vínculo e o teu valor não são a mesma coisa.';
+ let c='Qual é a menor coisa concreta que atende essa necessidade sem exigir que você fique bem agora?';
+ renderResult('#bNext','',a,b,c,()=>{
+   addLog('mal','Hoje apertou',{feel,layer,before,need},{summary:a.replace(/<[^>]+>/g,''),question:c});show('home')
+ },'Guardar e voltar para Hoje')
+}
 
-// --- HOJE ESTOU MELHOR ---
+// 6) HOJE ESTOU MELHOR
 function flowMelhor(){
- $('#flowBox').innerHTML=`<div class="card good"><div class="eyebrow">Hoje estou melhor</div><h1>O que voltou a existir hoje?</h1><p class="human muted">Não quero registrar só os dias em que essa história te engole.</p>${options(['Tive paz por algumas horas','Consegui trabalhar / estudar','Ri de verdade','Fiquei bem sozinho(a)','Saí com alguém / vi amigos','Mexi o corpo / fui para a rua / natureza','Fiz alguma coisa que era minha','Pensei menos nessa pessoa','Pensei nela(e), mas não desabei','Senti vontade de futuro'],'gWhat')}</div><div id="gNext"></div>`;bind('gWhat',g2)
+ $('#flowBox').innerHTML=`<div class="card good">
+  <div class="eyebrow">Hoje estou melhor</div>
+  <h1>O que voltou a existir hoje?</h1>
+  <p class="human muted">Se a gente só registra a dor, parece que a tua vida inteira virou o término. Quero guardar também os momentos em que você reaparece.</p>
+  ${options([
+   'Tive paz por algumas horas',
+   'Ri / me diverti de verdade',
+   'Consegui trabalhar / estudar',
+   'Fiquei sozinho(a) e fiquei bem',
+   'Estive com amigos / família e me senti presente',
+   'Meu corpo ficou melhor / me movimentei',
+   'Fiz alguma coisa que era minha',
+   'Pensei nessa pessoa e não desabei',
+   'Passei um tempo sem pensar nela(e)',
+   'Senti atração / curiosidade por outra pessoa',
+   'Senti vontade de fazer planos',
+   'Eu me reconheci um pouco de novo'
+  ],'gWhat')}
+ </div><div id="gNext"></div>`;
+ bind('gWhat',gScene)
 }
-function g2(what){$('#gNext').innerHTML=q('O que ajudou esse dia a ser diferente?', ['Dormir melhor','Estar com outras pessoas','Ter uma coisa para fazer','Movimento / natureza / sair de casa','Não ter contato com essa pessoa','Ter tido um contato tranquilo','Eu me tratei melhor hoje','Não sei. Só aconteceu'],'gHelp');bind('gHelp',help=>g3(what,help))}
-function g3(what,help){$('#gNext').innerHTML=q('Teve algum momento em que você percebeu “caramba, eu estou aqui” sem a relação ocupar tudo?', ['Sim, e lembro da cena','Sim, mas foi rápido','Acho que sim','Não exatamente'],'gAlive');bind('gAlive',alive=>gResult(what,help,alive))}
-function gResult(what,help,alive){let a=`Hoje apareceu uma coisa importante: <b>${esc(what.toLowerCase())}</b>. Você percebe que ajudou <b>${esc(help.toLowerCase())}</b>. E sobre ter existido um momento realmente seu: <b>${esc(alive.toLowerCase())}</b>.`;let b='Isso não precisa significar que você “superou”. Só mostra que a tua vida ainda consegue produzir estados que não dependem inteiramente dessa relação.';let c='O que aconteceu hoje que você gostaria de oferecer de novo para si nesta semana — sem transformar isso em obrigação?';$('#gNext').innerHTML=insight(a,b,c);$('#saveMoment').onclick=()=>{addLog('melhor','Hoje a vida abriu espaço',{what,help,alive},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')}}
+function gScene(what){
+ const branch={
+  'Tive paz por algumas horas':['Acordei melhor','Fiquei longe do celular','Estava ocupado(a)','Estava com alguém','Fui para a rua / natureza','Nada especial. Só veio paz'],
+  'Ri / me diverti de verdade':['Com amigos','Com família','Sozinho(a)','Vi / ouvi alguma coisa engraçada','Fiz algo que não fazia há tempo'],
+  'Consegui trabalhar / estudar':['Concentrei por um tempo','Terminei uma coisa pequena','Pareceu bom ter outro assunto','Me senti capaz de novo','A rotina me ajudou'],
+  'Fiquei sozinho(a) e fiquei bem':['Curti o silêncio','Fiz algo só meu','Não senti necessidade de procurar','Percebi que a casa não estava tão vazia','Foi rápido, mas aconteceu'],
+  'Estive com amigos / família e me senti presente':['Consegui falar de outras coisas','Me senti querido(a)','Ri','Pedi ajuda / recebi cuidado','Não precisei falar da relação'],
+  'Meu corpo ficou melhor / me movimentei':['Caminhei','Treinei','Dormi melhor','Comi melhor','Tomei sol / fui para natureza','Meu corpo só parecia menos pesado'],
+  'Fiz alguma coisa que era minha':['Um hobby','Música / filme / jogo','Arrumei minha casa','Fui a um lugar meu','Retomei algo que tinha abandonado'],
+  'Pensei nessa pessoa e não desabei':['A lembrança veio e passou','Senti saudade, mas continuei o dia','Vi algo e não fui atrás','Consegui lembrar do bom sem querer voltar','Consegui lembrar do ruim sem reviver tudo'],
+  'Passei um tempo sem pensar nela(e)':['Eu só percebi depois','Eu estava envolvido(a) em outra coisa','Foi estranho perceber','Foi um alívio','Deu até culpa por alguns segundos'],
+  'Senti atração / curiosidade por outra pessoa':['Foi leve','Me assustou','Me deu esperança','Me senti vivo(a)','Não significa que quero me envolver agora'],
+  'Senti vontade de fazer planos':['Uma viagem','Um projeto','Trabalho / estudo','Mudar alguma coisa na rotina','Algo pequeno para a próxima semana'],
+  'Eu me reconheci um pouco de novo':['No jeito de rir','Na minha autonomia','Num interesse antigo','Na forma de pensar','Na vontade de cuidar de mim']
+ };
+ $('#gNext').innerHTML=q('Onde você percebeu isso acontecendo?',branch[what]||['Foi um momento pequeno'],'gScene');
+ bind('gScene',scene=>gHelp(what,scene))
+}
+function gHelp(what,scene){
+ $('#gNext').innerHTML=q('O que parece ter ajudado — mesmo que só um pouco?',[
+  'Dormir melhor',
+  'Estar com outras pessoas',
+  'Ter uma coisa concreta para fazer',
+  'Movimento / rua / natureza',
+  'Menos contato com essa pessoa',
+  'Um contato tranquilo e sem ambiguidade',
+  'Parar de procurar informação',
+  'Me tratar com menos cobrança',
+  'O tempo simplesmente passou',
+  'Não sei ainda'
+ ],'gHelp');
+ bind('gHelp',help=>gFear(what,scene,help))
+}
+function gFear(what,scene,help){
+ $('#gNext').innerHTML=q('Quando você percebe que está melhor, alguma coisa estranha vem junto?',[
+  'Medo de piorar de novo',
+  'Culpa por estar seguindo',
+  'Medo de esquecer essa pessoa',
+  'Vontade de testar se ainda sinto algo olhando as redes',
+  'Vontade de contar para ela(e) que estou bem',
+  'Nada disso. Só aproveitei',
+  'Nunca tinha reparado'
+ ],'gFear');
+ bind('gFear',fear=>gResult2(what,scene,help,fear))
+}
+function gResult2(what,scene,help,fear){
+ let a=`Hoje voltou <b>${esc(what.toLowerCase())}</b>. Você percebeu isso quando <b>${esc(scene.toLowerCase())}</b>, e algo que pode ter ajudado foi <b>${esc(help.toLowerCase())}</b>.`;
+ let b='Isso não precisa ser transformado em prova de que você “superou”. É só evidência de que tua vida consegue ocupar espaço novamente.';
+ if(fear.includes('piorar')) b+=' Melhorar e piorar de novo não apaga esse momento. Recuperações humanas raramente andam em linha reta.';
+ else if(fear.includes('culpa')) b+=' Sentir algo bom não diminui o que essa relação significou. Seguir vivendo não é trair a própria história.';
+ else if(fear.includes('esquecer')) b+=' Memória e sofrimento não são a mesma coisa. Você pode continuar lembrando sem precisar continuar doendo do mesmo jeito.';
+ else if(fear.includes('testar')) b+=' Talvez valha observar a vontade de testar a própria recuperação através do ex. Você não precisa se ferir de novo para confirmar que melhorou.';
+ else if(fear.includes('contar')) b+=' Pode haver um pedaço antigo de cumplicidade ainda ativo: quando algo acontece contigo, uma parte tua ainda procura aquela testemunha.';
+ let c='O que existiu hoje que você gostaria de deixar ter mais espaço — sem transformar isso em meta, cobrança ou “prova de superação”?';
+ renderResult('#gNext','',a,b,c,()=>{
+   addLog('melhor','Hoje a vida abriu espaço',{what,scene,help,fear},{summary:a.replace(/<[^>]+>/g,''),question:c});show('journey')
+ })
+}
 
 // --- SOS ---
 function renderSOS(){
