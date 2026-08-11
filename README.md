@@ -1,8 +1,11 @@
-# PÓS — Beta V5
-Protótipo estático para Vercel.
+# PÓS Beta V7 — Seis Janelas
 
-## Deploy
-Substitua os arquivos do repositório atual por estes e faça commit/push. A Vercel deve publicar automaticamente.
+Versão aprofundada das seis portas humanas:
+- Bateu saudade
+- Quero mandar mensagem
+- Recebi mensagem
+- Lembrei de uma cena
+- Só estou mal
+- Hoje estou melhor
 
-## Observação
-A memória desta beta usa localStorage e fica apenas no navegador. Não há backend, conta, banco remoto ou IA real conectada.
+Para Vercel/GitHub: substitua os arquivos da raiz do repositório pelo conteúdo desta pasta.
