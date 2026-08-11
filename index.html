@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PÓS — Beta V3</title>
+<title>PÓS — Beta V4</title>
 <style>
 :root{
  --bg:#0c0d0f;--panel:#121417;--card:#171a1e;--card2:#1d2126;--text:#f7f7f7;--muted:#9da4ad;
@@ -35,7 +35,7 @@ textarea,input,select{width:100%;background:#0f1114;color:var(--text);border:1px
 </head>
 <body>
 <div class="app">
-  <div class="top"><div class="brand">PÓS</div><div class="beta">BETA V3</div></div>
+  <div class="top"><div class="brand">PÓS</div><div class="beta">BETA V4</div></div>
 
   <!-- ONBOARDING -->
   <section id="onboarding" class="hidden">
@@ -263,7 +263,7 @@ $('#finishOnboarding').addEventListener('click',()=>{
 
 const scripts={
 saudade:{title:'Bateu saudade.',intro:'Não vou tentar tirar isso de você. Quero só separar algumas coisas.',q:'Quando a saudade veio hoje, o que apareceu primeiro?',options:['Uma lembrança boa','Medo dela(e) seguir sem mim','Vontade de ter alguém perto','Só um vazio. Não sei'],reply:o=>o==='Uma lembrança boa'?'Talvez valha observar se você sente falta da relação como ela estava no final — ou de uma versão anterior dela.':'A saudade pode carregar coisas diferentes além da pessoa. Vamos guardar o que apareceu sem fechar uma conclusão.'},
-mandar:{title:'Você quer mandar mensagem.',intro:'Antes de decidir qualquer coisa, vamos entender o que você espera encontrar do outro lado.',q:'Se ela(e) respondesse como você gostaria, o que queria que acontecesse?',options:['Que a gente voltasse','Saber se ainda sente algo','Parar essa angústia','Nem sei. Só quero falar'],reply:o=>o==='Parar essa angústia'?'Talvez a mensagem esteja tentando regular uma dor imediata. Isso não decide se mandar é certo ou errado — só muda a pergunta.':'O que você quer obter com o contato pode ser diferente da vontade de contato em si.'},
+mandar:{title:'Você quer mandar mensagem.',intro:'Antes de decidir qualquer coisa, vamos entender o que aconteceu agora.',custom:true},
 recebi:{title:'Você recebeu uma mensagem.',intro:'Uma mensagem isolada pode significar muita coisa. O contexto importa mais que a frase.',q:'O que essa mensagem mexeu primeiro?',options:['Esperança','Raiva','Ansiedade','Confusão'],reply:o=>`Primeiro apareceu ${o.toLowerCase()}. Antes de interpretar a intenção da outra pessoa, vale olhar o que isso reativou em você e como situações parecidas terminaram antes.`},
 mal:{title:'Hoje você só está mal.',intro:'Tudo bem não saber explicar. Vamos diminuir a pergunta.',q:'O que pesa mais agora?',options:['Solidão','Ansiedade','Saudade','Raiva'],reply:o=>`Hoje o que apareceu com mais força foi ${o.toLowerCase()}. Não precisamos transformar isso em teoria. Localizar já é um começo.`},
 melhor:{title:'Hoje você está melhor.',intro:'Isso também importa. O produto não pode existir apenas quando você está em crise.',q:'O que esteve diferente hoje?',options:['Pensei menos nela(e)','Fiz algo por mim','Falei com pessoas','Nem sei. Só acordei melhor'],reply:o=>'Registrar dias melhores ajuda a perceber que a história também se move quando a dor diminui.'},
@@ -271,6 +271,7 @@ lembranca:{title:'Uma cena voltou.',intro:'Não interpreta ainda. Cena primeiro,
 };
 function openFlow(type){
  const s=scripts[type];show('flow');
+ if(type==='mandar'){ openMessageFlow(); return; }
  let html=`<div class="card"><div class="muted">Agora</div><h1>${s.title}</h1><p>${s.intro}</p>`;
  if(s.free) html+=`<textarea id="freeText" placeholder="Onde vocês estavam? O que aconteceu? O que foi dito?"></textarea><button id="continueFree" class="btn">Continuar</button>`;
  else html+=`<h2>${s.q}</h2><div class="radioGrid">${s.options.map(o=>`<div class="radioOption answer" data-answer="${o}">${o}</div>`).join('')}</div>`;
@@ -280,6 +281,132 @@ function openFlow(type){
   $('#continueFree').addEventListener('click',()=>{const t=$('#freeText').value.trim();if(!t)return;state.scenes.push(t);showAnswer(type,t,s.reply())})
  }else $$('.answer').forEach(a=>a.addEventListener('click',()=>showAnswer(type,a.dataset.answer,s.reply(a.dataset.answer))));
 }
+
+function openMessageFlow(){
+ const previous = state.logs.filter(x=>x.kind==='mandar').slice(-1)[0];
+ const previousText = previous
+   ? `<div class="callout"><h3>Isso já apareceu antes</h3><p>Você já registrou uma vontade parecida em <b>${previous.when}</b>.</p><p class="muted">Desta vez, vamos comparar o que está acontecendo agora com aquele momento.</p></div>`
+   : '';
+
+ $('#flowContent').innerHTML=`
+   <div class="card">
+     <div class="muted">Agora</div>
+     <h1>Você quer mandar mensagem.</h1>
+     <p>Antes de pensar no texto, quero entender o que aconteceu para essa vontade aparecer agora.</p>
+     <textarea id="msgTrigger" placeholder="Ex.: vi uma foto, sonhei com ela, fiquei sozinho, ela curtiu algo meu, bateu saudade do nada..."></textarea>
+     <button id="msgStep1" class="btn">Continuar</button>
+   </div>
+   ${previousText}
+   <div id="messageFlowNext"></div>
+ `;
+ $('#msgStep1').addEventListener('click',()=>{
+   const trigger=$('#msgTrigger').value.trim();
+   if(!trigger)return;
+   messageStep2(trigger, previous);
+ });
+}
+
+function messageStep2(trigger, previous){
+ $('#messageFlowNext').innerHTML=`
+   <div class="card">
+     <h2>Ela(e) fez alguma coisa hoje?</h2>
+     <div class="radioGrid">
+       <div class="radioOption msg2" data-v="Sim, houve contato ou algum sinal">Sim, houve contato ou algum sinal</div>
+       <div class="radioOption msg2" data-v="Não. A vontade veio sem contato">Não. A vontade veio sem contato</div>
+       <div class="radioOption msg2" data-v="Vi algo nas redes sociais">Vi algo nas redes sociais</div>
+       <div class="radioOption msg2" data-v="Não sei dizer">Não sei dizer</div>
+     </div>
+   </div>`;
+ $$('.msg2').forEach(el=>el.addEventListener('click',()=>messageStep3(trigger,el.dataset.v,previous)));
+}
+
+function messageStep3(trigger, contact, previous){
+ $('#messageFlowNext').innerHTML=`
+   <div class="card">
+     <h2>Se ela(e) respondesse exatamente como você gostaria, o que você queria que acontecesse?</h2>
+     <div class="radioGrid">
+       <div class="radioOption msg3" data-v="Quero voltar">Que a gente voltasse</div>
+       <div class="radioOption msg3" data-v="Quero saber se ainda sente algo">Saber se ainda sente algo</div>
+       <div class="radioOption msg3" data-v="Quero aliviar essa angústia">Parar essa angústia</div>
+       <div class="radioOption msg3" data-v="Nem sei, só quero falar">Nem sei. Só quero falar</div>
+     </div>
+   </div>`;
+ $$('.msg3').forEach(el=>el.addEventListener('click',()=>messageStep4(trigger,contact,el.dataset.v,previous)));
+}
+
+function messageStep4(trigger, contact, expectation, previous){
+ $('#messageFlowNext').innerHTML=`
+   <div class="card">
+     <h2>Isso já aconteceu desde o término?</h2>
+     <div class="radioGrid">
+       <div class="radioOption msg4" data-v="Sim, e eu mandei mensagem">Sim, e eu mandei mensagem</div>
+       <div class="radioOption msg4" data-v="Sim, mas não mandei">Sim, mas não mandei</div>
+       <div class="radioOption msg4" data-v="Não, é a primeira vez">Não, é a primeira vez</div>
+       <div class="radioOption msg4" data-v="Não lembro">Não lembro</div>
+     </div>
+   </div>`;
+ $$('.msg4').forEach(el=>el.addEventListener('click',()=>messageResult(trigger,contact,expectation,el.dataset.v,previous)));
+}
+
+function messageResult(trigger, contact, expectation, repetition, previous){
+ let interpretation='';
+ if(expectation==='Quero aliviar essa angústia'){
+   interpretation='Hoje, a vontade de contato parece estar ligada pelo menos em parte à tentativa de aliviar o que você está sentindo agora.';
+ } else if(expectation==='Quero voltar'){
+   interpretation='Hoje, o contato parece estar ligado a uma esperança concreta de reaproximação, não apenas à vontade de falar.';
+ } else if(expectation==='Quero saber se ainda sente algo'){
+   interpretation='Hoje, a mensagem parece buscar uma resposta sobre o lugar que você ainda ocupa para essa pessoa.';
+ } else {
+   interpretation='Hoje, a vontade de contato ainda está meio sem forma. Isso também é uma informação importante.';
+ }
+
+ let memoryLine = previous
+   ? `Você já registrou uma vontade parecida antes. Isso não prova um padrão, mas mostra que esse tipo de momento está se repetindo.`
+   : `Ainda não há histórico suficiente para comparar este momento com outros.`;
+
+ let decisionQuestion = expectation==='Quero aliviar essa angústia'
+   ? 'Se a mensagem não vier com a resposta que você espera, o que acontece com essa angústia depois?'
+   : expectation==='Quero voltar'
+   ? 'O que mudou concretamente desde aquilo que fez a relação terminar?'
+   : expectation==='Quero saber se ainda sente algo'
+   ? 'Saber que ela(e) ainda sente algo mudaria qual decisão concreta na sua vida?'
+   : 'O que você espera sentir cinco minutos depois de mandar?';
+
+ $('#messageFlowNext').innerHTML=`
+   <div class="card">
+     <div class="muted">Leitura deste momento</div>
+     <h1>Antes da mensagem, tem uma coisa acontecendo em você.</h1>
+     <div class="mem">
+       <div><b>O que acendeu a vontade:</b><br>${trigger}</div>
+       <div><b>Contexto de hoje:</b><br>${contact}</div>
+       <div><b>O que você espera obter:</b><br>${expectation}</div>
+       <div><b>Repetição:</b><br>${repetition}</div>
+     </div>
+   </div>
+   <div class="callout">
+     <h3>O que aparece</h3>
+     <p>${interpretation}</p>
+     <p>${memoryLine}</p>
+   </div>
+   <div class="card">
+     <h3>O que eu não vou decidir por você</h3>
+     <p class="muted">O PÓS não manda você enviar ou não enviar. A ideia é te ajudar a entender qual necessidade está tentando resolver antes de agir.</p>
+   </div>
+   <div class="card">
+     <h3>Uma pergunta antes de decidir</h3>
+     <p><b>${decisionQuestion}</b></p>
+     <textarea id="finalReflection" placeholder="Se quiser, responde aqui..."></textarea>
+     <button id="saveMessageMoment" class="btn">Guardar este momento</button>
+   </div>
+ `;
+ $('#saveMessageMoment').addEventListener('click',()=>{
+   const reflection=$('#finalReflection').value.trim();
+   const text=`Quis mandar mensagem. Gatilho: ${trigger}. Esperava: ${expectation}. ${reflection?`Reflexão: ${reflection}`:''}`;
+   log('mandar',text);
+   show('journey');
+ });
+}
+
 function showAnswer(type,answer,reply){
  $('#flowResponse').innerHTML=`<div class="chat"><div class="bubble user">${answer}</div><div class="bubble bot">${reply}</div></div>
  <div class="card"><h3>O que fica daqui</h3><p class="muted">A versão real transformaria isso em memória útil, não apenas histórico bruto.</p><button id="saveMoment" class="btn">Guardar este momento</button></div>`;

@@ -1,15 +1,26 @@
-# PÓS — Beta V3
+# PÓS — Beta V4
 
 Mudança principal:
-- A pergunta de abertura muda a cada nova visita:
-  1. O que te trouxe aqui?
-  2. O que aconteceu para você chegar aqui?
-  3. O que você está sentindo?
-  4. Qual foi a cena que mais ficou na tua cabeça desde ontem?
-  5. Volta para a primeira.
+- Fluxo completo de “Quero mandar mensagem”
+- Investiga:
+  1. O que aconteceu antes da vontade
+  2. Se houve contato/sinal
+  3. O que a pessoa espera obter
+  4. Se isso já aconteceu antes
+  5. Usa memória anterior quando existe
+  6. Faz uma devolutiva sem mandar a pessoa agir
+  7. Guarda o episódio na jornada
 
-A sequência fica registrada localmente no navegador.
+Também mantém:
+- Onboarding
+- Perguntas rotativas de abertura
+- Hoje
+- SOS
+- Jornada
+- Memória
+- Recomeçar
+- Perfil/privacidade
 
 ## Publicação
-Substitua os arquivos do repositório atual por estes e faça commit.
-A Vercel publica a atualização automaticamente.
+Substitua os arquivos no mesmo repositório do GitHub e faça commit.
+A Vercel deve publicar automaticamente.
