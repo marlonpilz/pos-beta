@@ -1,26 +1,8 @@
-# PÓS — Beta V4
+# PÓS — Beta V5
+Protótipo estático para Vercel.
 
-Mudança principal:
-- Fluxo completo de “Quero mandar mensagem”
-- Investiga:
-  1. O que aconteceu antes da vontade
-  2. Se houve contato/sinal
-  3. O que a pessoa espera obter
-  4. Se isso já aconteceu antes
-  5. Usa memória anterior quando existe
-  6. Faz uma devolutiva sem mandar a pessoa agir
-  7. Guarda o episódio na jornada
+## Deploy
+Substitua os arquivos do repositório atual por estes e faça commit/push. A Vercel deve publicar automaticamente.
 
-Também mantém:
-- Onboarding
-- Perguntas rotativas de abertura
-- Hoje
-- SOS
-- Jornada
-- Memória
-- Recomeçar
-- Perfil/privacidade
-
-## Publicação
-Substitua os arquivos no mesmo repositório do GitHub e faça commit.
-A Vercel deve publicar automaticamente.
+## Observação
+A memória desta beta usa localStorage e fica apenas no navegador. Não há backend, conta, banco remoto ou IA real conectada.
