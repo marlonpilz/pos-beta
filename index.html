@@ -3,215 +3,314 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PÓS — Beta Privada</title>
+<title>PÓS — Beta V2</title>
 <style>
 :root{
-  --bg:#0c0d0f;--card:#15171a;--card2:#1b1e22;--text:#f4f4f4;--muted:#9ca3af;
-  --border:#2a2e34;--accent:#e8e8e8;--accentText:#111;--soft:#20242a;
+ --bg:#0c0d0f;--panel:#121417;--card:#171a1e;--card2:#1d2126;--text:#f7f7f7;--muted:#9da4ad;
+ --border:#2b3036;--soft:#20252b;--accent:#f2f2f2;--accentText:#111;
 }
-*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-.app{max-width:520px;margin:0 auto;min-height:100vh;padding:18px 16px 92px}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
-.brand{font-size:24px;font-weight:800;letter-spacing:.12em}.beta{font-size:11px;border:1px solid var(--border);border-radius:999px;padding:5px 8px;color:var(--muted)}
-h1{font-size:27px;line-height:1.12;margin:10px 0 8px} h2{font-size:20px;margin:0 0 8px} p{line-height:1.5}
-.muted{color:var(--muted);font-size:14px}.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin:12px 0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice,.btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:16px;padding:14px;text-align:left;font:inherit;cursor:pointer}
-.choice:hover,.choice.active{border-color:#777;background:var(--soft)}.choice strong{display:block;margin-bottom:4px}.choice small{color:var(--muted)}
-.btn{width:100%;text-align:center;font-weight:700;background:var(--accent);color:var(--accentText);margin-top:12px}
-.btn.secondary{background:var(--card);color:var(--text)} textarea,input{width:100%;border:1px solid var(--border);background:#101215;color:var(--text);border-radius:14px;padding:13px;font:inherit}
-textarea{min-height:130px;resize:vertical}.hidden{display:none}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--border);border-radius:999px;padding:7px 10px;font-size:12px;color:#d1d5db}
-.memory{font-size:13px}.memory div{padding:7px 0;border-bottom:1px solid var(--border)}.memory div:last-child{border:0}
-.chat{display:flex;flex-direction:column;gap:10px;margin:14px 0}.bubble{max-width:88%;padding:12px 14px;border-radius:17px;line-height:1.45}.user{align-self:flex-end;background:#e9e9e9;color:#111}.bot{align-self:flex-start;background:var(--card2);border:1px solid var(--border)}
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,13,15,.94);backdrop-filter:blur(12px);border-top:1px solid var(--border)}
-.navin{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);padding:9px 12px}.nav button{background:none;border:0;color:var(--muted);padding:8px;font:inherit}.nav button.active{color:#fff}
-.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px}.stat b{font-size:18px;display:block}.stat span{font-size:11px;color:var(--muted)}
-.notice{border-left:3px solid #888;padding:10px 12px;background:var(--soft);border-radius:0 12px 12px 0;font-size:13px;color:#ddd}
-@media(max-width:400px){.grid{grid-template-columns:1fr}.statrow{grid-template-columns:1fr 1fr}.statrow .stat:last-child{grid-column:1/-1}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+button,input,textarea,select{font:inherit}.app{max-width:540px;margin:0 auto;min-height:100vh;padding:18px 16px 100px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.brand{font-size:25px;font-weight:800;letter-spacing:.14em}.beta{font-size:11px;color:var(--muted);padding:5px 9px;border:1px solid var(--border);border-radius:999px}
+h1{font-size:28px;line-height:1.12;margin:10px 0 8px}h2{font-size:20px;margin:0 0 8px}h3{font-size:16px;margin:0 0 6px}p{line-height:1.5}
+.muted{color:var(--muted);font-size:14px}.tiny{font-size:12px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin:12px 0}.soft{background:var(--soft)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.choice,.action,.btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:16px;padding:14px;cursor:pointer}.choice{text-align:left}.choice strong,.action strong{display:block;margin-bottom:4px}.choice small,.action small{display:block;color:var(--muted)}.choice:hover,.choice.active,.action:hover{background:var(--soft);border-color:#666}
+.btn{width:100%;text-align:center;font-weight:700;background:var(--accent);color:var(--accentText);margin-top:10px}.btn.secondary{background:var(--card);color:var(--text)}
+textarea,input,select{width:100%;background:#0f1114;color:var(--text);border:1px solid var(--border);border-radius:14px;padding:12px}.hidden{display:none!important}
+.pillrow{display:flex;gap:8px;flex-wrap:wrap}.pill{border:1px solid var(--border);border-radius:999px;padding:7px 10px;font-size:12px;color:#d7dbe0;background:var(--panel)}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px}.stat b{font-size:18px;display:block}.stat span{font-size:11px;color:var(--muted)}
+.mem div,.timelineItem{padding:9px 0;border-bottom:1px solid var(--border)}.mem div:last-child,.timelineItem:last-child{border:0}
+.chat{display:flex;flex-direction:column;gap:10px;margin:14px 0}.bubble{max-width:90%;padding:12px 14px;border-radius:17px;line-height:1.45}.user{align-self:flex-end;background:#ededed;color:#111}.bot{align-self:flex-start;background:var(--card2);border:1px solid var(--border)}
+.callout{border-left:3px solid #80858b;background:var(--soft);padding:12px 14px;border-radius:0 14px 14px 0}
+.bar{height:9px;border-radius:999px;background:#252a30;overflow:hidden}.bar>span{display:block;height:100%;background:#cfd3d8;border-radius:999px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,13,15,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);z-index:20}.navin{max-width:540px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 6px}.nav button{background:none;border:0;color:var(--muted);padding:7px 3px;font-size:11px}.nav button.active{color:#fff;font-weight:700}
+.icon{font-size:19px;display:block;margin-bottom:2px}.sectionHead{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-top:22px}
+.tag{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:5px 8px;font-size:11px;color:var(--muted)}
+.locked{opacity:.6}.divider{height:1px;background:var(--border);margin:14px 0}
+.radioGrid{display:grid;gap:8px}.radioOption{border:1px solid var(--border);border-radius:14px;padding:12px;cursor:pointer}.radioOption.selected{background:var(--soft);border-color:#70757c}
+@media(max-width:410px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.grid3 .stat:last-child{grid-column:1/-1}.nav button{font-size:10px}}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="top"><div class="brand">PÓS</div><div class="beta">BETA PRIVADA</div></div>
+  <div class="top"><div class="brand">PÓS</div><div class="beta">BETA V2</div></div>
 
-  <section id="home">
-    <div class="muted">Boa noite.</div>
-    <h1>O que aconteceu hoje?</h1>
-    <p class="muted">Não precisa entender tudo. Só começa pelo que está mais vivo agora.</p>
-
-    <div class="grid">
-      <button class="choice event" data-type="saudade"><strong>Bateu saudade</strong><small>Minha cabeça voltou pra relação.</small></button>
-      <button class="choice event" data-type="mandar"><strong>Quero mandar mensagem</strong><small>Estou quase procurando.</small></button>
-      <button class="choice event" data-type="recebi"><strong>Recebi uma mensagem</strong><small>Não sei como interpretar.</small></button>
-      <button class="choice event" data-type="lembranca"><strong>Lembrei de uma cena</strong><small>Uma coisa voltou hoje.</small></button>
-      <button class="choice event" data-type="mal"><strong>Só estou mal</strong><small>Nem sei explicar direito.</small></button>
-      <button class="choice event" data-type="melhor"><strong>Hoje estou melhor</strong><small>Quero registrar isso também.</small></button>
-    </div>
-
+  <!-- ONBOARDING -->
+  <section id="onboarding" class="hidden">
+    <div class="muted">Um lugar para depois do fim.</div>
+    <h1>Você não precisa entender tudo agora.</h1>
+    <p class="muted">Me conta só onde você está. O resto a gente organiza aos poucos.</p>
     <div class="card">
-      <h2>O que eu já sei sobre você</h2>
-      <div id="memorySummary" class="memory"></div>
-      <button id="reset" class="btn secondary">Apagar memória desta beta</button>
+      <label class="tiny">Há quanto tempo terminou?</label>
+      <select id="breakupTime">
+        <option>Menos de 7 dias</option><option>1 a 4 semanas</option><option>1 a 3 meses</option><option>Mais de 3 meses</option>
+      </select>
+      <div class="divider"></div>
+      <label class="tiny">Quem terminou?</label>
+      <div class="radioGrid" id="whoEnded">
+        <div class="radioOption" data-value="Eu terminei">Eu terminei</div>
+        <div class="radioOption" data-value="A outra pessoa terminou">A outra pessoa terminou</div>
+        <div class="radioOption" data-value="Foi confuso / mútuo">Foi confuso / mútuo</div>
+      </div>
+      <div class="divider"></div>
+      <label class="tiny">Vocês ainda se falam?</label>
+      <div class="radioGrid" id="contactStatus">
+        <div class="radioOption" data-value="Sim, quase todo dia">Sim, quase todo dia</div>
+        <div class="radioOption" data-value="Às vezes">Às vezes</div>
+        <div class="radioOption" data-value="Não">Não</div>
+      </div>
+      <button id="finishOnboarding" class="btn">Entrar no PÓS</button>
     </div>
   </section>
 
-  <section id="flow" class="hidden">
-    <button id="back" class="btn secondary">← Voltar</button>
+  <!-- HOJE -->
+  <section id="home" class="screen">
+    <div class="muted">Boa noite.</div>
+    <h1>O que aconteceu hoje?</h1>
+    <p class="muted">Escolhe o ponto mais próximo do que está pegando agora.</p>
+    <div class="grid2">
+      <button class="choice event" data-type="saudade"><strong>💭 Bateu saudade</strong><small>Minha cabeça voltou pra relação.</small></button>
+      <button class="choice event" data-type="mandar"><strong>📱 Quero mandar mensagem</strong><small>Estou quase procurando.</small></button>
+      <button class="choice event" data-type="recebi"><strong>💬 Recebi mensagem</strong><small>Não sei como interpretar.</small></button>
+      <button class="choice event" data-type="lembranca"><strong>🧩 Lembrei de uma cena</strong><small>Uma coisa voltou hoje.</small></button>
+      <button class="choice event" data-type="mal"><strong>🌧️ Só estou mal</strong><small>Nem sei explicar direito.</small></button>
+      <button class="choice event" data-type="melhor"><strong>🌤️ Hoje estou melhor</strong><small>Quero registrar isso também.</small></button>
+    </div>
+
+    <div class="sectionHead"><div><h2>Seu momento</h2><div class="muted">Uma leitura simples do agora.</div></div><span class="tag">demo</span></div>
+    <div class="grid3">
+      <div class="stat"><b id="homeDays">12</b><span>dias desde o fim</span></div>
+      <div class="stat"><b id="homeLogs">0</b><span>registros</span></div>
+      <div class="stat"><b>Entender</b><span>fase atual</span></div>
+    </div>
+    <div class="card">
+      <h3>Uma coisa para lembrar hoje</h3>
+      <p id="dailyPrompt">Saudade não é necessariamente direção. Às vezes é só sinal de que algo importante existiu.</p>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section id="flow" class="screen hidden">
+    <button id="backFlow" class="btn secondary">← Voltar</button>
     <div id="flowContent"></div>
   </section>
 
-  <section id="journey" class="hidden">
-    <h1>Sua travessia</h1>
-    <p class="muted">Não mede “cura”. Só organiza o que foi mudando ao longo do caminho.</p>
-    <div class="statrow">
-      <div class="stat"><b id="days">12</b><span>dias desde o término</span></div>
-      <div class="stat"><b id="records">0</b><span>registros feitos</span></div>
-      <div class="stat"><b id="focus">Entender</b><span>foco atual</span></div>
+  <!-- SOS -->
+  <section id="sos" class="screen hidden">
+    <div class="muted">Modo SOS</div>
+    <h1>Quando a vontade aperta.</h1>
+    <p class="muted">Não é terapia de emergência. É um espaço curto para ganhar alguns minutos de clareza antes de agir.</p>
+    <div class="card">
+      <h2>O que está mais urgente?</h2>
+      <button class="action sosAction" data-sos="mandar"><strong>Quero mandar mensagem agora</strong><small>Antes de enviar, separar impulso de intenção.</small></button>
+      <button class="action sosAction" data-sos="stalk"><strong>Quero olhar as redes dela(e)</strong><small>Entender o que você espera encontrar.</small></button>
+      <button class="action sosAction" data-sos="voltar"><strong>Quero pedir para voltar</strong><small>Olhar mudança concreta, não só dor.</small></button>
+      <button class="action sosAction" data-sos="desabar"><strong>Estou desabando</strong><small>Reduzir a pergunta e voltar ao presente.</small></button>
     </div>
-    <div class="card"><h2>Últimos registros</h2><div id="timeline" class="memory"></div></div>
-    <div class="notice">Nesta beta, os dados ficam apenas neste navegador. Na versão real, haveria conta, banco de dados, privacidade e exclusão controlada pelo usuário.</div>
+    <div id="sosResult"></div>
+  </section>
+
+  <!-- JORNADA -->
+  <section id="journey" class="screen hidden">
+    <div class="muted">Sua travessia</div>
+    <h1>O que foi mudando.</h1>
+    <div class="grid3">
+      <div class="stat"><b id="journeyDays">12</b><span>dias</span></div>
+      <div class="stat"><b id="journeyLogs">0</b><span>registros</span></div>
+      <div class="stat"><b id="goodDays">0</b><span>dias melhores</span></div>
+    </div>
+    <div class="card">
+      <h2>Foco da sua história</h2>
+      <div class="tiny">Ex / relação</div><div class="bar"><span id="exBar" style="width:82%"></span></div>
+      <div class="tiny" style="margin-top:10px">Você / sua vida</div><div class="bar"><span id="selfBar" style="width:18%"></span></div>
+      <p class="muted">A ideia do produto seria acompanhar quando a conversa começa a sair do “nós” e voltar para “eu”.</p>
+    </div>
+    <div class="card"><h2>Últimos registros</h2><div id="timeline" class="mem"></div></div>
+  </section>
+
+  <!-- MEMÓRIA -->
+  <section id="memory" class="screen hidden">
+    <div class="muted">Memória da relação</div>
+    <h1>O que já ficou registrado.</h1>
+    <p class="muted">Na versão real, isso seria construído e atualizado pela IA a partir das conversas.</p>
+    <div class="card"><h2>História básica</h2><div id="memorySummary" class="mem"></div></div>
+    <div class="card">
+      <h2>Hipóteses em observação</h2>
+      <div class="mem">
+        <div>Talvez você tenha ocupado mais o lugar de reparar quando havia ameaça de ruptura.</div>
+        <div>A esperança de “voltar a ser como antes” parece ter sustentado parte do vínculo.</div>
+        <div>O custo da relação para sua vida fora dela ainda precisa ser observado com mais cuidado.</div>
+      </div>
+      <p class="tiny">Hipóteses ≠ diagnóstico. O sistema deveria manter essa distinção explícita.</p>
+    </div>
+    <div class="card">
+      <h2>Cenas guardadas</h2>
+      <div id="scenesList" class="mem"></div>
+    </div>
+  </section>
+
+  <!-- RECONSTRUIR -->
+  <section id="rebuild" class="screen hidden">
+    <div class="muted">Depois do fim</div>
+    <h1>Voltar para a própria vida.</h1>
+    <p class="muted">Conforme o ex deixa de ocupar tudo, o produto começa a mudar de assunto junto com você.</p>
+    <div class="grid2">
+      <button class="choice rebuildItem" data-area="Amigos"><strong>👥 Amigos</strong><small>Quem sumiu da sua rotina?</small></button>
+      <button class="choice rebuildItem" data-area="Corpo"><strong>🏃 Corpo</strong><small>Movimento, sono, autocuidado.</small></button>
+      <button class="choice rebuildItem" data-area="Trabalho"><strong>🧭 Trabalho</strong><small>Projetos que ficaram pequenos.</small></button>
+      <button class="choice rebuildItem" data-area="Prazer"><strong>🌊 Prazer</strong><small>O que ainda é seu?</small></button>
+      <button class="choice rebuildItem" data-area="Casa"><strong>🏠 Casa</strong><small>Rotina e espaço pessoal.</small></button>
+      <button class="choice rebuildItem" data-area="Novos vínculos"><strong>❤️ Novos vínculos</strong><small>Sem pressa para substituir ninguém.</small></button>
+    </div>
+    <div id="rebuildDetail"></div>
+  </section>
+
+  <!-- EU -->
+  <section id="me" class="screen hidden">
+    <div class="muted">Pra mim</div>
+    <h1>Seu espaço.</h1>
+    <div class="card">
+      <h2>Minha fase</h2>
+      <div class="mem">
+        <div><b>Término:</b> <span id="meBreakup">12 dias</span></div>
+        <div><b>Quem terminou:</b> <span id="meWho">não definido</span></div>
+        <div><b>Contato atual:</b> <span id="meContact">não definido</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Privacidade</h2>
+      <p class="muted">Na versão real: baixar dados, corrigir memória, apagar cenas, excluir conta e controlar o que a IA pode relembrar.</p>
+      <button id="resetBeta" class="btn secondary">Apagar dados desta beta</button>
+    </div>
+    <div class="card">
+      <h2>Sobre esta beta</h2>
+      <p class="muted">A inteligência aqui é simulada. O objetivo é visualizar produto, fluxo, linguagem e sensação de uso.</p>
+    </div>
   </section>
 </div>
 
 <div class="nav">
   <div class="navin">
-    <button data-screen="home" class="active">Hoje</button>
-    <button data-screen="journey">Jornada</button>
-    <button id="aboutBtn">Sobre</button>
+    <button data-screen="home" class="active"><span class="icon">◉</span>Hoje</button>
+    <button data-screen="sos"><span class="icon">⚡</span>SOS</button>
+    <button data-screen="journey"><span class="icon">↗</span>Jornada</button>
+    <button data-screen="rebuild"><span class="icon">✦</span>Recomeçar</button>
+    <button data-screen="me"><span class="icon">○</span>Pra mim</button>
   </div>
 </div>
 
 <script>
-const storeKey='pos_beta_v1';
-let data;
-try{ data=JSON.parse(localStorage.getItem(storeKey)) }catch(e){}
-if(!data) data={
-  profile:{relationship:'4 anos', breakup:'12 dias', repair:'Você costumava tentar reparar primeiro', cost:'Partes da sua vida foram ficando menores', hope:'Você ainda esperava que a relação voltasse a ser como antes'},
-  logs:[]
+const key='pos_beta_v2';
+let state;
+try{state=JSON.parse(localStorage.getItem(key))}catch(e){}
+if(!state) state={
+ onboarded:false,
+ onboarding:{breakupTime:'1 a 4 semanas',whoEnded:'',contactStatus:''},
+ profile:{relationship:'4 anos',breakup:'12 dias',repair:'Você costumava tentar reparar primeiro',cost:'Partes da sua vida foram ficando menores',hope:'Você ainda esperava que a relação voltasse a ser como antes'},
+ logs:[], scenes:[]
 };
-function save(){localStorage.setItem(storeKey,JSON.stringify(data)); renderMemory(); renderJourney()}
-function renderMemory(){
-  const m=document.getElementById('memorySummary');
-  m.innerHTML=`
-    <div><b>Relação:</b> ${data.profile.relationship}</div>
-    <div><b>Término:</b> ${data.profile.breakup}</div>
-    <div><b>Conflitos:</b> ${data.profile.repair}</div>
-    <div><b>Custo percebido:</b> ${data.profile.cost}</div>
-    <div><b>Hipótese em observação:</b> ${data.profile.hope}</div>`;
-}
-function renderJourney(){
-  document.getElementById('records').textContent=data.logs.length;
-  const tl=document.getElementById('timeline');
-  if(!data.logs.length){tl.innerHTML='<div class="muted">Nenhum registro ainda. Volte em “Hoje” e teste uma situação.</div>';return}
-  tl.innerHTML=data.logs.slice().reverse().map(x=>`<div><b>${x.when}</b><br>${x.text}</div>`).join('');
-}
-function log(text){
-  const now=new Date();
-  data.logs.push({when:now.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),text});
-  save();
-}
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function save(){localStorage.setItem(key,JSON.stringify(state));renderAll()}
 function show(id){
-  ['home','flow','journey'].forEach(s=>document.getElementById(s).classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  document.querySelectorAll('.nav button[data-screen]').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
+ $$('.screen').forEach(s=>s.classList.add('hidden'));
+ $('#onboarding').classList.add('hidden');
+ $('#'+id).classList.remove('hidden');
+ $$('.nav button[data-screen]').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
+ window.scrollTo({top:0,behavior:'smooth'});
 }
-document.querySelectorAll('.nav button[data-screen]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.screen)));
-document.getElementById('back').addEventListener('click',()=>show('home'));
-document.getElementById('reset').addEventListener('click',()=>{
-  if(confirm('Apagar os registros desta beta?')){
-    localStorage.removeItem(storeKey); location.reload();
-  }
+function log(kind,text){
+ const d=new Date();
+ state.logs.push({kind,text,when:d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})});
+ if(kind==='melhor'){}
+ save();
+}
+function renderAll(){
+ $('#homeLogs').textContent=state.logs.length; $('#journeyLogs').textContent=state.logs.length;
+ $('#goodDays').textContent=state.logs.filter(x=>x.kind==='melhor').length;
+ $('#timeline').innerHTML=state.logs.length?state.logs.slice().reverse().map(x=>`<div class="timelineItem"><b>${x.when}</b><br>${x.text}</div>`).join(''):'<div class="muted">Nenhum registro ainda.</div>';
+ $('#memorySummary').innerHTML=`
+  <div><b>Relação:</b> ${state.profile.relationship}</div>
+  <div><b>Término:</b> ${state.profile.breakup}</div>
+  <div><b>Conflitos:</b> ${state.profile.repair}</div>
+  <div><b>Custo percebido:</b> ${state.profile.cost}</div>
+  <div><b>Hipótese:</b> ${state.profile.hope}</div>`;
+ $('#scenesList').innerHTML=state.scenes.length?state.scenes.slice().reverse().map(s=>`<div>${s}</div>`).join(''):'<div class="muted">Nenhuma cena registrada ainda.</div>';
+ $('#meBreakup').textContent=state.onboarding.breakupTime||state.profile.breakup;
+ $('#meWho').textContent=state.onboarding.whoEnded||'não definido';
+ $('#meContact').textContent=state.onboarding.contactStatus||'não definido';
+ const n=state.logs.length;
+ const ex=Math.max(35,82-n*4), self=100-ex;
+ $('#exBar').style.width=ex+'%';$('#selfBar').style.width=self+'%';
+}
+$$('.nav button[data-screen]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.screen)));
+$('#backFlow').addEventListener('click',()=>show('home'));
+$('#resetBeta').addEventListener('click',()=>{if(confirm('Apagar todos os dados locais desta beta?')){localStorage.removeItem(key);location.reload()}});
+
+function selectRadio(containerId){
+ $$('#'+containerId+' .radioOption').forEach(x=>x.addEventListener('click',()=>{
+   $$('#'+containerId+' .radioOption').forEach(y=>y.classList.remove('selected'));x.classList.add('selected');
+   if(containerId==='whoEnded')state.onboarding.whoEnded=x.dataset.value;
+   if(containerId==='contactStatus')state.onboarding.contactStatus=x.dataset.value;
+ }));
+}
+selectRadio('whoEnded');selectRadio('contactStatus');
+$('#finishOnboarding').addEventListener('click',()=>{
+ state.onboarding.breakupTime=$('#breakupTime').value;
+ state.onboarded=true;save();show('home');
 });
-document.getElementById('aboutBtn').addEventListener('click',()=>alert('PÓS — beta privada. Nesta versão, a inteligência é simulada para visualizar a experiência. A versão real conectaria a interface a um modelo de IA e a uma memória segura por usuário.'));
 
 const scripts={
-saudade:{
- title:'Bateu saudade.',
- intro:'Não vou tentar tirar isso de você. Quero só separar algumas coisas.',
- q:'Quando a saudade veio hoje, o que apareceu primeiro?',
- options:['Uma lembrança boa','Medo dela seguir sem mim','Vontade de ter alguém perto','Só um vazio. Não sei'],
- reply:(o)=> o==='Uma lembrança boa'
- ?'Talvez valha observar se você está sentindo falta da relação como ela estava no final — ou de uma versão anterior dela.'
- :'A saudade pode carregar coisas diferentes além da pessoa. Vamos registrar o que apareceu hoje sem fechar uma conclusão.'
-},
-mandar:{
- title:'Você quer mandar mensagem.',
- intro:'Antes de decidir qualquer coisa, quero entender o que você espera encontrar do outro lado.',
- q:'Se ela respondesse exatamente como você gostaria, o que você queria que acontecesse?',
- options:['Que a gente voltasse','Saber se ela ainda sente algo','Parar essa angústia','Nem sei. Só quero falar'],
- reply:(o)=> o==='Parar essa angústia'
- ?'Então talvez a mensagem esteja tentando regular uma dor imediata. Isso não diz se mandar é certo ou errado — só muda a pergunta.'
- :'O que você quer obter com o contato pode ser diferente da vontade de contato em si. Essa diferença merece ser observada.'
-},
-recebi:{
- title:'Ela te chamou.',
- intro:'Uma mensagem isolada pode significar muita coisa. O contexto importa mais que a frase.',
- q:'O que essa mensagem mexeu primeiro em você?',
- options:['Esperança','Raiva','Ansiedade','Confusão'],
- reply:(o)=>`Primeiro apareceu ${o.toLowerCase()}. Antes de interpretar a intenção dela, vale entender o que essa mensagem reativou em você e como situações parecidas terminaram antes.`
-},
-lembranca:{
- title:'Uma cena voltou.',
- intro:'Não tenta interpretar. Cena primeiro, explicação depois.',
- free:true,
- reply:()=> 'Guardar cenas concretas ao longo do tempo permite perceber repetições sem exigir que você já saiba nomear “seu padrão”.'
-},
-mal:{
- title:'Hoje você só está mal.',
- intro:'Tudo bem não saber explicar. Vamos reduzir o tamanho da pergunta.',
- q:'O que está mais pesado agora?',
- options:['Solidão','Ansiedade','Saudade','Raiva'],
- reply:(o)=>`Hoje o que apareceu com mais força foi ${o.toLowerCase()}. Não precisamos transformar isso em uma teoria. Só localizar já é um começo.`
-},
-melhor:{
- title:'Hoje você está melhor.',
- intro:'Isso também importa. O produto não pode existir apenas quando você está em crise.',
- q:'O que esteve diferente hoje?',
- options:['Pensei menos nela','Fiz algo por mim','Falei com pessoas','Nem sei. Só acordei melhor'],
- reply:()=> 'Registrar dias melhores ajuda a perceber que a história não se move apenas quando a dor aumenta. Também existe reconstrução acontecendo.'
-}
+saudade:{title:'Bateu saudade.',intro:'Não vou tentar tirar isso de você. Quero só separar algumas coisas.',q:'Quando a saudade veio hoje, o que apareceu primeiro?',options:['Uma lembrança boa','Medo dela(e) seguir sem mim','Vontade de ter alguém perto','Só um vazio. Não sei'],reply:o=>o==='Uma lembrança boa'?'Talvez valha observar se você sente falta da relação como ela estava no final — ou de uma versão anterior dela.':'A saudade pode carregar coisas diferentes além da pessoa. Vamos guardar o que apareceu sem fechar uma conclusão.'},
+mandar:{title:'Você quer mandar mensagem.',intro:'Antes de decidir qualquer coisa, vamos entender o que você espera encontrar do outro lado.',q:'Se ela(e) respondesse como você gostaria, o que queria que acontecesse?',options:['Que a gente voltasse','Saber se ainda sente algo','Parar essa angústia','Nem sei. Só quero falar'],reply:o=>o==='Parar essa angústia'?'Talvez a mensagem esteja tentando regular uma dor imediata. Isso não decide se mandar é certo ou errado — só muda a pergunta.':'O que você quer obter com o contato pode ser diferente da vontade de contato em si.'},
+recebi:{title:'Você recebeu uma mensagem.',intro:'Uma mensagem isolada pode significar muita coisa. O contexto importa mais que a frase.',q:'O que essa mensagem mexeu primeiro?',options:['Esperança','Raiva','Ansiedade','Confusão'],reply:o=>`Primeiro apareceu ${o.toLowerCase()}. Antes de interpretar a intenção da outra pessoa, vale olhar o que isso reativou em você e como situações parecidas terminaram antes.`},
+mal:{title:'Hoje você só está mal.',intro:'Tudo bem não saber explicar. Vamos diminuir a pergunta.',q:'O que pesa mais agora?',options:['Solidão','Ansiedade','Saudade','Raiva'],reply:o=>`Hoje o que apareceu com mais força foi ${o.toLowerCase()}. Não precisamos transformar isso em teoria. Localizar já é um começo.`},
+melhor:{title:'Hoje você está melhor.',intro:'Isso também importa. O produto não pode existir apenas quando você está em crise.',q:'O que esteve diferente hoje?',options:['Pensei menos nela(e)','Fiz algo por mim','Falei com pessoas','Nem sei. Só acordei melhor'],reply:o=>'Registrar dias melhores ajuda a perceber que a história também se move quando a dor diminui.'},
+lembranca:{title:'Uma cena voltou.',intro:'Não interpreta ainda. Cena primeiro, explicação depois.',free:true,reply:()=> 'Guardar cenas concretas ao longo do tempo permite perceber repetições sem exigir que você já saiba nomear “seu padrão”.'}
 };
 function openFlow(type){
- const s=scripts[type];
- show('flow');
- const c=document.getElementById('flowContent');
- let body=`<div class="card"><h1>${s.title}</h1><p>${s.intro}</p>`;
+ const s=scripts[type];show('flow');
+ let html=`<div class="card"><div class="muted">Agora</div><h1>${s.title}</h1><p>${s.intro}</p>`;
+ if(s.free) html+=`<textarea id="freeText" placeholder="Onde vocês estavam? O que aconteceu? O que foi dito?"></textarea><button id="continueFree" class="btn">Continuar</button>`;
+ else html+=`<h2>${s.q}</h2><div class="radioGrid">${s.options.map(o=>`<div class="radioOption answer" data-answer="${o}">${o}</div>`).join('')}</div>`;
+ html+=`</div><div id="flowResponse"></div>`;
+ $('#flowContent').innerHTML=html;
  if(s.free){
-   body+=`<label class="muted">Conta a cena do jeito que lembrar.</label><textarea id="freeText" placeholder="O que aconteceu? Onde vocês estavam? O que foi dito?"></textarea><button id="go" class="btn">Continuar</button>`;
- }else{
-   body+=`<h2>${s.q}</h2><div class="chips">${s.options.map((o,i)=>`<button class="choice ans" data-answer="${o.replace(/"/g,'&quot;')}">${o}</button>`).join('')}</div>`;
- }
- body+='</div><div id="response"></div>';
- c.innerHTML=body;
- if(s.free){
-   document.getElementById('go').addEventListener('click',()=>{
-     const t=document.getElementById('freeText').value.trim();
-     if(!t)return;
-     showResponse(type,t,s.reply());
-   });
- } else {
-   document.querySelectorAll('.ans').forEach(b=>b.addEventListener('click',()=>showResponse(type,b.dataset.answer,s.reply(b.dataset.answer))));
- }
+  $('#continueFree').addEventListener('click',()=>{const t=$('#freeText').value.trim();if(!t)return;state.scenes.push(t);showAnswer(type,t,s.reply())})
+ }else $$('.answer').forEach(a=>a.addEventListener('click',()=>showAnswer(type,a.dataset.answer,s.reply(a.dataset.answer))));
 }
-function showResponse(type,answer,reply){
- const r=document.getElementById('response');
- r.innerHTML=`
-  <div class="chat">
-    <div class="bubble user">${answer}</div>
-    <div class="bubble bot">${reply}</div>
-  </div>
-  <div class="card">
-    <h2>O que fica guardado</h2>
-    <p class="muted">Nesta beta, o registro é simples. Na versão real, a IA transformaria cada conversa em memória estruturada: fatos, eventos, hipóteses em observação e mudanças ao longo do tempo.</p>
-    <button id="saveLog" class="btn">Guardar este momento</button>
-  </div>`;
- document.getElementById('saveLog').addEventListener('click',()=>{
-   log(`${scripts[type].title} — ${answer}`);
-   alert('Momento guardado nesta beta.');
-   show('journey');
- });
+function showAnswer(type,answer,reply){
+ $('#flowResponse').innerHTML=`<div class="chat"><div class="bubble user">${answer}</div><div class="bubble bot">${reply}</div></div>
+ <div class="card"><h3>O que fica daqui</h3><p class="muted">A versão real transformaria isso em memória útil, não apenas histórico bruto.</p><button id="saveMoment" class="btn">Guardar este momento</button></div>`;
+ $('#saveMoment').addEventListener('click',()=>{log(type,`${scripts[type].title} — ${answer}`);show('journey')});
 }
-document.querySelectorAll('.event').forEach(b=>b.addEventListener('click',()=>openFlow(b.dataset.type)));
-renderMemory();renderJourney();
+$$('.event').forEach(b=>b.addEventListener('click',()=>openFlow(b.dataset.type)));
+
+const sosCopy={
+ mandar:'Antes de escrever qualquer coisa, responda só isto: você quer falar com a pessoa ou quer que a angústia pare?',
+ stalk:'Antes de abrir as redes, pensa: o que você espera encontrar — uma confirmação, uma dor, uma esperança ou alguma sensação de controle?',
+ voltar:'Antes de pedir para voltar, procure uma mudança concreta naquilo que fez a relação terminar. Dor menor não é mudança estrutural.',
+ desabar:'Agora não precisamos entender a relação inteira. Localize só o próximo minuto: onde você está, o que seu corpo pede e quem é uma pessoa segura para contatar se precisar de apoio real.'
+};
+$$('.sosAction').forEach(b=>b.addEventListener('click',()=>{
+ $('#sosResult').innerHTML=`<div class="callout"><h3>Primeiro passo</h3><p>${sosCopy[b.dataset.sos]}</p></div>`;
+}));
+$$('.rebuildItem').forEach(b=>b.addEventListener('click',()=>{
+ const area=b.dataset.area;
+ const copy={
+  'Amigos':'Quem fazia parte da sua vida antes da relação e foi ficando distante?',
+  'Corpo':'Qual pequeno cuidado com seu corpo existia antes e desapareceu no caminho?',
+  'Trabalho':'Que projeto, estudo ou desejo profissional perdeu espaço?',
+  'Prazer':'O que você fazia porque gostava — e não porque alguém esperava?',
+  'Casa':'O que deixaria seu espaço com mais cara de “sua vida” novamente?',
+  'Novos vínculos':'Você está querendo conhecer alguém ou querendo não se sentir sozinho?'
+ }[area];
+ $('#rebuildDetail').innerHTML=`<div class="card"><h2>${area}</h2><p>${copy}</p><textarea placeholder="Se quiser, registra uma resposta..."></textarea><button class="btn secondary">Guardar para depois</button></div>`;
+}));
+
+renderAll();
+if(!state.onboarded){$$('.screen').forEach(s=>s.classList.add('hidden'));$('#onboarding').classList.remove('hidden')}
 </script>
 </body>
 </html>

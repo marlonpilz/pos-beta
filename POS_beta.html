@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PÓS — Beta</title>
+<style>
+:root{
+  --bg:#0c0d0f;--card:#15171a;--card2:#1b1e22;--text:#f4f4f4;--muted:#9ca3af;
+  --border:#2a2e34;--accent:#e8e8e8;--accentText:#111;--soft:#20242a;
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+.app{max-width:520px;margin:0 auto;min-height:100vh;padding:18px 16px 92px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.brand{font-size:24px;font-weight:800;letter-spacing:.12em}.beta{font-size:11px;border:1px solid var(--border);border-radius:999px;padding:5px 8px;color:var(--muted)}
+h1{font-size:27px;line-height:1.12;margin:10px 0 8px} h2{font-size:20px;margin:0 0 8px} p{line-height:1.5}
+.muted{color:var(--muted);font-size:14px}.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice,.btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:16px;padding:14px;text-align:left;font:inherit;cursor:pointer}
+.choice:hover,.choice.active{border-color:#777;background:var(--soft)}.choice strong{display:block;margin-bottom:4px}.choice small{color:var(--muted)}
+.btn{width:100%;text-align:center;font-weight:700;background:var(--accent);color:var(--accentText);margin-top:12px}
+.btn.secondary{background:var(--card);color:var(--text)} textarea,input{width:100%;border:1px solid var(--border);background:#101215;color:var(--text);border-radius:14px;padding:13px;font:inherit}
+textarea{min-height:130px;resize:vertical}.hidden{display:none}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--border);border-radius:999px;padding:7px 10px;font-size:12px;color:#d1d5db}
+.memory{font-size:13px}.memory div{padding:7px 0;border-bottom:1px solid var(--border)}.memory div:last-child{border:0}
+.chat{display:flex;flex-direction:column;gap:10px;margin:14px 0}.bubble{max-width:88%;padding:12px 14px;border-radius:17px;line-height:1.45}.user{align-self:flex-end;background:#e9e9e9;color:#111}.bot{align-self:flex-start;background:var(--card2);border:1px solid var(--border)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,13,15,.94);backdrop-filter:blur(12px);border-top:1px solid var(--border)}
+.navin{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);padding:9px 12px}.nav button{background:none;border:0;color:var(--muted);padding:8px;font:inherit}.nav button.active{color:#fff}
+.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px}.stat b{font-size:18px;display:block}.stat span{font-size:11px;color:var(--muted)}
+.notice{border-left:3px solid #888;padding:10px 12px;background:var(--soft);border-radius:0 12px 12px 0;font-size:13px;color:#ddd}
+@media(max-width:400px){.grid{grid-template-columns:1fr}.statrow{grid-template-columns:1fr 1fr}.statrow .stat:last-child{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="brand">PÓS</div><div class="beta">BETA CONCEITUAL</div></div>
+
+  <section id="home">
+    <div class="muted">Boa noite.</div>
+    <h1>O que aconteceu hoje?</h1>
+    <p class="muted">Não precisa entender tudo. Só começa pelo que está mais vivo agora.</p>
+
+    <div class="grid">
+      <button class="choice event" data-type="saudade"><strong>Bateu saudade</strong><small>Minha cabeça voltou pra relação.</small></button>
+      <button class="choice event" data-type="mandar"><strong>Quero mandar mensagem</strong><small>Estou quase procurando.</small></button>
+      <button class="choice event" data-type="recebi"><strong>Recebi uma mensagem</strong><small>Não sei como interpretar.</small></button>
+      <button class="choice event" data-type="lembranca"><strong>Lembrei de uma cena</strong><small>Uma coisa voltou hoje.</small></button>
+      <button class="choice event" data-type="mal"><strong>Só estou mal</strong><small>Nem sei explicar direito.</small></button>
+      <button class="choice event" data-type="melhor"><strong>Hoje estou melhor</strong><small>Quero registrar isso também.</small></button>
+    </div>
+
+    <div class="card">
+      <h2>O que eu já sei sobre você</h2>
+      <div id="memorySummary" class="memory"></div>
+      <button id="reset" class="btn secondary">Apagar memória desta beta</button>
+    </div>
+  </section>
+
+  <section id="flow" class="hidden">
+    <button id="back" class="btn secondary">← Voltar</button>
+    <div id="flowContent"></div>
+  </section>
+
+  <section id="journey" class="hidden">
+    <h1>Sua travessia</h1>
+    <p class="muted">Não mede “cura”. Só organiza o que foi mudando ao longo do caminho.</p>
+    <div class="statrow">
+      <div class="stat"><b id="days">12</b><span>dias desde o término</span></div>
+      <div class="stat"><b id="records">0</b><span>registros feitos</span></div>
+      <div class="stat"><b id="focus">Entender</b><span>foco atual</span></div>
+    </div>
+    <div class="card"><h2>Últimos registros</h2><div id="timeline" class="memory"></div></div>
+    <div class="notice">Nesta beta, os dados ficam apenas neste navegador. Na versão real, haveria conta, banco de dados, privacidade e exclusão controlada pelo usuário.</div>
+  </section>
+</div>
+
+<div class="nav">
+  <div class="navin">
+    <button data-screen="home" class="active">Hoje</button>
+    <button data-screen="journey">Jornada</button>
+    <button id="aboutBtn">Sobre</button>
+  </div>
+</div>
+
+<script>
+const storeKey='pos_beta_v1';
+let data;
+try{ data=JSON.parse(localStorage.getItem(storeKey)) }catch(e){}
+if(!data) data={
+  profile:{relationship:'4 anos', breakup:'12 dias', repair:'Você costumava tentar reparar primeiro', cost:'Partes da sua vida foram ficando menores', hope:'Você ainda esperava que a relação voltasse a ser como antes'},
+  logs:[]
+};
+function save(){localStorage.setItem(storeKey,JSON.stringify(data)); renderMemory(); renderJourney()}
+function renderMemory(){
+  const m=document.getElementById('memorySummary');
+  m.innerHTML=`
+    <div><b>Relação:</b> ${data.profile.relationship}</div>
+    <div><b>Término:</b> ${data.profile.breakup}</div>
+    <div><b>Conflitos:</b> ${data.profile.repair}</div>
+    <div><b>Custo percebido:</b> ${data.profile.cost}</div>
+    <div><b>Hipótese em observação:</b> ${data.profile.hope}</div>`;
+}
+function renderJourney(){
+  document.getElementById('records').textContent=data.logs.length;
+  const tl=document.getElementById('timeline');
+  if(!data.logs.length){tl.innerHTML='<div class="muted">Nenhum registro ainda. Volte em “Hoje” e teste uma situação.</div>';return}
+  tl.innerHTML=data.logs.slice().reverse().map(x=>`<div><b>${x.when}</b><br>${x.text}</div>`).join('');
+}
+function log(text){
+  const now=new Date();
+  data.logs.push({when:now.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),text});
+  save();
+}
+function show(id){
+  ['home','flow','journey'].forEach(s=>document.getElementById(s).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  document.querySelectorAll('.nav button[data-screen]').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
+}
+document.querySelectorAll('.nav button[data-screen]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.screen)));
+document.getElementById('back').addEventListener('click',()=>show('home'));
+document.getElementById('reset').addEventListener('click',()=>{
+  if(confirm('Apagar os registros desta beta?')){
+    localStorage.removeItem(storeKey); location.reload();
+  }
+});
+document.getElementById('aboutBtn').addEventListener('click',()=>alert('PÓS — beta conceitual. Nesta versão, a inteligência é simulada para visualizar a experiência. A versão real conectaria a interface a um modelo de IA e a uma memória segura por usuário.'));
+
+const scripts={
+saudade:{
+ title:'Bateu saudade.',
+ intro:'Não vou tentar tirar isso de você. Quero só separar algumas coisas.',
+ q:'Quando a saudade veio hoje, o que apareceu primeiro?',
+ options:['Uma lembrança boa','Medo dela seguir sem mim','Vontade de ter alguém perto','Só um vazio. Não sei'],
+ reply:(o)=> o==='Uma lembrança boa'
+ ?'Talvez valha observar se você está sentindo falta da relação como ela estava no final — ou de uma versão anterior dela.'
+ :'A saudade pode carregar coisas diferentes além da pessoa. Vamos registrar o que apareceu hoje sem fechar uma conclusão.'
+},
+mandar:{
+ title:'Você quer mandar mensagem.',
+ intro:'Antes de decidir qualquer coisa, quero entender o que você espera encontrar do outro lado.',
+ q:'Se ela respondesse exatamente como você gostaria, o que você queria que acontecesse?',
+ options:['Que a gente voltasse','Saber se ela ainda sente algo','Parar essa angústia','Nem sei. Só quero falar'],
+ reply:(o)=> o==='Parar essa angústia'
+ ?'Então talvez a mensagem esteja tentando regular uma dor imediata. Isso não diz se mandar é certo ou errado — só muda a pergunta.'
+ :'O que você quer obter com o contato pode ser diferente da vontade de contato em si. Essa diferença merece ser observada.'
+},
+recebi:{
+ title:'Ela te chamou.',
+ intro:'Uma mensagem isolada pode significar muita coisa. O contexto importa mais que a frase.',
+ q:'O que essa mensagem mexeu primeiro em você?',
+ options:['Esperança','Raiva','Ansiedade','Confusão'],
+ reply:(o)=>`Primeiro apareceu ${o.toLowerCase()}. Antes de interpretar a intenção dela, vale entender o que essa mensagem reativou em você e como situações parecidas terminaram antes.`
+},
+lembranca:{
+ title:'Uma cena voltou.',
+ intro:'Não tenta interpretar. Cena primeiro, explicação depois.',
+ free:true,
+ reply:()=> 'Guardar cenas concretas ao longo do tempo permite perceber repetições sem exigir que você já saiba nomear “seu padrão”.'
+},
+mal:{
+ title:'Hoje você só está mal.',
+ intro:'Tudo bem não saber explicar. Vamos reduzir o tamanho da pergunta.',
+ q:'O que está mais pesado agora?',
+ options:['Solidão','Ansiedade','Saudade','Raiva'],
+ reply:(o)=>`Hoje o que apareceu com mais força foi ${o.toLowerCase()}. Não precisamos transformar isso em uma teoria. Só localizar já é um começo.`
+},
+melhor:{
+ title:'Hoje você está melhor.',
+ intro:'Isso também importa. O produto não pode existir apenas quando você está em crise.',
+ q:'O que esteve diferente hoje?',
+ options:['Pensei menos nela','Fiz algo por mim','Falei com pessoas','Nem sei. Só acordei melhor'],
+ reply:()=> 'Registrar dias melhores ajuda a perceber que a história não se move apenas quando a dor aumenta. Também existe reconstrução acontecendo.'
+}
+};
+function openFlow(type){
+ const s=scripts[type];
+ show('flow');
+ const c=document.getElementById('flowContent');
+ let body=`<div class="card"><h1>${s.title}</h1><p>${s.intro}</p>`;
+ if(s.free){
+   body+=`<label class="muted">Conta a cena do jeito que lembrar.</label><textarea id="freeText" placeholder="O que aconteceu? Onde vocês estavam? O que foi dito?"></textarea><button id="go" class="btn">Continuar</button>`;
+ }else{
+   body+=`<h2>${s.q}</h2><div class="chips">${s.options.map((o,i)=>`<button class="choice ans" data-answer="${o.replace(/"/g,'&quot;')}">${o}</button>`).join('')}</div>`;
+ }
+ body+='</div><div id="response"></div>';
+ c.innerHTML=body;
+ if(s.free){
+   document.getElementById('go').addEventListener('click',()=>{
+     const t=document.getElementById('freeText').value.trim();
+     if(!t)return;
+     showResponse(type,t,s.reply());
+   });
+ } else {
+   document.querySelectorAll('.ans').forEach(b=>b.addEventListener('click',()=>showResponse(type,b.dataset.answer,s.reply(b.dataset.answer))));
+ }
+}
+function showResponse(type,answer,reply){
+ const r=document.getElementById('response');
+ r.innerHTML=`
+  <div class="chat">
+    <div class="bubble user">${answer}</div>
+    <div class="bubble bot">${reply}</div>
+  </div>
+  <div class="card">
+    <h2>O que fica guardado</h2>
+    <p class="muted">Nesta beta, o registro é simples. Na versão real, a IA transformaria cada conversa em memória estruturada: fatos, eventos, hipóteses em observação e mudanças ao longo do tempo.</p>
+    <button id="saveLog" class="btn">Guardar este momento</button>
+  </div>`;
+ document.getElementById('saveLog').addEventListener('click',()=>{
+   log(`${scripts[type].title} — ${answer}`);
+   alert('Momento guardado nesta beta.');
+   show('journey');
+ });
+}
+document.querySelectorAll('.event').forEach(b=>b.addEventListener('click',()=>openFlow(b.dataset.type)));
+renderMemory();renderJourney();
+</script>
+</body>
+</html>
